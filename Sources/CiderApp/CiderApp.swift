@@ -3,7 +3,7 @@ import SwiftUI
 
 @main
 struct CiderApp: App {
-    private static let demoScript = "pharo/scripts/emit-welcome-browser.st"
+    private static let demoScript = "pharo/scripts/emit-drtests.st"
 
     @State private var model = CiderAppModel.helloWorld
 

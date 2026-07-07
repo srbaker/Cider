@@ -23,7 +23,7 @@ Run the app demo with:
 scripts/demo
 ```
 
-This prepares the local Pharo image, builds `.build/Cider.app`, and launches the SwiftUI app. The app asks Pharo for its real NewTools `StWelcomeBrowser` presenter at runtime and falls back to the bundled Hello World fixture if the live bridge is unavailable.
+This prepares the local Pharo image, builds `.build/Cider.app`, and launches the SwiftUI app. The app asks Pharo for its real DrTests/SUnit runner presenter at runtime and falls back to the bundled Hello World fixture if the live bridge is unavailable.
 
 Run the full local check with:
 
@@ -43,7 +43,7 @@ Run the Pharo availability check with:
 scripts/bootstrap-pharo
 ```
 
-`scripts/bootstrap-pharo` also runs the Hello World Spec application headlessly and compares its `CIDER:` output with `Sources/CiderCore/Resources/hello-world.ndjson`, which is the canonical Swift smoke fixture for this slice. The visible demo path uses Pharo's real `StWelcomeBrowser` so browser-shaped behavior comes from upstream NewTools code instead of a Cider-specific fake browser.
+`scripts/bootstrap-pharo` also runs the Hello World Spec application headlessly and compares its `CIDER:` output with `Sources/CiderCore/Resources/hello-world.ndjson`, which is the canonical Swift smoke fixture for this slice. The visible demo path uses Pharo's real DrTests/SUnit runner so development-tool behavior comes from upstream Pharo code instead of a Cider-specific fake runner.
 
 Prepare a cached local Pharo image and VM with:
 
