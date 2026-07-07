@@ -85,5 +85,5 @@ CiderWireEmitterTest >> testWideStringValuesStayByteOriented [
 
 	self
 		assert: stream contents trimBoth
-		equals: 'CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n1","adapter":"LabelAdapter","label":"caf\u00e9"}'
+		equals: 'CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n1","adapter":"LabelAdapter","label":"caf\u00E9"}'
 ]
