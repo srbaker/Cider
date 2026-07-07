@@ -17,6 +17,14 @@ Pharo is intentionally local-first in this phase. Containerized Pharo is deferre
 
 ## Bootstrap
 
+Run the app demo with:
+
+```sh
+scripts/demo
+```
+
+This prepares the local Pharo image and launches the SwiftUI app. The app asks Pharo for the Hello World Spec slice at runtime and falls back to the bundled fixture if the live bridge is unavailable.
+
 Run the full local check with:
 
 ```sh
