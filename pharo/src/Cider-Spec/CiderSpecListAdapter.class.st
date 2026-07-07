@@ -15,6 +15,7 @@ CiderSpecListAdapter >> buildWidget [
 		(self presenter displayValueFor: each) asString ].
 	self emitter
 		listPresenterBuilt: node
-		items: items asArray.
+		items: items asArray
+		selectedIndexes: self presenter selection selectedIndexes asArray.
 	^ node
 ]

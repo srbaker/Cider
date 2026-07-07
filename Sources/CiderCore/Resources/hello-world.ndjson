@@ -8,6 +8,6 @@ CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n3","child":"n5",
 CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"build","id":"n6","adapter":"TextInputFieldAdapter","text":"Editable text","placeholder":"Type here","editable":true,"password":false}
 CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n3","child":"n6","expand":false}
 CIDER:{"receiver":"SpPanedLayout","selector":"add:","id":"n2","child":"n3"}
-CIDER:{"receiver":"SpListPresenter","selector":"build","id":"n7","adapter":"ListAdapter","items":["Packages","Classes","Protocols","Methods"]}
+CIDER:{"receiver":"SpListPresenter","selector":"build","id":"n7","adapter":"ListAdapter","items":["Packages","Classes","Protocols","Methods"],"selectedIndexes":[]}
 CIDER:{"receiver":"SpPanedLayout","selector":"add:","id":"n2","child":"n7"}
 CIDER:{"receiver":"SpWindowPresenter","selector":"presenter:","id":"n1","presenterLayout":"n2"}

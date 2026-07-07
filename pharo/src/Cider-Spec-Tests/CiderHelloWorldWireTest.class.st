@@ -31,7 +31,7 @@ CiderHelloWorldWireTest >> testHelloWorldPresenterEmitsWindowBoxLabelAndEdges [
 	self assert: lines eighth equals: 'CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"build","id":"n6","adapter":"TextInputFieldAdapter","text":"Editable text","placeholder":"Type here","editable":true,"password":false}'.
 	self assert: lines ninth equals: 'CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n3","child":"n6","expand":false}'.
 	self assert: (lines at: 10) equals: 'CIDER:{"receiver":"SpPanedLayout","selector":"add:","id":"n2","child":"n3"}'.
-	self assert: (lines at: 11) equals: 'CIDER:{"receiver":"SpListPresenter","selector":"build","id":"n7","adapter":"ListAdapter","items":["Packages","Classes","Protocols","Methods"]}'.
+	self assert: (lines at: 11) equals: 'CIDER:{"receiver":"SpListPresenter","selector":"build","id":"n7","adapter":"ListAdapter","items":["Packages","Classes","Protocols","Methods"],"selectedIndexes":[]}'.
 	self assert: (lines at: 12) equals: 'CIDER:{"receiver":"SpPanedLayout","selector":"add:","id":"n2","child":"n7"}'.
 	self assert: (lines at: 13) equals: 'CIDER:{"receiver":"SpWindowPresenter","selector":"presenter:","id":"n1","presenterLayout":"n2"}'
 ]

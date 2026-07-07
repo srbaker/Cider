@@ -25,9 +25,10 @@ CiderClassMethodBrowserWireTest >> testClassMethodBrowserEmitsExistingSpecBrowse
 	self assert: lines first equals: 'CIDER:{"receiver":"SpWindowPresenter","selector":"open","id":"n1","adapter":"WindowAdapter","presenter":"SpClassMethodBrowser","title":"Class Method Browser"}'.
 	self assert: lines second equals: 'CIDER:{"receiver":"SpPanedLayout","selector":"build","id":"n2","adapter":"PanedAdapter","direction":"topToBottom"}'.
 	self assert: lines third equals: 'CIDER:{"receiver":"SpPanedLayout","selector":"build","id":"n3","adapter":"PanedAdapter","direction":"leftToRight"}'.
-	self assert: lines fourth equals: 'CIDER:{"receiver":"SpListPresenter","selector":"build","id":"n4","adapter":"ListAdapter","items":["Object","String","Array"]}'.
+	self assert: lines fourth equals: 'CIDER:{"receiver":"SpListPresenter","selector":"build","id":"n4","adapter":"ListAdapter","items":["Object","String","Array"],"selectedIndexes":[1]}'.
 	self assert: lines fifth equals: 'CIDER:{"receiver":"SpPanedLayout","selector":"add:","id":"n3","child":"n4"}'.
 	self assert: (lines sixth beginsWith: 'CIDER:{"receiver":"SpListPresenter","selector":"build","id":"n5","adapter":"ListAdapter","items":[').
+	self assert: (lines sixth includesSubstring: ',"selectedIndexes":[1]}').
 	self assert: lines seventh equals: 'CIDER:{"receiver":"SpPanedLayout","selector":"add:","id":"n3","child":"n5"}'.
 	self assert: lines eighth equals: 'CIDER:{"receiver":"SpPanedLayout","selector":"add:","id":"n2","child":"n3"}'.
 	self assert: (lines ninth beginsWith: 'CIDER:{"receiver":"SpCodePresenter","selector":"build","id":"n6","adapter":"CodeAdapter","text":"').

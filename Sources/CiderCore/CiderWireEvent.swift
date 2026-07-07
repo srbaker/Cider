@@ -30,6 +30,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public var editable: Bool?
     public var password: Bool?
     public var items: [String]?
+    public var selectedIndexes: [Int]?
     public var lineNumbers: Bool?
     public var syntaxHighlight: Bool?
     public var child: String?
@@ -51,6 +52,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         editable: Bool? = nil,
         password: Bool? = nil,
         items: [String]? = nil,
+        selectedIndexes: [Int]? = nil,
         lineNumbers: Bool? = nil,
         syntaxHighlight: Bool? = nil,
         child: String? = nil,
@@ -71,6 +73,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         self.editable = editable
         self.password = password
         self.items = items
+        self.selectedIndexes = selectedIndexes
         self.lineNumbers = lineNumbers
         self.syntaxHighlight = syntaxHighlight
         self.child = child

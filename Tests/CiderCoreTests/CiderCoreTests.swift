@@ -45,6 +45,7 @@ import Testing
     #expect(events[8].expand == false)
     #expect(events[9].child == "n3")
     #expect(events[10].items == ["Packages", "Classes", "Protocols", "Methods"])
+    #expect(events[10].selectedIndexes == [])
     #expect(events[11].child == "n7")
     #expect(events[12].presenterLayout == "n2")
 }
@@ -71,6 +72,7 @@ import Testing
     #expect(model.textInputFields["n6"]?.editable == true)
     #expect(model.textInputFields["n6"]?.password == false)
     #expect(model.lists["n7"]?.items == ["Packages", "Classes", "Protocols", "Methods"])
+    #expect(model.lists["n7"]?.selectedIndexes == [])
 }
 
 @Test func ciderSpecModelReconstructsCodePresenter() throws {

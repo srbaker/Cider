@@ -50,8 +50,15 @@ struct CiderSpecRenderer: View {
     }
 
     private func renderList(_ list: CiderSpecModel.SpListPresenter) -> AnyView {
-        AnyView(List(list.items, id: \.self) { item in
+        AnyView(List(Array(list.items.enumerated()), id: \.offset) { index, item in
             Text(item)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 2)
+                .listRowBackground(
+                    list.selectedIndexes.contains(index + 1)
+                        ? Color.accentColor.opacity(0.18)
+                        : Color.clear
+                )
         }
         .frame(minHeight: 120))
     }

@@ -94,10 +94,12 @@ public struct CiderSpecModel: Equatable, Sendable {
     public struct SpListPresenter: Equatable, Sendable {
         public var id: String
         public var items: [String]
+        public var selectedIndexes: [Int]
 
-        public init(id: String, items: [String]) {
+        public init(id: String, items: [String], selectedIndexes: [Int] = []) {
             self.id = id
             self.items = items
+            self.selectedIndexes = selectedIndexes
         }
     }
 
@@ -222,10 +224,14 @@ public struct CiderSpecModel: Equatable, Sendable {
                 )
 
             case .listPresenterBuild:
-                guard let items = event.items else {
+                guard let items = event.items, let selectedIndexes = event.selectedIndexes else {
                     throw BuildError.missingListPayload(event.id)
                 }
-                model.lists[event.id] = SpListPresenter(id: event.id, items: items)
+                model.lists[event.id] = SpListPresenter(
+                    id: event.id,
+                    items: items,
+                    selectedIndexes: selectedIndexes
+                )
 
             case .codePresenterBuild:
                 guard

@@ -95,14 +95,15 @@ CiderWireEmitter >> labelPresenterBuilt: aNode text: aString [
 ]
 
 { #category : 'emitting' }
-CiderWireEmitter >> listPresenterBuilt: aNode items: itemStrings [
+CiderWireEmitter >> listPresenterBuilt: aNode items: itemStrings selectedIndexes: indexes [
 
 	self emit: {
 		#receiver -> 'SpListPresenter'.
 		#selector -> 'build'.
 		#id -> aNode id.
 		#adapter -> 'ListAdapter'.
-		#items -> itemStrings }
+		#items -> itemStrings.
+		#selectedIndexes -> indexes }
 ]
 
 { #category : 'emitting' }
