@@ -33,6 +33,8 @@ struct CiderSpecRenderer: View {
                 .disabled(!button.enabled))
         } else if let checkBox = model.checkBoxes[id] {
             return renderCheckBox(checkBox)
+        } else if let dropList = model.dropLists[id] {
+            return renderDropList(dropList)
         } else if let textInputField = model.textInputFields[id] {
             return renderTextInputField(textInputField)
         } else if let list = model.lists[id] {
@@ -102,6 +104,21 @@ struct CiderSpecRenderer: View {
         AnyView(Toggle(checkBox.label, isOn: .constant(checkBox.state))
             .toggleStyle(.checkbox)
             .disabled(!checkBox.enabled))
+    }
+
+    private func renderDropList(_ dropList: CiderSpecModel.SpDropListPresenter) -> AnyView {
+        let selectedIndex = max(dropList.selectedIndex - 1, 0)
+        let selectedItem = dropList.items.indices.contains(selectedIndex)
+            ? dropList.items[selectedIndex]
+            : dropList.items.first ?? ""
+
+        return AnyView(Picker("", selection: .constant(selectedItem)) {
+            ForEach(dropList.items, id: \.self) { item in
+                Text(item).tag(item)
+            }
+        }
+        .labelsHidden()
+        .disabled(true))
     }
 
     private func renderNativeWidget(_ nativeWidget: CiderSpecModel.SpNativeWidget) -> AnyView {

@@ -111,6 +111,18 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct SpDropListPresenter: Equatable, Sendable {
+        public var id: String
+        public var items: [String]
+        public var selectedIndex: Int
+
+        public init(id: String, items: [String], selectedIndex: Int) {
+            self.id = id
+            self.items = items
+            self.selectedIndex = selectedIndex
+        }
+    }
+
     public struct SpTextInputFieldPresenter: Equatable, Sendable {
         public var id: String
         public var text: String
@@ -204,6 +216,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         case missingImagePayload(String)
         case missingButtonPayload(String)
         case missingCheckBoxPayload(String)
+        case missingDropListPayload(String)
         case missingTextInputFieldPayload(String)
         case missingListPayload(String)
         case missingCodePayload(String)
@@ -228,6 +241,7 @@ public struct CiderSpecModel: Equatable, Sendable {
     public var images: [String: SpImagePresenter]
     public var buttons: [String: SpButtonPresenter]
     public var checkBoxes: [String: SpCheckBoxPresenter]
+    public var dropLists: [String: SpDropListPresenter]
     public var textInputFields: [String: SpTextInputFieldPresenter]
     public var lists: [String: SpListPresenter]
     public var codePresenters: [String: SpCodePresenter]
@@ -244,6 +258,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         images: [String: SpImagePresenter] = [:],
         buttons: [String: SpButtonPresenter] = [:],
         checkBoxes: [String: SpCheckBoxPresenter] = [:],
+        dropLists: [String: SpDropListPresenter] = [:],
         textInputFields: [String: SpTextInputFieldPresenter] = [:],
         lists: [String: SpListPresenter] = [:],
         codePresenters: [String: SpCodePresenter] = [:],
@@ -259,6 +274,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         self.images = images
         self.buttons = buttons
         self.checkBoxes = checkBoxes
+        self.dropLists = dropLists
         self.textInputFields = textInputFields
         self.lists = lists
         self.codePresenters = codePresenters
@@ -352,6 +368,16 @@ public struct CiderSpecModel: Equatable, Sendable {
                     label: label,
                     state: state,
                     enabled: enabled
+                )
+
+            case .dropListPresenterBuild:
+                guard let items = event.items, let selectedIndex = event.selectedIndex else {
+                    throw BuildError.missingDropListPayload(event.id)
+                }
+                model.dropLists[event.id] = SpDropListPresenter(
+                    id: event.id,
+                    items: items,
+                    selectedIndex: selectedIndex
                 )
 
             case .textInputFieldPresenterBuild:

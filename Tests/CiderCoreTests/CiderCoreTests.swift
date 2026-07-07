@@ -176,6 +176,21 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelReconstructsDropListPresenter() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpDropListPresenter","selector":"build","id":"n1","adapter":"DropListAdapter","items":["Tests Runner","Coverage"],"selectedIndex":1}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.first?.kind == .dropListPresenterBuild)
+    #expect(model.dropLists["n1"] == CiderSpecModel.SpDropListPresenter(
+        id: "n1",
+        items: ["Tests Runner", "Coverage"],
+        selectedIndex: 1
+    ))
+}
+
 @Test func ciderSpecModelReconstructsPaginatorPresenter() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpPaginatorPresenter","selector":"build","id":"n1","adapter":"PaginatorAdapter","pages":7,"selectedPage":3,"visiblePages":2}

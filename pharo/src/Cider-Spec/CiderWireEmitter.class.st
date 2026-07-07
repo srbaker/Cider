@@ -86,6 +86,18 @@ CiderWireEmitter >> checkBoxPresenterBuilt: aNode label: aString state: stateBoo
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> dropListPresenterBuilt: aNode items: itemStrings selectedIndex: selectedIndex [
+
+	self emit: {
+		#receiver -> 'SpDropListPresenter'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'DropListAdapter'.
+		#items -> itemStrings.
+		#selectedIndex -> selectedIndex }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> emit: associations [
 
 	stream

@@ -22,6 +22,24 @@ CiderWireEmitterTest >> testStringValuesEscapeJsonControlCharacters [
 ]
 
 { #category : 'tests' }
+CiderWireEmitterTest >> testDropListPresenterBuildsSpecShapedEvent [
+	| stream emitter node |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #DropListAdapter.
+
+	emitter
+		dropListPresenterBuilt: node
+		items: #( 'Tests Runner' 'Coverage' )
+		selectedIndex: 1.
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"SpDropListPresenter","selector":"build","id":"n1","adapter":"DropListAdapter","items":["Tests Runner","Coverage"],"selectedIndex":1}'
+]
+
+{ #category : 'tests' }
 CiderWireEmitterTest >> testMicScrolledTextMorphBuildsAsNamedMorph [
 	| stream emitter node |
 

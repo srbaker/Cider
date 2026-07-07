@@ -10,6 +10,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case imagePresenterBuild
         case buttonPresenterBuild
         case checkBoxPresenterBuild
+        case dropListPresenterBuild
         case textInputFieldPresenterBuild
         case listPresenterBuild
         case codePresenterBuild
@@ -43,6 +44,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public var password: Bool?
     public var items: [String]?
     public var selectedIndexes: [Int]?
+    public var selectedIndex: Int?
     public var lineNumbers: Bool?
     public var syntaxHighlight: Bool?
     public var widgetClass: String?
@@ -73,6 +75,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         password: Bool? = nil,
         items: [String]? = nil,
         selectedIndexes: [Int]? = nil,
+        selectedIndex: Int? = nil,
         lineNumbers: Bool? = nil,
         syntaxHighlight: Bool? = nil,
         widgetClass: String? = nil,
@@ -102,6 +105,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         self.password = password
         self.items = items
         self.selectedIndexes = selectedIndexes
+        self.selectedIndex = selectedIndex
         self.lineNumbers = lineNumbers
         self.syntaxHighlight = syntaxHighlight
         self.widgetClass = widgetClass
@@ -130,6 +134,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .buttonPresenterBuild
         case ("SpCheckBoxPresenter", "build"):
             .checkBoxPresenterBuild
+        case ("SpDropListPresenter", "build"):
+            .dropListPresenterBuild
         case ("SpTextInputFieldPresenter", "build"):
             .textInputFieldPresenterBuild
         case ("SpListPresenter", "build"):
