@@ -133,7 +133,7 @@ import Testing
 
 @Test func ciderSpecModelReconstructsNativeWidgetPlaceholder() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
-    CIDER:{"receiver":"SpNativeWidget","selector":"build","id":"n1","adapter":"NativeAdapter","widgetClass":"MicScrolledTextMorph","text":"Welcome\\u0001to Pharo"}
+    CIDER:{"receiver":"SpNativeWidget","selector":"build","id":"n1","adapter":"NativeAdapter","widgetClass":"UnknownMorph","text":"Fallback"}
     """)
 
     let model = try CiderSpecModel.build(from: events)
@@ -141,7 +141,21 @@ import Testing
     #expect(events.first?.kind == .nativeWidgetBuild)
     #expect(model.nativeWidgets["n1"] == CiderSpecModel.SpNativeWidget(
         id: "n1",
-        widgetClass: "MicScrolledTextMorph",
+        widgetClass: "UnknownMorph",
+        text: "Fallback"
+    ))
+}
+
+@Test func ciderSpecModelReconstructsMicScrolledTextMorph() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"MicScrolledTextMorph","selector":"build","id":"n1","adapter":"MorphAdapter","text":"Welcome\\u0001to Pharo"}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.first?.kind == .micScrolledTextMorphBuild)
+    #expect(model.micScrolledTextMorphs["n1"] == CiderSpecModel.MicScrolledTextMorph(
+        id: "n1",
         text: "Welcome\u{1}to Pharo"
     ))
 }

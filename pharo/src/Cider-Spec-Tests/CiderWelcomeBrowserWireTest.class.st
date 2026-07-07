@@ -25,6 +25,7 @@ CiderWelcomeBrowserWireTest >> testWelcomeBrowserEmitsRealNewToolsSpecTree [
 	self assert: (lines anySatisfy: [ :line | line includesSubstring: '"receiver":"SpImagePresenter"' ]).
 	self assert: (lines anySatisfy: [ :line | line includesSubstring: '"receiver":"SpCheckBoxPresenter"' ]).
 	self assert: (lines anySatisfy: [ :line | line includesSubstring: '"receiver":"SpPaginatorPresenter"' ]).
-	self assert: (lines anySatisfy: [ :line | line includesSubstring: '"receiver":"SpNativeWidget"' ]).
+	self assert: (lines anySatisfy: [ :line | line includesSubstring: '"receiver":"MicScrolledTextMorph"' ]).
+	self deny: (lines anySatisfy: [ :line | line includesSubstring: '"widgetClass":"MicScrolledTextMorph"' ]).
 	self assert: lines last equals: 'CIDER:{"receiver":"SpWindowPresenter","selector":"presenter:","id":"n1","presenterLayout":"n2"}'
 ]

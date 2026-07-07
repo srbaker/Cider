@@ -155,6 +155,17 @@ CiderWireEmitter >> millerLayoutBuilt: aNode direction: aString visiblePages: aN
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> micScrolledTextMorphBuilt: aNode text: aString [
+
+	self emit: {
+		#receiver -> 'MicScrolledTextMorph'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'MorphAdapter'.
+		#text -> aString }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> nativeWidgetBuilt: aNode widgetClass: aString text: textString [
 
 	self emit: {

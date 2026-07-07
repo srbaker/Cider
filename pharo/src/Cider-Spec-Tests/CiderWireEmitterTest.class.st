@@ -22,6 +22,21 @@ CiderWireEmitterTest >> testStringValuesEscapeJsonControlCharacters [
 ]
 
 { #category : 'tests' }
+CiderWireEmitterTest >> testMicScrolledTextMorphBuildsAsNamedMorph [
+	| stream emitter node |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #NativeAdapter.
+
+	emitter micScrolledTextMorphBuilt: node text: 'Welcome'.
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"MicScrolledTextMorph","selector":"build","id":"n1","adapter":"MorphAdapter","text":"Welcome"}'
+]
+
+{ #category : 'tests' }
 CiderWireEmitterTest >> testWideStringValuesStayByteOriented [
 	| stream emitter node text |
 

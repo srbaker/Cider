@@ -171,6 +171,16 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct MicScrolledTextMorph: Equatable, Sendable {
+        public var id: String
+        public var text: String
+
+        public init(id: String, text: String) {
+            self.id = id
+            self.text = text
+        }
+    }
+
     public struct SpPaginatorPresenter: Equatable, Sendable {
         public var id: String
         public var pages: Int
@@ -197,6 +207,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         case missingTextInputFieldPayload(String)
         case missingListPayload(String)
         case missingCodePayload(String)
+        case missingMicScrolledTextMorphPayload(String)
         case missingNativeWidgetPayload(String)
         case missingPaginatorPayload(String)
         case missingBoxChildPayload(String)
@@ -220,6 +231,7 @@ public struct CiderSpecModel: Equatable, Sendable {
     public var textInputFields: [String: SpTextInputFieldPresenter]
     public var lists: [String: SpListPresenter]
     public var codePresenters: [String: SpCodePresenter]
+    public var micScrolledTextMorphs: [String: MicScrolledTextMorph]
     public var nativeWidgets: [String: SpNativeWidget]
     public var paginators: [String: SpPaginatorPresenter]
 
@@ -235,6 +247,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         textInputFields: [String: SpTextInputFieldPresenter] = [:],
         lists: [String: SpListPresenter] = [:],
         codePresenters: [String: SpCodePresenter] = [:],
+        micScrolledTextMorphs: [String: MicScrolledTextMorph] = [:],
         nativeWidgets: [String: SpNativeWidget] = [:],
         paginators: [String: SpPaginatorPresenter] = [:]
     ) {
@@ -249,6 +262,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         self.textInputFields = textInputFields
         self.lists = lists
         self.codePresenters = codePresenters
+        self.micScrolledTextMorphs = micScrolledTextMorphs
         self.nativeWidgets = nativeWidgets
         self.paginators = paginators
     }
@@ -380,6 +394,15 @@ public struct CiderSpecModel: Equatable, Sendable {
                     text: text,
                     lineNumbers: lineNumbers,
                     syntaxHighlight: syntaxHighlight
+                )
+
+            case .micScrolledTextMorphBuild:
+                guard let text = event.text else {
+                    throw BuildError.missingMicScrolledTextMorphPayload(event.id)
+                }
+                model.micScrolledTextMorphs[event.id] = MicScrolledTextMorph(
+                    id: event.id,
+                    text: text
                 )
 
             case .nativeWidgetBuild:

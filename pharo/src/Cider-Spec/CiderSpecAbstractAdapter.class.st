@@ -55,6 +55,13 @@ CiderSpecAbstractAdapter >> nodeFrom: anAdapter [
 		ifTrue: [ ^ childNode ].
 
 	node := self emitter newNodeFor: #NativeAdapter.
+	childNode class name = #MicScrolledTextMorph
+		ifTrue: [
+			self emitter
+				micScrolledTextMorphBuilt: node
+				text: (self textFromNativeWidget: childNode).
+			^ node ].
+
 	self emitter
 		nativeWidgetBuilt: node
 		widgetClass: childNode class name asString

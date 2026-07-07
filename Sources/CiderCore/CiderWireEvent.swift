@@ -13,6 +13,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case textInputFieldPresenterBuild
         case listPresenterBuild
         case codePresenterBuild
+        case micScrolledTextMorphBuild
         case nativeWidgetBuild
         case paginatorPresenterBuild
         case boxLayoutAdd
@@ -135,6 +136,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .listPresenterBuild
         case ("SpCodePresenter", "build"):
             .codePresenterBuild
+        case ("MicScrolledTextMorph", "build"):
+            .micScrolledTextMorphBuild
         case ("SpNativeWidget", "build"):
             .nativeWidgetBuild
         case ("SpPaginatorPresenter", "build"):

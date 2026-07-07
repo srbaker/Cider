@@ -39,6 +39,8 @@ struct CiderSpecRenderer: View {
             return renderList(list)
         } else if let codePresenter = model.codePresenters[id] {
             return renderCodePresenter(codePresenter)
+        } else if let micScrolledTextMorph = model.micScrolledTextMorphs[id] {
+            return renderMicScrolledTextMorph(micScrolledTextMorph)
         } else if let nativeWidget = model.nativeWidgets[id] {
             return renderNativeWidget(nativeWidget)
         } else if let paginator = model.paginators[id] {
@@ -111,6 +113,17 @@ struct CiderSpecRenderer: View {
 
         return AnyView(ScrollView([.horizontal, .vertical]) {
             Text(text)
+                .textSelection(.enabled)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .padding(8)
+        }
+        .frame(minHeight: 120)
+        .background(Color.secondary.opacity(0.04)))
+    }
+
+    private func renderMicScrolledTextMorph(_ morph: CiderSpecModel.MicScrolledTextMorph) -> AnyView {
+        AnyView(ScrollView([.horizontal, .vertical]) {
+            Text(morph.text)
                 .textSelection(.enabled)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
                 .padding(8)
