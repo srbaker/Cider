@@ -35,6 +35,18 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct SpPanedLayout: Equatable, Sendable {
+        public var id: String
+        public var direction: String
+        public var children: [String]
+
+        public init(id: String, direction: String, children: [String] = []) {
+            self.id = id
+            self.direction = direction
+            self.children = children
+        }
+    }
+
     public struct SpLabelPresenter: Equatable, Sendable {
         public var id: String
         public var label: String
@@ -92,18 +104,22 @@ public struct CiderSpecModel: Equatable, Sendable {
     public enum BuildError: Error, Equatable, Sendable {
         case missingWindowPayload(String)
         case missingBoxPayload(String)
+        case missingPanedPayload(String)
         case missingLabelPayload(String)
         case missingButtonPayload(String)
         case missingTextInputFieldPayload(String)
         case missingListPayload(String)
         case missingBoxChildPayload(String)
+        case missingPanedChildPayload(String)
         case missingWindowPresenterPayload(String)
         case unknownBox(String)
+        case unknownPaned(String)
         case unknownWindow(String)
     }
 
     public var windows: [String: SpWindowPresenter]
     public var boxLayouts: [String: SpBoxLayout]
+    public var panedLayouts: [String: SpPanedLayout]
     public var labels: [String: SpLabelPresenter]
     public var buttons: [String: SpButtonPresenter]
     public var textInputFields: [String: SpTextInputFieldPresenter]
@@ -112,6 +128,7 @@ public struct CiderSpecModel: Equatable, Sendable {
     public init(
         windows: [String: SpWindowPresenter] = [:],
         boxLayouts: [String: SpBoxLayout] = [:],
+        panedLayouts: [String: SpPanedLayout] = [:],
         labels: [String: SpLabelPresenter] = [:],
         buttons: [String: SpButtonPresenter] = [:],
         textInputFields: [String: SpTextInputFieldPresenter] = [:],
@@ -119,6 +136,7 @@ public struct CiderSpecModel: Equatable, Sendable {
     ) {
         self.windows = windows
         self.boxLayouts = boxLayouts
+        self.panedLayouts = panedLayouts
         self.labels = labels
         self.buttons = buttons
         self.textInputFields = textInputFields
@@ -145,6 +163,12 @@ public struct CiderSpecModel: Equatable, Sendable {
                     throw BuildError.missingBoxPayload(event.id)
                 }
                 model.boxLayouts[event.id] = SpBoxLayout(id: event.id, direction: direction)
+
+            case .panedLayoutBuild:
+                guard let direction = event.direction else {
+                    throw BuildError.missingPanedPayload(event.id)
+                }
+                model.panedLayouts[event.id] = SpPanedLayout(id: event.id, direction: direction)
 
             case .labelPresenterBuild:
                 guard let label = event.label else {
@@ -194,6 +218,16 @@ public struct CiderSpecModel: Equatable, Sendable {
                 }
                 boxLayout.children.append(SpBoxLayout.Child(id: child, expand: expand))
                 model.boxLayouts[event.id] = boxLayout
+
+            case .panedLayoutAdd:
+                guard let child = event.child else {
+                    throw BuildError.missingPanedChildPayload(event.id)
+                }
+                guard var panedLayout = model.panedLayouts[event.id] else {
+                    throw BuildError.unknownPaned(event.id)
+                }
+                panedLayout.children.append(child)
+                model.panedLayouts[event.id] = panedLayout
 
             case .windowPresenterSet:
                 guard let presenterLayout = event.presenterLayout else {

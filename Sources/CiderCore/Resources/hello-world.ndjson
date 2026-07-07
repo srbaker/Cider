@@ -1,11 +1,13 @@
 CIDER:{"receiver":"SpWindowPresenter","selector":"open","id":"n1","adapter":"WindowAdapter","presenter":"CiderHelloWorldPresenter","title":"Cider Hello"}
-CIDER:{"receiver":"SpBoxLayout","selector":"build","id":"n2","adapter":"BoxAdapter","direction":"topToBottom"}
-CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n3","adapter":"LabelAdapter","label":"Hello, World!"}
-CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n3","expand":false}
-CIDER:{"receiver":"SpButtonPresenter","selector":"build","id":"n4","adapter":"ButtonAdapter","label":"Click me!","enabled":true}
-CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n4","expand":false}
-CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"build","id":"n5","adapter":"TextInputFieldAdapter","text":"Editable text","placeholder":"Type here","editable":true,"password":false}
-CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n5","expand":false}
-CIDER:{"receiver":"SpListPresenter","selector":"build","id":"n6","adapter":"ListAdapter","items":["Packages","Classes","Protocols","Methods"]}
-CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n6","expand":true}
+CIDER:{"receiver":"SpPanedLayout","selector":"build","id":"n2","adapter":"PanedAdapter","direction":"leftToRight"}
+CIDER:{"receiver":"SpBoxLayout","selector":"build","id":"n3","adapter":"BoxAdapter","direction":"topToBottom"}
+CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n4","adapter":"LabelAdapter","label":"Hello, World!"}
+CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n3","child":"n4","expand":false}
+CIDER:{"receiver":"SpButtonPresenter","selector":"build","id":"n5","adapter":"ButtonAdapter","label":"Click me!","enabled":true}
+CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n3","child":"n5","expand":false}
+CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"build","id":"n6","adapter":"TextInputFieldAdapter","text":"Editable text","placeholder":"Type here","editable":true,"password":false}
+CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n3","child":"n6","expand":false}
+CIDER:{"receiver":"SpPanedLayout","selector":"add:","id":"n2","child":"n3"}
+CIDER:{"receiver":"SpListPresenter","selector":"build","id":"n7","adapter":"ListAdapter","items":["Packages","Classes","Protocols","Methods"]}
+CIDER:{"receiver":"SpPanedLayout","selector":"add:","id":"n2","child":"n7"}
 CIDER:{"receiver":"SpWindowPresenter","selector":"presenter:","id":"n1","presenterLayout":"n2"}

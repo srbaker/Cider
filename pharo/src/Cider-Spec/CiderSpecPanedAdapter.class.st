@@ -1,5 +1,5 @@
 Class {
-	#name : 'CiderSpecBoxAdapter',
+	#name : 'CiderSpecPanedAdapter',
 	#superclass : 'CiderSpecAbstractAdapter',
 	#category : 'Cider-Spec-Adapters',
 	#package : 'Cider-Spec',
@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'protocol' }
-CiderSpecBoxAdapter >> add: anAdapter constraints: constraints [
+CiderSpecPanedAdapter >> add: anAdapter constraints: constraints [
 	| childNode |
 
 	childNode := (anAdapter respondsTo: #widget)
@@ -15,22 +15,21 @@ CiderSpecBoxAdapter >> add: anAdapter constraints: constraints [
 		ifFalse: [ anAdapter build ].
 	self widget addChild: childNode.
 	self emitter
-		boxLayout: self widget
+		panedLayout: self widget
 		added: childNode
-		expand: constraints isExpand
 ]
 
 { #category : 'factory' }
-CiderSpecBoxAdapter >> buildWidget [
+CiderSpecPanedAdapter >> buildWidget [
 
-	^ self emitter newNodeFor: #BoxAdapter
+	^ self emitter newNodeFor: #PanedAdapter
 ]
 
 { #category : 'protocol' }
-CiderSpecBoxAdapter >> layout: aLayout [
+CiderSpecPanedAdapter >> layout: aLayout [
 
 	self emitter
-		boxLayoutBuilt: self widget
+		panedLayoutBuilt: self widget
 		direction: (aLayout isHorizontal
 			ifTrue: [ 'leftToRight' ]
 			ifFalse: [ 'topToBottom' ])

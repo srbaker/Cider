@@ -37,6 +37,17 @@ CiderWireEmitter >> boxLayout: aNode added: childNode expand: aBoolean [
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> boxLayoutBuilt: aNode direction: aString [
+
+	self emit: {
+		#receiver -> 'SpBoxLayout'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'BoxAdapter'.
+		#direction -> aString }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> buttonPresenterBuilt: aNode label: aString enabled: aBoolean [
 
 	self emit: {
@@ -79,6 +90,27 @@ CiderWireEmitter >> listPresenterBuilt: aNode items: itemStrings [
 		#id -> aNode id.
 		#adapter -> 'ListAdapter'.
 		#items -> itemStrings }
+]
+
+{ #category : 'emitting' }
+CiderWireEmitter >> panedLayout: aNode added: childNode [
+
+	self emit: {
+		#receiver -> 'SpPanedLayout'.
+		#selector -> 'add:'.
+		#id -> aNode id.
+		#child -> childNode id }
+]
+
+{ #category : 'emitting' }
+CiderWireEmitter >> panedLayoutBuilt: aNode direction: aString [
+
+	self emit: {
+		#receiver -> 'SpPanedLayout'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'PanedAdapter'.
+		#direction -> aString }
 ]
 
 { #category : 'emitting' }
@@ -198,12 +230,7 @@ CiderWireEmitter >> stream: aStream [
 { #category : 'emitting' }
 CiderWireEmitter >> topToBottomBoxLayoutBuilt: aNode [
 
-	self emit: {
-		#receiver -> 'SpBoxLayout'.
-		#selector -> 'build'.
-		#id -> aNode id.
-		#adapter -> 'BoxAdapter'.
-		#direction -> 'topToBottom' }
+	self boxLayoutBuilt: aNode direction: 'topToBottom'
 ]
 
 { #category : 'emitting' }

@@ -20,6 +20,8 @@ struct CiderSpecRenderer: View {
     private func renderNode(id: String) -> AnyView {
         if let boxLayout = model.boxLayouts[id] {
             return renderBoxLayout(boxLayout)
+        } else if let panedLayout = model.panedLayouts[id] {
+            return renderPanedLayout(panedLayout)
         } else if let label = model.labels[id] {
             return AnyView(Text(label.label))
         } else if let button = model.buttons[id] {
@@ -66,10 +68,30 @@ struct CiderSpecRenderer: View {
         }
     }
 
+    private func renderPanedLayout(_ panedLayout: CiderSpecModel.SpPanedLayout) -> AnyView {
+        switch panedLayout.direction {
+        case "topToBottom":
+            return AnyView(VSplitView {
+                renderChildren(of: panedLayout)
+            })
+        default:
+            return AnyView(HSplitView {
+                renderChildren(of: panedLayout)
+            })
+        }
+    }
+
     @ViewBuilder
     private func renderChildren(of boxLayout: CiderSpecModel.SpBoxLayout) -> some View {
         ForEach(boxLayout.children, id: \.id) { child in
             renderNode(id: child.id)
+        }
+    }
+
+    @ViewBuilder
+    private func renderChildren(of panedLayout: CiderSpecModel.SpPanedLayout) -> some View {
+        ForEach(panedLayout.children, id: \.self) { child in
+            renderNode(id: child)
         }
     }
 }

@@ -4,11 +4,13 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public enum Kind: Equatable, Sendable {
         case windowOpen
         case boxLayoutBuild
+        case panedLayoutBuild
         case labelPresenterBuild
         case buttonPresenterBuild
         case textInputFieldPresenterBuild
         case listPresenterBuild
         case boxLayoutAdd
+        case panedLayoutAdd
         case windowPresenterSet
         case unknown(receiver: String, selector: String)
     }
@@ -75,6 +77,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .windowOpen
         case ("SpBoxLayout", "build"):
             .boxLayoutBuild
+        case ("SpPanedLayout", "build"):
+            .panedLayoutBuild
         case ("SpLabelPresenter", "build"):
             .labelPresenterBuild
         case ("SpButtonPresenter", "build"):
@@ -85,6 +89,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .listPresenterBuild
         case ("SpBoxLayout", "add:expand:"):
             .boxLayoutAdd
+        case ("SpPanedLayout", "add:"):
+            .panedLayoutAdd
         case ("SpWindowPresenter", "presenter:"):
             .windowPresenterSet
         default:

@@ -14,11 +14,13 @@ Class {
 { #category : 'layout' }
 CiderHelloWorldPresenter >> defaultLayout [
 
-	^ SpBoxLayout newTopToBottom
-		add: label expand: false;
-		add: button expand: false;
-		add: input expand: false;
-		add: list expand: true;
+	^ SpPanedLayout newLeftToRight
+		add: (SpBoxLayout newTopToBottom
+			add: label expand: false;
+			add: button expand: false;
+			add: input expand: false;
+			yourself);
+		add: list;
 		yourself
 ]
 

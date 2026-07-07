@@ -13,6 +13,7 @@ import Testing
 
     #expect(events.map(\.kind) == [
         .windowOpen,
+        .panedLayoutBuild,
         .boxLayoutBuild,
         .labelPresenterBuild,
         .boxLayoutAdd,
@@ -20,30 +21,32 @@ import Testing
         .boxLayoutAdd,
         .textInputFieldPresenterBuild,
         .boxLayoutAdd,
+        .panedLayoutAdd,
         .listPresenterBuild,
-        .boxLayoutAdd,
+        .panedLayoutAdd,
         .windowPresenterSet
     ])
     #expect(events[0].presenter == "CiderHelloWorldPresenter")
     #expect(events[0].title == "Cider Hello")
-    #expect(events[1].direction == "topToBottom")
-    #expect(events[2].label == "Hello, World!")
-    #expect(events[3].child == "n3")
-    #expect(events[3].expand == false)
-    #expect(events[4].label == "Click me!")
-    #expect(events[4].enabled == true)
-    #expect(events[5].child == "n4")
-    #expect(events[5].expand == false)
-    #expect(events[6].text == "Editable text")
-    #expect(events[6].placeholder == "Type here")
-    #expect(events[6].editable == true)
-    #expect(events[6].password == false)
-    #expect(events[7].child == "n5")
-    #expect(events[7].expand == false)
-    #expect(events[8].items == ["Packages", "Classes", "Protocols", "Methods"])
-    #expect(events[9].child == "n6")
-    #expect(events[9].expand == true)
-    #expect(events[10].presenterLayout == "n2")
+    #expect(events[1].direction == "leftToRight")
+    #expect(events[2].direction == "topToBottom")
+    #expect(events[3].label == "Hello, World!")
+    #expect(events[4].child == "n4")
+    #expect(events[4].expand == false)
+    #expect(events[5].label == "Click me!")
+    #expect(events[5].enabled == true)
+    #expect(events[6].child == "n5")
+    #expect(events[6].expand == false)
+    #expect(events[7].text == "Editable text")
+    #expect(events[7].placeholder == "Type here")
+    #expect(events[7].editable == true)
+    #expect(events[7].password == false)
+    #expect(events[8].child == "n6")
+    #expect(events[8].expand == false)
+    #expect(events[9].child == "n3")
+    #expect(events[10].items == ["Packages", "Classes", "Protocols", "Methods"])
+    #expect(events[11].child == "n7")
+    #expect(events[12].presenterLayout == "n2")
 }
 
 @Test func ciderSpecModelReconstructsHelloWorldTree() throws {
@@ -52,21 +55,22 @@ import Testing
     #expect(model.windows["n1"]?.presenter == "CiderHelloWorldPresenter")
     #expect(model.windows["n1"]?.title == "Cider Hello")
     #expect(model.windows["n1"]?.presenterLayout == "n2")
-    #expect(model.boxLayouts["n2"]?.direction == "topToBottom")
-    #expect(model.boxLayouts["n2"]?.children == [
-        CiderSpecModel.SpBoxLayout.Child(id: "n3", expand: false),
+    #expect(model.panedLayouts["n2"]?.direction == "leftToRight")
+    #expect(model.panedLayouts["n2"]?.children == ["n3", "n7"])
+    #expect(model.boxLayouts["n3"]?.direction == "topToBottom")
+    #expect(model.boxLayouts["n3"]?.children == [
         CiderSpecModel.SpBoxLayout.Child(id: "n4", expand: false),
         CiderSpecModel.SpBoxLayout.Child(id: "n5", expand: false),
-        CiderSpecModel.SpBoxLayout.Child(id: "n6", expand: true)
+        CiderSpecModel.SpBoxLayout.Child(id: "n6", expand: false)
     ])
-    #expect(model.labels["n3"]?.label == "Hello, World!")
-    #expect(model.buttons["n4"]?.label == "Click me!")
-    #expect(model.buttons["n4"]?.enabled == true)
-    #expect(model.textInputFields["n5"]?.text == "Editable text")
-    #expect(model.textInputFields["n5"]?.placeholder == "Type here")
-    #expect(model.textInputFields["n5"]?.editable == true)
-    #expect(model.textInputFields["n5"]?.password == false)
-    #expect(model.lists["n6"]?.items == ["Packages", "Classes", "Protocols", "Methods"])
+    #expect(model.labels["n4"]?.label == "Hello, World!")
+    #expect(model.buttons["n5"]?.label == "Click me!")
+    #expect(model.buttons["n5"]?.enabled == true)
+    #expect(model.textInputFields["n6"]?.text == "Editable text")
+    #expect(model.textInputFields["n6"]?.placeholder == "Type here")
+    #expect(model.textInputFields["n6"]?.editable == true)
+    #expect(model.textInputFields["n6"]?.password == false)
+    #expect(model.lists["n7"]?.items == ["Packages", "Classes", "Protocols", "Methods"])
 }
 
 @Test func ciderWireOutputIgnoresNonProtocolLines() throws {
