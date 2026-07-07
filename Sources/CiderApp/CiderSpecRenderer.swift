@@ -40,13 +40,28 @@ struct CiderSpecRenderer: View {
 
     private func renderCodePresenter(_ codePresenter: CiderSpecModel.SpCodePresenter) -> AnyView {
         AnyView(ScrollView([.horizontal, .vertical]) {
-            Text(codePresenter.text)
-                .font(.system(.body, design: .monospaced))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                .padding(8)
-                .textSelection(.enabled)
+            HStack(alignment: .top, spacing: 12) {
+                if codePresenter.lineNumbers {
+                    Text(lineNumbers(for: codePresenter.text))
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.trailing)
+                }
+
+                Text(codePresenter.text)
+                    .textSelection(.enabled)
+            }
+            .font(.system(.body, design: .monospaced))
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .padding(8)
         }
         .frame(minHeight: 160))
+    }
+
+    private func lineNumbers(for text: String) -> String {
+        let lineCount = max(text.split(separator: "\n", omittingEmptySubsequences: false).count, 1)
+        return (1...lineCount)
+            .map(String.init)
+            .joined(separator: "\n")
     }
 
     private func renderList(_ list: CiderSpecModel.SpListPresenter) -> AnyView {
