@@ -93,6 +93,24 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelAppliesLabelPresenterUpdates() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n1","adapter":"LabelAdapter","label":"Not clicked"}
+    CIDER:{"receiver":"SpLabelPresenter","selector":"label:","id":"n1","label":"Clicked"}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.map(\.kind) == [
+        .labelPresenterBuild,
+        .labelPresenterSet
+    ])
+    #expect(model.labels["n1"] == CiderSpecModel.SpLabelPresenter(
+        id: "n1",
+        label: "Clicked"
+    ))
+}
+
 @Test func ciderSpecModelReconstructsMillerLayout() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpMillerLayout","selector":"build","id":"n1","adapter":"MillerAdapter","direction":"leftToRight","visiblePages":2}

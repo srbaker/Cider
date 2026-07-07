@@ -17,6 +17,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case panedLayoutBuild
         case millerLayoutBuild
         case labelPresenterBuild
+        case labelPresenterSet
         case imagePresenterBuild
         case buttonPresenterBuild
         case checkBoxPresenterBuild
@@ -148,6 +149,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .millerLayoutBuild
         case ("SpLabelPresenter", "build"):
             .labelPresenterBuild
+        case ("SpLabelPresenter", "label:"):
+            .labelPresenterSet
         case ("SpImagePresenter", "build"):
             .imagePresenterBuild
         case ("SpButtonPresenter", "build"):

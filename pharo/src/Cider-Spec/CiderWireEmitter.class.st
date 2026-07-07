@@ -120,6 +120,16 @@ CiderWireEmitter >> labelPresenterBuilt: aNode text: aString [
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> labelPresenter: aNode labelChangedTo: aString [
+
+	self emit: {
+		#receiver -> 'SpLabelPresenter'.
+		#selector -> 'label:'.
+		#id -> aNode id.
+		#label -> aString }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> imagePresenterBuilt: aNode width: width height: height autoScale: aBoolean [
 
 	self emit: {

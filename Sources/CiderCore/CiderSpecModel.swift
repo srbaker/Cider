@@ -358,6 +358,12 @@ public struct CiderSpecModel: Equatable, Sendable {
                 }
                 model.labels[event.id] = SpLabelPresenter(id: event.id, label: label)
 
+            case .labelPresenterSet:
+                guard let label = event.label else {
+                    throw BuildError.missingLabelPayload(event.id)
+                }
+                model.labels[event.id] = SpLabelPresenter(id: event.id, label: label)
+
             case .imagePresenterBuild:
                 guard
                     let width = event.width,

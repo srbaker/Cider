@@ -22,6 +22,23 @@ CiderWireEmitterTest >> testStringValuesEscapeJsonControlCharacters [
 ]
 
 { #category : 'tests' }
+CiderWireEmitterTest >> testLabelPresenterUpdateBuildsSpecShapedEvent [
+	| stream emitter node |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #LabelAdapter.
+
+	emitter
+		labelPresenter: node
+		labelChangedTo: 'Clicked'.
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"SpLabelPresenter","selector":"label:","id":"n1","label":"Clicked"}'
+]
+
+{ #category : 'tests' }
 CiderWireEmitterTest >> testTreePresenterBuildsSpecShapedEvent [
 	| stream emitter node output treeNode |
 

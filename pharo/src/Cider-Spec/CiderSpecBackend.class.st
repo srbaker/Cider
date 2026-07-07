@@ -2,7 +2,8 @@ Class {
 	#name : 'CiderSpecBackend',
 	#superclass : 'SpApplicationBackend',
 	#instVars : [
-		'emitter'
+		'emitter',
+		'adaptersByNodeId'
 	],
 	#category : 'Cider-Spec-Backend',
 	#package : 'Cider-Spec',
@@ -22,6 +23,18 @@ CiderSpecBackend >> adapterBindingsClass [
 ]
 
 { #category : 'accessing' }
+CiderSpecBackend >> adapterForNodeId: aString [
+
+	^ self adaptersByNodeId at: aString ifAbsent: [ nil ]
+]
+
+{ #category : 'accessing' }
+CiderSpecBackend >> adaptersByNodeId [
+
+	^ adaptersByNodeId ifNil: [ adaptersByNodeId := Dictionary new ]
+]
+
+{ #category : 'accessing' }
 CiderSpecBackend >> componentListClass [
 
 	^ SpComponentListPresenter
@@ -31,6 +44,22 @@ CiderSpecBackend >> componentListClass [
 CiderSpecBackend >> defaultConfigurationFor: anApplication [
 
 	^ SpApplicationConfiguration new
+]
+
+{ #category : 'events' }
+CiderSpecBackend >> dispatchIncomingEvent: aDictionary [
+	| receiver selector id adapter |
+
+	receiver := aDictionary at: 'receiver' ifAbsent: [ '' ].
+	selector := aDictionary at: 'selector' ifAbsent: [ '' ].
+	id := aDictionary at: 'id' ifAbsent: [ '' ].
+
+	(receiver = 'SpButtonPresenter' and: [ selector = 'click' ])
+		ifFalse: [ ^ self ].
+
+	adapter := self adapterForNodeId: id.
+	(adapter notNil and: [ adapter respondsTo: #click ])
+		ifTrue: [ adapter click ]
 ]
 
 { #category : 'ui' }
@@ -87,6 +116,12 @@ CiderSpecBackend >> notifyError: aSpecNotification [
 CiderSpecBackend >> notifyInfo: aSpecNotification [
 
 	self inform: aSpecNotification message
+]
+
+{ #category : 'accessing' }
+CiderSpecBackend >> registerAdapter: anAdapter forNode: aNode [
+
+	self adaptersByNodeId at: aNode id put: anAdapter
 ]
 
 { #category : 'ui - dialogs' }
