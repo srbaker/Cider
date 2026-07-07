@@ -3,7 +3,7 @@ import SwiftUI
 
 @main
 struct CiderApp: App {
-    @State private var model = CiderAppModel()
+    @State private var model = CiderAppModel.helloWorld
 
     var body: some Scene {
         WindowGroup(model.title) {
