@@ -163,6 +163,10 @@ public struct CiderSpecModel: Equatable, Sendable {
         self.codePresenters = codePresenters
     }
 
+    public var primaryWindow: SpWindowPresenter? {
+        windows.values.sorted { $0.id < $1.id }.first
+    }
+
     public static func build(from events: [CiderWireEvent]) throws -> CiderSpecModel {
         var model = CiderSpecModel()
 

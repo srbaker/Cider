@@ -53,6 +53,8 @@ import Testing
 @Test func ciderSpecModelReconstructsHelloWorldTree() throws {
     let model = try CiderWireFixture.helloWorldModel()
 
+    #expect(model.primaryWindow?.title == "Cider Hello")
+    #expect(CiderAppModel(specModel: model).title == "Cider Hello")
     #expect(model.windows["n1"]?.presenter == "CiderHelloWorldPresenter")
     #expect(model.windows["n1"]?.title == "Cider Hello")
     #expect(model.windows["n1"]?.presenterLayout == "n2")

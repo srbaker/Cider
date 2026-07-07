@@ -6,6 +6,6 @@ public struct CiderAppModel: Equatable, Sendable {
     }
 
     public var title: String {
-        "Cider"
+        specModel?.primaryWindow?.title ?? "Cider"
     }
 }
