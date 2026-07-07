@@ -19,7 +19,7 @@ CiderHelloWorldWireTest >> testHelloWorldPresenterEmitsWindowBoxLabelAndEdges [
 
 	output := stream contents.
 	lines := output lines.
-	self assert: lines size equals: 7.
+	self assert: lines size equals: 9.
 	self assert: (lines first beginsWith: 'CIDER:').
 	self assert: lines first equals: 'CIDER:{"receiver":"SpWindowPresenter","selector":"open","id":"n1","adapter":"WindowAdapter","presenter":"CiderHelloWorldPresenter","title":"Cider Hello"}'.
 	self assert: lines second equals: 'CIDER:{"receiver":"SpBoxLayout","selector":"build","id":"n2","adapter":"BoxAdapter","direction":"topToBottom"}'.
@@ -27,5 +27,7 @@ CiderHelloWorldWireTest >> testHelloWorldPresenterEmitsWindowBoxLabelAndEdges [
 	self assert: lines fourth equals: 'CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n3","expand":false}'.
 	self assert: lines fifth equals: 'CIDER:{"receiver":"SpButtonPresenter","selector":"build","id":"n4","adapter":"ButtonAdapter","label":"Click me!","enabled":true}'.
 	self assert: lines sixth equals: 'CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n4","expand":false}'.
-	self assert: lines seventh equals: 'CIDER:{"receiver":"SpWindowPresenter","selector":"presenter:","id":"n1","presenterLayout":"n2"}'
+	self assert: lines seventh equals: 'CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"build","id":"n5","adapter":"TextInputFieldAdapter","text":"Editable text","placeholder":"Type here","editable":true,"password":false}'.
+	self assert: lines eighth equals: 'CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n5","expand":false}'.
+	self assert: lines ninth equals: 'CIDER:{"receiver":"SpWindowPresenter","selector":"presenter:","id":"n1","presenterLayout":"n2"}'
 ]

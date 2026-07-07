@@ -3,7 +3,8 @@ Class {
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'label',
-		'button'
+		'button',
+		'input'
 	],
 	#category : 'Cider-Spec-Examples',
 	#package : 'Cider-Spec-Examples'
@@ -15,6 +16,7 @@ CiderHelloWorldPresenter >> defaultLayout [
 	^ SpBoxLayout newTopToBottom
 		add: label expand: false;
 		add: button expand: false;
+		add: input expand: false;
 		yourself
 ]
 
@@ -25,13 +27,24 @@ CiderHelloWorldPresenter >> initializePresenters [
 	label label: 'Hello, World!'.
 
 	button := self newButton.
-	button label: 'Click me!'
+	button label: 'Click me!'.
+
+	input := self newTextInput.
+	input
+		placeholder: 'Type here';
+		text: 'Editable text'
 ]
 
 { #category : 'accessing' }
 CiderHelloWorldPresenter >> button [
 
 	^ button
+]
+
+{ #category : 'accessing' }
+CiderHelloWorldPresenter >> input [
+
+	^ input
 ]
 
 { #category : 'accessing' }

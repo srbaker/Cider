@@ -6,6 +6,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case boxLayoutBuild
         case labelPresenterBuild
         case buttonPresenterBuild
+        case textInputFieldPresenterBuild
         case boxLayoutAdd
         case windowPresenterSet
         case unknown(receiver: String, selector: String)
@@ -20,6 +21,10 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public var direction: String?
     public var label: String?
     public var enabled: Bool?
+    public var text: String?
+    public var placeholder: String?
+    public var editable: Bool?
+    public var password: Bool?
     public var child: String?
     public var expand: Bool?
     public var presenterLayout: String?
@@ -34,6 +39,10 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         direction: String? = nil,
         label: String? = nil,
         enabled: Bool? = nil,
+        text: String? = nil,
+        placeholder: String? = nil,
+        editable: Bool? = nil,
+        password: Bool? = nil,
         child: String? = nil,
         expand: Bool? = nil,
         presenterLayout: String? = nil
@@ -47,6 +56,10 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         self.direction = direction
         self.label = label
         self.enabled = enabled
+        self.text = text
+        self.placeholder = placeholder
+        self.editable = editable
+        self.password = password
         self.child = child
         self.expand = expand
         self.presenterLayout = presenterLayout
@@ -62,6 +75,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .labelPresenterBuild
         case ("SpButtonPresenter", "build"):
             .buttonPresenterBuild
+        case ("SpTextInputFieldPresenter", "build"):
+            .textInputFieldPresenterBuild
         case ("SpBoxLayout", "add:expand:"):
             .boxLayoutAdd
         case ("SpWindowPresenter", "presenter:"):

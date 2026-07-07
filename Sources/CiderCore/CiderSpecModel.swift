@@ -57,11 +57,34 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct SpTextInputFieldPresenter: Equatable, Sendable {
+        public var id: String
+        public var text: String
+        public var placeholder: String
+        public var editable: Bool
+        public var password: Bool
+
+        public init(
+            id: String,
+            text: String,
+            placeholder: String,
+            editable: Bool,
+            password: Bool
+        ) {
+            self.id = id
+            self.text = text
+            self.placeholder = placeholder
+            self.editable = editable
+            self.password = password
+        }
+    }
+
     public enum BuildError: Error, Equatable, Sendable {
         case missingWindowPayload(String)
         case missingBoxPayload(String)
         case missingLabelPayload(String)
         case missingButtonPayload(String)
+        case missingTextInputFieldPayload(String)
         case missingBoxChildPayload(String)
         case missingWindowPresenterPayload(String)
         case unknownBox(String)
@@ -72,17 +95,20 @@ public struct CiderSpecModel: Equatable, Sendable {
     public var boxLayouts: [String: SpBoxLayout]
     public var labels: [String: SpLabelPresenter]
     public var buttons: [String: SpButtonPresenter]
+    public var textInputFields: [String: SpTextInputFieldPresenter]
 
     public init(
         windows: [String: SpWindowPresenter] = [:],
         boxLayouts: [String: SpBoxLayout] = [:],
         labels: [String: SpLabelPresenter] = [:],
-        buttons: [String: SpButtonPresenter] = [:]
+        buttons: [String: SpButtonPresenter] = [:],
+        textInputFields: [String: SpTextInputFieldPresenter] = [:]
     ) {
         self.windows = windows
         self.boxLayouts = boxLayouts
         self.labels = labels
         self.buttons = buttons
+        self.textInputFields = textInputFields
     }
 
     public static func build(from events: [CiderWireEvent]) throws -> CiderSpecModel {
@@ -120,6 +146,23 @@ public struct CiderSpecModel: Equatable, Sendable {
                     id: event.id,
                     label: label,
                     enabled: enabled
+                )
+
+            case .textInputFieldPresenterBuild:
+                guard
+                    let text = event.text,
+                    let placeholder = event.placeholder,
+                    let editable = event.editable,
+                    let password = event.password
+                else {
+                    throw BuildError.missingTextInputFieldPayload(event.id)
+                }
+                model.textInputFields[event.id] = SpTextInputFieldPresenter(
+                    id: event.id,
+                    text: text,
+                    placeholder: placeholder,
+                    editable: editable,
+                    password: password
                 )
 
             case .boxLayoutAdd:

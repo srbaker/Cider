@@ -70,6 +70,20 @@ CiderWireEmitter >> labelPresenterBuilt: aNode text: aString [
 		#label -> aString }
 ]
 
+{ #category : 'emitting' }
+CiderWireEmitter >> textInputFieldPresenterBuilt: aNode text: aString placeholder: placeholderString editable: editableBoolean password: passwordBoolean [
+
+	self emit: {
+		#receiver -> 'SpTextInputFieldPresenter'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'TextInputFieldAdapter'.
+		#text -> aString.
+		#placeholder -> placeholderString.
+		#editable -> editableBoolean.
+		#password -> passwordBoolean }
+]
+
 { #category : 'initialization' }
 CiderWireEmitter >> initialize [
 

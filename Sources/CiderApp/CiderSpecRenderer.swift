@@ -25,8 +25,22 @@ struct CiderSpecRenderer: View {
         } else if let button = model.buttons[id] {
             return AnyView(Button(button.label) {}
                 .disabled(!button.enabled))
+        } else if let textInputField = model.textInputFields[id] {
+            return renderTextInputField(textInputField)
         } else {
             return AnyView(EmptyView())
+        }
+    }
+
+    private func renderTextInputField(_ textInputField: CiderSpecModel.SpTextInputFieldPresenter) -> AnyView {
+        let text = Binding.constant(textInputField.text)
+
+        if textInputField.password {
+            return AnyView(SecureField(textInputField.placeholder, text: text)
+                .disabled(!textInputField.editable))
+        } else {
+            return AnyView(TextField(textInputField.placeholder, text: text)
+                .disabled(!textInputField.editable))
         }
     }
 
