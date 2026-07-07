@@ -95,6 +95,16 @@ public final class CiderPharoLiveSession: @unchecked Sendable {
         try await send(event)
     }
 
+    public func selectListIndexes(id: String, indexes: [Int]) async throws {
+        let event = CiderWireEvent(
+            receiver: "SpListPresenter",
+            selector: "selectedIndexes:",
+            id: id,
+            selectedIndexes: indexes
+        )
+        try await send(event)
+    }
+
     public func send(_ event: CiderWireEvent) async throws {
         try await withCheckedThrowingContinuation { continuation in
             writeQueue.async {

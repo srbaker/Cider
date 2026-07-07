@@ -3,7 +3,8 @@ Class {
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'label',
-		'button'
+		'button',
+		'list'
 	],
 	#category : 'Cider-Spec-Examples',
 	#package : 'Cider-Spec-Examples'
@@ -15,6 +16,7 @@ CiderInteractiveClickPresenter >> defaultLayout [
 	^ SpBoxLayout newTopToBottom
 		add: label expand: false;
 		add: button expand: false;
+		add: list expand: true;
 		yourself
 ]
 
@@ -27,7 +29,13 @@ CiderInteractiveClickPresenter >> initializePresenters [
 	button := self newButton.
 	button
 		label: 'Click';
-		action: [ label label: 'Clicked' ]
+		action: [ label label: 'Clicked' ].
+
+	list := self newList.
+	list items: #( 'Alpha' 'Beta' 'Gamma' ).
+	list whenSelectionChangedDo: [ :selection |
+		selection selectedItem ifNotNil: [ :item |
+			label label: 'Selected ' , item ] ]
 ]
 
 { #category : 'accessing' }
@@ -40,6 +48,12 @@ CiderInteractiveClickPresenter >> button [
 CiderInteractiveClickPresenter >> label [
 
 	^ label
+]
+
+{ #category : 'accessing' }
+CiderInteractiveClickPresenter >> list [
+
+	^ list
 ]
 
 { #category : 'accessing' }

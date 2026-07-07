@@ -4,6 +4,7 @@ import SwiftUI
 struct CiderSpecRenderer: View {
     let model: CiderSpecModel
     let onButtonClick: (String) -> Void
+    let onListSelection: (String, [Int]) -> Void
 
     private var rootWindow: CiderSpecModel.SpWindowPresenter? {
         model.windows.values.sorted { $0.id < $1.id }.first
@@ -167,14 +168,19 @@ struct CiderSpecRenderer: View {
 
     private func renderList(_ list: CiderSpecModel.SpListPresenter) -> AnyView {
         AnyView(List(Array(list.items.enumerated()), id: \.offset) { index, item in
-            Text(item)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.vertical, 2)
-                .listRowBackground(
-                    list.selectedIndexes.contains(index + 1)
-                        ? Color.accentColor.opacity(0.18)
-                        : Color.clear
-                )
+            Button {
+                onListSelection(list.id, [index + 1])
+            } label: {
+                Text(item)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 2)
+            }
+            .buttonStyle(.plain)
+            .listRowBackground(
+                list.selectedIndexes.contains(index + 1)
+                    ? Color.accentColor.opacity(0.18)
+                    : Color.clear
+            )
         }
         .frame(minHeight: 120))
     }

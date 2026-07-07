@@ -155,6 +155,16 @@ CiderWireEmitter >> listPresenterBuilt: aNode items: itemStrings selectedIndexes
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> listPresenter: aNode selectedIndexesChangedTo: indexes [
+
+	self emit: {
+		#receiver -> 'SpListPresenter'.
+		#selector -> 'selectedIndexes:'.
+		#id -> aNode id.
+		#selectedIndexes -> indexes }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> millerLayout: aNode added: childNode [
 
 	self emit: {

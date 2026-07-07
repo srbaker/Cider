@@ -15,6 +15,10 @@ struct CiderApp: App {
                 Task {
                     await clickButton(id: id)
                 }
+            } onListSelection: { id, indexes in
+                Task {
+                    await selectListIndexes(id: id, indexes: indexes)
+                }
             }
                 .frame(minWidth: 720, minHeight: 480)
                 .task {
@@ -46,6 +50,11 @@ struct CiderApp: App {
     @MainActor
     private func clickButton(id: String) async {
         try? await session?.clickButton(id: id)
+    }
+
+    @MainActor
+    private func selectListIndexes(id: String, indexes: [Int]) async {
+        try? await session?.selectListIndexes(id: id, indexes: indexes)
     }
 
     @MainActor

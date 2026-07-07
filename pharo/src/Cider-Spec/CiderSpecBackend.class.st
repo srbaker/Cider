@@ -53,13 +53,18 @@ CiderSpecBackend >> dispatchIncomingEvent: aDictionary [
 	receiver := aDictionary at: 'receiver' ifAbsent: [ '' ].
 	selector := aDictionary at: 'selector' ifAbsent: [ '' ].
 	id := aDictionary at: 'id' ifAbsent: [ '' ].
+	adapter := self adapterForNodeId: id.
 
 	(receiver = 'SpButtonPresenter' and: [ selector = 'click' ])
-		ifFalse: [ ^ self ].
+		ifTrue: [
+			(adapter notNil and: [ adapter respondsTo: #click ])
+				ifTrue: [ adapter click ].
+			^ self ].
 
-	adapter := self adapterForNodeId: id.
-	(adapter notNil and: [ adapter respondsTo: #click ])
-		ifTrue: [ adapter click ]
+	(receiver = 'SpListPresenter' and: [ selector = 'selectedIndexes:' ])
+		ifTrue: [
+			(adapter notNil and: [ adapter respondsTo: #selectedIndexes: ])
+				ifTrue: [ adapter selectedIndexes: (aDictionary at: 'selectedIndexes' ifAbsent: [ #() ]) ] ]
 ]
 
 { #category : 'ui' }
