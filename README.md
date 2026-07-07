@@ -23,7 +23,7 @@ Run the app demo with:
 scripts/demo
 ```
 
-This prepares the local Pharo image and launches the SwiftUI app. The app asks Pharo for the Hello World Spec slice at runtime and falls back to the bundled fixture if the live bridge is unavailable.
+This prepares the local Pharo image, builds `.build/Cider.app`, and launches the SwiftUI app. The app asks Pharo for the Hello World Spec slice at runtime and falls back to the bundled fixture if the live bridge is unavailable.
 
 Run the full local check with:
 

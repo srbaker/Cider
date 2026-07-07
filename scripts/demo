@@ -18,9 +18,62 @@ mkdir -p \
 
 cd "${ROOT_DIR}"
 
-swift run \
+swift build \
+  --disable-sandbox \
+  --cache-path "${SWIFTPM_CACHE_DIR}" \
+  --config-path "${SWIFTPM_CONFIG_DIR}" \
+  --security-path "${SWIFTPM_SECURITY_DIR}"
+
+BIN_DIR="$(swift build \
   --disable-sandbox \
   --cache-path "${SWIFTPM_CACHE_DIR}" \
   --config-path "${SWIFTPM_CONFIG_DIR}" \
   --security-path "${SWIFTPM_SECURITY_DIR}" \
-  Cider
+  --show-bin-path)"
+
+APP_BUNDLE="${ROOT_DIR}/.build/Cider.app"
+APP_CONTENTS="${APP_BUNDLE}/Contents"
+APP_MACOS="${APP_CONTENTS}/MacOS"
+
+rm -rf "${APP_BUNDLE}"
+mkdir -p "${APP_MACOS}"
+
+cp "${BIN_DIR}/Cider" "${APP_MACOS}/CiderBinary"
+cp -R "${BIN_DIR}/Cider_CiderCore.bundle" "${APP_BUNDLE}/Cider_CiderCore.bundle"
+
+cat > "${APP_CONTENTS}/Info.plist" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleExecutable</key>
+  <string>Cider</string>
+  <key>CFBundleIdentifier</key>
+  <string>dev.sidechain.Cider</string>
+  <key>CFBundleName</key>
+  <string>Cider</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>0.1.0</string>
+  <key>LSMinimumSystemVersion</key>
+  <string>14.0</string>
+  <key>NSPrincipalClass</key>
+  <string>NSApplication</string>
+</dict>
+</plist>
+PLIST
+
+cat > "${APP_MACOS}/Cider" <<LAUNCHER
+#!/usr/bin/env bash
+set -euo pipefail
+cd "${ROOT_DIR}"
+exec "\$(dirname "\$0")/CiderBinary"
+LAUNCHER
+chmod +x "${APP_MACOS}/Cider"
+
+if [[ "${CIDER_DEMO_OPEN:-1}" == "1" ]]; then
+  open -n "${APP_BUNDLE}"
+else
+  echo "Built demo app: ${APP_BUNDLE}"
+fi
