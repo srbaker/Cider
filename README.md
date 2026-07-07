@@ -4,11 +4,14 @@ Cider is a macOS-first SwiftUI frontend for Smalltalk. The Swift app will receiv
 
 Phase 0 establishes the project floor: SwiftPM structure, a minimal SwiftUI app shell, a pure Swift core module, Swift Testing coverage, and a headless Pharo availability check.
 
+Phase 1 adds the first Spec-shaped wire slice. A minimal Pharo Spec application emits `CIDER:`-prefixed NDJSON records whose payloads use Spec vocabulary such as `SpWindowPresenter`, `SpBoxLayout`, `SpLabelPresenter`, adapter names, selectors, and presenter relationships.
+
 ## Requirements
 
 - Swift 6.3 or newer
 - macOS 14 or newer for the SwiftUI app target
-- A local Pharo installation on `PATH` for headless bootstrap checks
+- A local Pharo 13.1 installation on `PATH` for headless bootstrap checks
+- `CIDER_PHARO_IMAGE` pointing at a local Pharo 13.1 image for Pharo tests
 
 Pharo is intentionally local-first in this phase. Containerized Pharo is deferred until the CI and reproducibility work.
 
@@ -39,3 +42,11 @@ scripts/bootstrap-pharo
 - `CiderCoreTests` contains Swift Testing coverage for core behavior.
 
 The actual Spec adapter protocol, transport, serialization format, and widget schema are not defined in Phase 0.
+
+## Pharo Packages
+
+The Pharo code lives in Tonel format under `pharo/src`:
+
+- `Cider-Spec` contains the Spec backend, adapters, and wire emitter.
+- `Cider-Spec-Examples` contains the Hello World Spec application.
+- `Cider-Spec-Tests` contains the SUnit wire test.

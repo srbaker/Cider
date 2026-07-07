@@ -5,5 +5,31 @@ import Testing
     let model = CiderAppModel()
 
     #expect(model.title == "Cider")
-    #expect(CiderWireProtocol.Placeholder() == CiderWireProtocol.Placeholder())
+}
+
+@Test func ciderWireDecoderParsesSpecShapedEvents() throws {
+    let ndjson = """
+    CIDER:{"receiver":"SpWindowPresenter","selector":"open","id":"n1","adapter":"WindowAdapter","presenter":"CiderHelloWorldPresenter","title":"Cider Hello"}
+    CIDER:{"receiver":"SpBoxLayout","selector":"build","id":"n2","adapter":"BoxAdapter","direction":"topToBottom"}
+    CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n3","adapter":"LabelAdapter","label":"Hello, World!"}
+    CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n3","expand":false}
+    CIDER:{"receiver":"SpWindowPresenter","selector":"presenter:","id":"n1","presenterLayout":"n2"}
+    """
+
+    let events = try CiderWireEventDecoder.decodeEvents(from: ndjson)
+
+    #expect(events.map(\.kind) == [
+        .windowOpen,
+        .boxLayoutBuild,
+        .labelPresenterBuild,
+        .boxLayoutAdd,
+        .windowPresenterSet
+    ])
+    #expect(events[0].presenter == "CiderHelloWorldPresenter")
+    #expect(events[0].title == "Cider Hello")
+    #expect(events[1].direction == "topToBottom")
+    #expect(events[2].label == "Hello, World!")
+    #expect(events[3].child == "n3")
+    #expect(events[3].expand == false)
+    #expect(events[4].presenterLayout == "n2")
 }
