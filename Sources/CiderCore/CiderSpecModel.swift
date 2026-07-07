@@ -414,6 +414,16 @@ public struct CiderSpecModel: Equatable, Sendable {
                     selectedIndex: selectedIndex
                 )
 
+            case .dropListPresenterSelectIndex:
+                guard let selectedIndex = event.selectedIndex else {
+                    throw BuildError.missingDropListPayload(event.id)
+                }
+                guard var dropList = model.dropLists[event.id] else {
+                    throw BuildError.missingDropListPayload(event.id)
+                }
+                dropList.selectedIndex = selectedIndex
+                model.dropLists[event.id] = dropList
+
             case .textInputFieldPresenterBuild:
                 guard
                     let text = event.text,

@@ -76,7 +76,13 @@ CiderSpecBackend >> dispatchIncomingEvent: aDictionary [
 	(receiver = 'SpTextInputFieldPresenter' and: [ selector = 'text:' ])
 		ifTrue: [
 			(adapter notNil and: [ adapter respondsTo: #text: ])
-				ifTrue: [ adapter text: (aDictionary at: 'text' ifAbsent: [ '' ]) ] ]
+				ifTrue: [ adapter text: (aDictionary at: 'text' ifAbsent: [ '' ]) ].
+			^ self ].
+
+	(receiver = 'SpDropListPresenter' and: [ selector = 'selectIndex:' ])
+		ifTrue: [
+			(adapter notNil and: [ adapter respondsTo: #selectIndex: ])
+				ifTrue: [ adapter selectIndex: (aDictionary at: 'selectedIndex' ifAbsent: [ 0 ]) ] ]
 ]
 
 { #category : 'ui' }

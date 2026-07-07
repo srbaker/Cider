@@ -136,6 +136,23 @@ CiderWireEmitterTest >> testDropListPresenterBuildsSpecShapedEvent [
 ]
 
 { #category : 'tests' }
+CiderWireEmitterTest >> testDropListPresenterSelectionUpdateBuildsSpecShapedEvent [
+	| stream emitter node |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #DropListAdapter.
+
+	emitter
+		dropListPresenter: node
+		selectedIndexChangedTo: 2.
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"SpDropListPresenter","selector":"selectIndex:","id":"n1","selectedIndex":2}'
+]
+
+{ #category : 'tests' }
 CiderWireEmitterTest >> testMicScrolledTextMorphBuildsAsNamedMorph [
 	| stream emitter node |
 

@@ -87,6 +87,44 @@ CiderInteractiveClickWireTest >> testTextInputDispatchesTextAndEmitsLabelUpdate 
 ]
 
 { #category : 'tests' }
+CiderInteractiveClickWireTest >> testDropListSelectionDispatchesSelectionAndEmitsLabelUpdate [
+	| stream emitter application presenter lines dropListLine dropListId labelLine labelId |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	application := StPharoApplication new.
+	application useBackend: #Cider.
+	application backend emitter: emitter.
+
+	presenter := application newPresenter: CiderInteractiveClickPresenter.
+	presenter open.
+
+	lines := stream contents lines.
+	labelLine := lines detect: [ :line |
+		(line includesSubstring: '"receiver":"SpLabelPresenter"')
+			and: [ line includesSubstring: '"label":"Not clicked"' ] ].
+	labelId := self idFromLine: labelLine.
+	dropListLine := lines detect: [ :line |
+		(line includesSubstring: '"receiver":"SpDropListPresenter"')
+			and: [ line includesSubstring: '"Two"' ] ].
+	dropListId := self idFromLine: dropListLine.
+
+	application backend dispatchIncomingEvent: (Dictionary new
+		at: 'receiver' put: 'SpDropListPresenter';
+		at: 'selector' put: 'selectIndex:';
+		at: 'id' put: dropListId;
+		at: 'selectedIndex' put: 2;
+		yourself).
+
+	self assert: presenter dropList selectedIndex equals: 2.
+	self assert: presenter label label equals: 'Choice Two'.
+	self assert: (stream contents lines anySatisfy: [ :line |
+		line = ('CIDER:{"receiver":"SpDropListPresenter","selector":"selectIndex:","id":"' , dropListId , '","selectedIndex":2}') ]).
+	self assert: (stream contents lines anySatisfy: [ :line |
+		line = ('CIDER:{"receiver":"SpLabelPresenter","selector":"label:","id":"' , labelId , '","label":"Choice Two"}') ])
+]
+
+{ #category : 'tests' }
 CiderInteractiveClickWireTest >> testListSelectionDispatchesSelectionAndEmitsLabelUpdate [
 	| stream emitter application presenter lines listLine listId labelLine labelId |
 

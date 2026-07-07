@@ -19,6 +19,10 @@ struct CiderApp: App {
                 Task {
                     await setTextInput(id: id, text: text)
                 }
+            } onDropListSelection: { id, index in
+                Task {
+                    await selectDropListIndex(id: id, index: index)
+                }
             } onListSelection: { id, indexes in
                 Task {
                     await selectListIndexes(id: id, indexes: indexes)
@@ -63,6 +67,11 @@ struct CiderApp: App {
     @MainActor
     private func setTextInput(id: String, text: String) async {
         try? await session?.setTextInput(id: id, text: text)
+    }
+
+    @MainActor
+    private func selectDropListIndex(id: String, index: Int) async {
+        try? await session?.selectDropListIndex(id: id, index: index)
     }
 
     @MainActor

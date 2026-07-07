@@ -249,6 +249,25 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelAppliesDropListSelectionUpdates() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpDropListPresenter","selector":"build","id":"n1","adapter":"DropListAdapter","items":["One","Two","Three"],"selectedIndex":1}
+    CIDER:{"receiver":"SpDropListPresenter","selector":"selectIndex:","id":"n1","selectedIndex":2}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.map(\.kind) == [
+        .dropListPresenterBuild,
+        .dropListPresenterSelectIndex
+    ])
+    #expect(model.dropLists["n1"] == CiderSpecModel.SpDropListPresenter(
+        id: "n1",
+        items: ["One", "Two", "Three"],
+        selectedIndex: 2
+    ))
+}
+
 @Test func ciderSpecModelReconstructsTreePresenter() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpTreePresenter","selector":"build","id":"n1","adapter":"TreeAdapter","roots":["Passed","Failures"],"nodes":[{"path":[1],"label":"Passed"},{"path":[1,1],"label":"CiderWireEmitterTest>>#testWideStringValuesStayByteOriented"},{"path":[2],"label":"Failures"}],"selectedPaths":[[1]]}

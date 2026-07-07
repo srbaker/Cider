@@ -5,6 +5,7 @@ struct CiderSpecRenderer: View {
     let model: CiderSpecModel
     let onButtonClick: (String) -> Void
     let onTextInputChange: (String, String) -> Void
+    let onDropListSelection: (String, Int) -> Void
     let onListSelection: (String, [Int]) -> Void
     let onTreeSelection: (String, [[Int]]) -> Void
 
@@ -115,18 +116,17 @@ struct CiderSpecRenderer: View {
     }
 
     private func renderDropList(_ dropList: CiderSpecModel.SpDropListPresenter) -> AnyView {
-        let selectedIndex = max(dropList.selectedIndex - 1, 0)
-        let selectedItem = dropList.items.indices.contains(selectedIndex)
-            ? dropList.items[selectedIndex]
-            : dropList.items.first ?? ""
+        let selection = Binding(
+            get: { dropList.selectedIndex },
+            set: { onDropListSelection(dropList.id, $0) }
+        )
 
-        return AnyView(Picker("", selection: .constant(selectedItem)) {
-            ForEach(dropList.items, id: \.self) { item in
-                Text(item).tag(item)
+        return AnyView(Picker("", selection: selection) {
+            ForEach(Array(dropList.items.enumerated()), id: \.offset) { index, item in
+                Text(item).tag(index + 1)
             }
         }
-        .labelsHidden()
-        .disabled(true))
+        .labelsHidden())
     }
 
     private func renderNativeWidget(_ nativeWidget: CiderSpecModel.SpNativeWidget) -> AnyView {

@@ -6,7 +6,8 @@ Class {
 		'button',
 		'list',
 		'tree',
-		'input'
+		'input',
+		'dropList'
 	],
 	#category : 'Cider-Spec-Examples',
 	#package : 'Cider-Spec-Examples'
@@ -19,6 +20,7 @@ CiderInteractiveClickPresenter >> defaultLayout [
 		add: label expand: false;
 		add: button expand: false;
 		add: input expand: false;
+		add: dropList expand: false;
 		add: list expand: true;
 		add: tree expand: true;
 		yourself
@@ -41,6 +43,12 @@ CiderInteractiveClickPresenter >> initializePresenters [
 		text: 'Editable text'.
 	input whenTextChangedDo: [ :text |
 		label label: 'Typed ' , text asString ].
+
+	dropList := self newDropList.
+	dropList items: #( 'One' 'Two' 'Three' ).
+	dropList whenSelectionChangedDo: [
+		dropList selectedItem ifNotNil: [ :item |
+			label label: 'Choice ' , item ] ].
 
 	list := self newList.
 	list items: #( 'Alpha' 'Beta' 'Gamma' ).
@@ -79,6 +87,12 @@ CiderInteractiveClickPresenter >> label [
 CiderInteractiveClickPresenter >> input [
 
 	^ input
+]
+
+{ #category : 'accessing' }
+CiderInteractiveClickPresenter >> dropList [
+
+	^ dropList
 ]
 
 { #category : 'accessing' }

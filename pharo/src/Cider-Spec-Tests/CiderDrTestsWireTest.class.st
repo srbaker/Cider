@@ -22,7 +22,8 @@ CiderDrTestsWireTest >> testDrTestsEmitsRealSUnitRunnerShape [
 	self assert: lines notEmpty.
 	self assert: lines first equals: 'CIDER:{"receiver":"SpWindowPresenter","selector":"open","id":"n1","adapter":"WindowAdapter","presenter":"DrTests","title":"Dr Tests - Tests Runner"}'.
 	self assert: (lines anySatisfy: [ :line | line includesSubstring: '"receiver":"SpDropListPresenter"' ]).
-	self assert: (lines anySatisfy: [ :line | line includesSubstring: '"Tests Runner"' ]).
+	self assert: (lines anySatisfy: [ :line | line includesSubstring: 'Dr Tests - Tests Runner' ]).
+	self assert: (lines anySatisfy: [ :line | line includesSubstring: '"DTTestsRunnerPlugin"' ]).
 	self assert: (lines anySatisfy: [ :line | line includesSubstring: '"receiver":"SpListPresenter"' ]).
 	self assert: (lines anySatisfy: [ :line | line includesSubstring: '"Cider-Spec-Tests"' ]).
 	self assert: (lines anySatisfy: [ :line | line includesSubstring: '"receiver":"SpTreePresenter"' ]).

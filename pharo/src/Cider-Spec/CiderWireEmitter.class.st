@@ -98,6 +98,16 @@ CiderWireEmitter >> dropListPresenterBuilt: aNode items: itemStrings selectedInd
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> dropListPresenter: aNode selectedIndexChangedTo: selectedIndex [
+
+	self emit: {
+		#receiver -> 'SpDropListPresenter'.
+		#selector -> 'selectIndex:'.
+		#id -> aNode id.
+		#selectedIndex -> selectedIndex }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> emit: associations [
 
 	stream
