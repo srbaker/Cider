@@ -79,12 +79,23 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct SpListPresenter: Equatable, Sendable {
+        public var id: String
+        public var items: [String]
+
+        public init(id: String, items: [String]) {
+            self.id = id
+            self.items = items
+        }
+    }
+
     public enum BuildError: Error, Equatable, Sendable {
         case missingWindowPayload(String)
         case missingBoxPayload(String)
         case missingLabelPayload(String)
         case missingButtonPayload(String)
         case missingTextInputFieldPayload(String)
+        case missingListPayload(String)
         case missingBoxChildPayload(String)
         case missingWindowPresenterPayload(String)
         case unknownBox(String)
@@ -96,19 +107,22 @@ public struct CiderSpecModel: Equatable, Sendable {
     public var labels: [String: SpLabelPresenter]
     public var buttons: [String: SpButtonPresenter]
     public var textInputFields: [String: SpTextInputFieldPresenter]
+    public var lists: [String: SpListPresenter]
 
     public init(
         windows: [String: SpWindowPresenter] = [:],
         boxLayouts: [String: SpBoxLayout] = [:],
         labels: [String: SpLabelPresenter] = [:],
         buttons: [String: SpButtonPresenter] = [:],
-        textInputFields: [String: SpTextInputFieldPresenter] = [:]
+        textInputFields: [String: SpTextInputFieldPresenter] = [:],
+        lists: [String: SpListPresenter] = [:]
     ) {
         self.windows = windows
         self.boxLayouts = boxLayouts
         self.labels = labels
         self.buttons = buttons
         self.textInputFields = textInputFields
+        self.lists = lists
     }
 
     public static func build(from events: [CiderWireEvent]) throws -> CiderSpecModel {
@@ -164,6 +178,12 @@ public struct CiderSpecModel: Equatable, Sendable {
                     editable: editable,
                     password: password
                 )
+
+            case .listPresenterBuild:
+                guard let items = event.items else {
+                    throw BuildError.missingListPayload(event.id)
+                }
+                model.lists[event.id] = SpListPresenter(id: event.id, items: items)
 
             case .boxLayoutAdd:
                 guard let child = event.child, let expand = event.expand else {

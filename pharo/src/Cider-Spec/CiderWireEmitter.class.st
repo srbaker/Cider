@@ -71,6 +71,17 @@ CiderWireEmitter >> labelPresenterBuilt: aNode text: aString [
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> listPresenterBuilt: aNode items: itemStrings [
+
+	self emit: {
+		#receiver -> 'SpListPresenter'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'ListAdapter'.
+		#items -> itemStrings }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> textInputFieldPresenterBuilt: aNode text: aString placeholder: placeholderString editable: editableBoolean password: passwordBoolean [
 
 	self emit: {
@@ -137,8 +148,20 @@ CiderWireEmitter >> jsonValue: anObject [
 	anObject isString ifTrue: [ ^ self jsonString: anObject ].
 	anObject isSymbol ifTrue: [ ^ self jsonString: anObject asString ].
 	anObject isNumber ifTrue: [ ^ anObject asString ].
+	anObject isCollection ifTrue: [ ^ self jsonArrayFrom: anObject ].
 	anObject ifNil: [ ^ 'null' ].
 	^ self jsonString: anObject asString
+]
+
+{ #category : 'private' }
+CiderWireEmitter >> jsonArrayFrom: aCollection [
+
+	^ String streamContents: [ :json |
+		json nextPut: $[.
+		aCollection doWithIndex: [ :item :index |
+			index > 1 ifTrue: [ json nextPut: $, ].
+			json nextPutAll: (self jsonValue: item) ].
+		json nextPut: $] ]
 ]
 
 { #category : 'instance creation' }

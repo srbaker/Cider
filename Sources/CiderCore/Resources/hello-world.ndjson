@@ -6,4 +6,6 @@ CIDER:{"receiver":"SpButtonPresenter","selector":"build","id":"n4","adapter":"Bu
 CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n4","expand":false}
 CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"build","id":"n5","adapter":"TextInputFieldAdapter","text":"Editable text","placeholder":"Type here","editable":true,"password":false}
 CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n5","expand":false}
+CIDER:{"receiver":"SpListPresenter","selector":"build","id":"n6","adapter":"ListAdapter","items":["Packages","Classes","Protocols","Methods"]}
+CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n6","expand":true}
 CIDER:{"receiver":"SpWindowPresenter","selector":"presenter:","id":"n1","presenterLayout":"n2"}

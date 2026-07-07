@@ -27,9 +27,18 @@ struct CiderSpecRenderer: View {
                 .disabled(!button.enabled))
         } else if let textInputField = model.textInputFields[id] {
             return renderTextInputField(textInputField)
+        } else if let list = model.lists[id] {
+            return renderList(list)
         } else {
             return AnyView(EmptyView())
         }
+    }
+
+    private func renderList(_ list: CiderSpecModel.SpListPresenter) -> AnyView {
+        AnyView(List(list.items, id: \.self) { item in
+            Text(item)
+        }
+        .frame(minHeight: 120))
     }
 
     private func renderTextInputField(_ textInputField: CiderSpecModel.SpTextInputFieldPresenter) -> AnyView {

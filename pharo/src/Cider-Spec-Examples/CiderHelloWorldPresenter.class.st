@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'label',
 		'button',
-		'input'
+		'input',
+		'list'
 	],
 	#category : 'Cider-Spec-Examples',
 	#package : 'Cider-Spec-Examples'
@@ -17,6 +18,7 @@ CiderHelloWorldPresenter >> defaultLayout [
 		add: label expand: false;
 		add: button expand: false;
 		add: input expand: false;
+		add: list expand: true;
 		yourself
 ]
 
@@ -32,7 +34,10 @@ CiderHelloWorldPresenter >> initializePresenters [
 	input := self newTextInput.
 	input
 		placeholder: 'Type here';
-		text: 'Editable text'
+		text: 'Editable text'.
+
+	list := self newList.
+	list items: #('Packages' 'Classes' 'Protocols' 'Methods')
 ]
 
 { #category : 'accessing' }
@@ -51,6 +56,12 @@ CiderHelloWorldPresenter >> input [
 CiderHelloWorldPresenter >> label [
 
 	^ label
+]
+
+{ #category : 'accessing' }
+CiderHelloWorldPresenter >> list [
+
+	^ list
 ]
 
 { #category : 'accessing' }

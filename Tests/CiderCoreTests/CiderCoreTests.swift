@@ -20,6 +20,8 @@ import Testing
         .boxLayoutAdd,
         .textInputFieldPresenterBuild,
         .boxLayoutAdd,
+        .listPresenterBuild,
+        .boxLayoutAdd,
         .windowPresenterSet
     ])
     #expect(events[0].presenter == "CiderHelloWorldPresenter")
@@ -38,7 +40,10 @@ import Testing
     #expect(events[6].password == false)
     #expect(events[7].child == "n5")
     #expect(events[7].expand == false)
-    #expect(events[8].presenterLayout == "n2")
+    #expect(events[8].items == ["Packages", "Classes", "Protocols", "Methods"])
+    #expect(events[9].child == "n6")
+    #expect(events[9].expand == true)
+    #expect(events[10].presenterLayout == "n2")
 }
 
 @Test func ciderSpecModelReconstructsHelloWorldTree() throws {
@@ -51,7 +56,8 @@ import Testing
     #expect(model.boxLayouts["n2"]?.children == [
         CiderSpecModel.SpBoxLayout.Child(id: "n3", expand: false),
         CiderSpecModel.SpBoxLayout.Child(id: "n4", expand: false),
-        CiderSpecModel.SpBoxLayout.Child(id: "n5", expand: false)
+        CiderSpecModel.SpBoxLayout.Child(id: "n5", expand: false),
+        CiderSpecModel.SpBoxLayout.Child(id: "n6", expand: true)
     ])
     #expect(model.labels["n3"]?.label == "Hello, World!")
     #expect(model.buttons["n4"]?.label == "Click me!")
@@ -60,6 +66,7 @@ import Testing
     #expect(model.textInputFields["n5"]?.placeholder == "Type here")
     #expect(model.textInputFields["n5"]?.editable == true)
     #expect(model.textInputFields["n5"]?.password == false)
+    #expect(model.lists["n6"]?.items == ["Packages", "Classes", "Protocols", "Methods"])
 }
 
 @Test func ciderWireOutputIgnoresNonProtocolLines() throws {
