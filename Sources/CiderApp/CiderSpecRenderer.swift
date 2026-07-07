@@ -10,6 +10,7 @@ struct CiderSpecRenderer: View {
     let onListSelection: (String, [Int]) -> Void
     let onTableSelection: (String, [Int]) -> Void
     let onTreeSelection: (String, [[Int]]) -> Void
+    let onTreeTableSelection: (String, [[Int]]) -> Void
 
     private var rootWindow: CiderSpecModel.SpWindowPresenter? {
         model.windows.values.sorted { $0.id < $1.id }.first
@@ -52,6 +53,8 @@ struct CiderSpecRenderer: View {
             return renderTable(table)
         } else if let tree = model.trees[id] {
             return renderTree(tree)
+        } else if let treeTable = model.treeTables[id] {
+            return renderTreeTable(treeTable)
         } else if let codePresenter = model.codePresenters[id] {
             return renderCodePresenter(codePresenter)
         } else if let micScrolledTextMorph = model.micScrolledTextMorphs[id] {
@@ -253,6 +256,46 @@ struct CiderSpecRenderer: View {
             )
         }
         .frame(minHeight: 120))
+    }
+
+    private func renderTreeTable(_ treeTable: CiderSpecModel.SpTreeTablePresenter) -> AnyView {
+        let columnCount = max(treeTable.columns.count, treeTable.nodes.map { $0.values.count }.max() ?? 0)
+        let gridColumns = Array(
+            repeating: GridItem(.flexible(minimum: 120, maximum: 1_000), spacing: 12, alignment: .leading),
+            count: max(columnCount, 1)
+        )
+
+        return AnyView(ScrollView([.horizontal, .vertical]) {
+            LazyVGrid(columns: gridColumns, alignment: .leading, spacing: 4) {
+                ForEach(0..<columnCount, id: \.self) { index in
+                    Text(index < treeTable.columns.count ? treeTable.columns[index] : "")
+                        .font(.headline)
+                }
+
+                ForEach(treeTable.nodes, id: \.path) { node in
+                    ForEach(0..<columnCount, id: \.self) { columnIndex in
+                        Button {
+                            onTreeTableSelection(treeTable.id, [node.path])
+                        } label: {
+                            Text(columnIndex < node.values.count ? node.values[columnIndex] : "")
+                                .lineLimit(1)
+                                .padding(.leading, columnIndex == 0 ? CGFloat(max(node.path.count - 1, 0) * 14) : 0)
+                                .padding(.vertical, 2)
+                                .padding(.horizontal, 4)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(
+                                    treeTable.selectedPaths.contains(node.path)
+                                        ? Color.accentColor.opacity(0.16)
+                                        : Color.clear
+                                )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+            .padding(6)
+        }
+        .frame(minHeight: 160))
     }
 
     private func renderTextInputField(_ textInputField: CiderSpecModel.SpTextInputFieldPresenter) -> AnyView {

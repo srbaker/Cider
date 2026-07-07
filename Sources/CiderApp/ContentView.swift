@@ -10,6 +10,7 @@ struct ContentView: View {
     let onListSelection: (String, [Int]) -> Void
     let onTableSelection: (String, [Int]) -> Void
     let onTreeSelection: (String, [[Int]]) -> Void
+    let onTreeTableSelection: (String, [[Int]]) -> Void
 
     var body: some View {
         Group {
@@ -22,7 +23,8 @@ struct ContentView: View {
                     onDropListSelection: onDropListSelection,
                     onListSelection: onListSelection,
                     onTableSelection: onTableSelection,
-                    onTreeSelection: onTreeSelection
+                    onTreeSelection: onTreeSelection,
+                    onTreeTableSelection: onTreeTableSelection
                 )
             } else {
                 Text(model.title)

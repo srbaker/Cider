@@ -343,6 +343,29 @@ CiderWireEmitter >> treePresenter: aNode selectedPathsChangedTo: selectedPaths [
 		#selectedPaths -> selectedPaths }
 ]
 
+{ #category : 'emitting' }
+CiderWireEmitter >> treeTablePresenterBuilt: aNode columns: columnStrings nodes: nodeDictionaries selectedPaths: selectedPaths [
+
+	self emit: {
+		#receiver -> 'SpTreeTablePresenter'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'TreeTableAdapter'.
+		#columns -> columnStrings.
+		#treeTableNodes -> nodeDictionaries.
+		#selectedPaths -> selectedPaths }
+]
+
+{ #category : 'emitting' }
+CiderWireEmitter >> treeTablePresenter: aNode selectedPathsChangedTo: selectedPaths [
+
+	self emit: {
+		#receiver -> 'SpTreeTablePresenter'.
+		#selector -> 'selectedPaths:'.
+		#id -> aNode id.
+		#selectedPaths -> selectedPaths }
+]
+
 { #category : 'initialization' }
 CiderWireEmitter >> initialize [
 

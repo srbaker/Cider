@@ -39,6 +39,10 @@ struct CiderApp: App {
                 Task {
                     await selectTreePaths(id: id, paths: paths)
                 }
+            } onTreeTableSelection: { id, paths in
+                Task {
+                    await selectTreeTablePaths(id: id, paths: paths)
+                }
             }
                 .frame(minWidth: 720, minHeight: 480)
                 .task {
@@ -100,6 +104,11 @@ struct CiderApp: App {
     @MainActor
     private func selectTreePaths(id: String, paths: [[Int]]) async {
         try? await session?.selectTreePaths(id: id, paths: paths)
+    }
+
+    @MainActor
+    private func selectTreeTablePaths(id: String, paths: [[Int]]) async {
+        try? await session?.selectTreeTablePaths(id: id, paths: paths)
     }
 
     @MainActor

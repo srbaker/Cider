@@ -378,6 +378,48 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelReconstructsTreeTablePresenter() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpTreeTablePresenter","selector":"build","id":"n1","adapter":"TreeTableAdapter","columns":["Class","Methods"],"treeTableNodes":[{"path":[1],"values":["Object","512"]},{"path":[1,1],"values":["Behavior","128"]}],"selectedPaths":[[1]]}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.first?.kind == .treeTablePresenterBuild)
+    #expect(model.treeTables["n1"] == CiderSpecModel.SpTreeTablePresenter(
+        id: "n1",
+        columns: ["Class", "Methods"],
+        nodes: [
+            CiderSpecModel.SpTreeTablePresenter.Node(path: [1], values: ["Object", "512"]),
+            CiderSpecModel.SpTreeTablePresenter.Node(path: [1, 1], values: ["Behavior", "128"])
+        ],
+        selectedPaths: [[1]]
+    ))
+}
+
+@Test func ciderSpecModelAppliesTreeTableSelectionUpdates() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpTreeTablePresenter","selector":"build","id":"n1","adapter":"TreeTableAdapter","columns":["Class"],"treeTableNodes":[{"path":[1],"values":["Object"]},{"path":[1,1],"values":["Behavior"]}],"selectedPaths":[]}
+    CIDER:{"receiver":"SpTreeTablePresenter","selector":"selectedPaths:","id":"n1","selectedPaths":[[1,1]]}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.map(\.kind) == [
+        .treeTablePresenterBuild,
+        .treeTablePresenterSetSelectedPaths
+    ])
+    #expect(model.treeTables["n1"] == CiderSpecModel.SpTreeTablePresenter(
+        id: "n1",
+        columns: ["Class"],
+        nodes: [
+            CiderSpecModel.SpTreeTablePresenter.Node(path: [1], values: ["Object"]),
+            CiderSpecModel.SpTreeTablePresenter.Node(path: [1, 1], values: ["Behavior"])
+        ],
+        selectedPaths: [[1, 1]]
+    ))
+}
+
 @Test func ciderSpecModelReconstructsPaginatorPresenter() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpPaginatorPresenter","selector":"build","id":"n1","adapter":"PaginatorAdapter","pages":7,"selectedPage":3,"visiblePages":2}

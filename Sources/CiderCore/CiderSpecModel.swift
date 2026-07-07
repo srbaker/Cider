@@ -195,6 +195,30 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct SpTreeTablePresenter: Equatable, Sendable {
+        public struct Node: Equatable, Sendable {
+            public var path: [Int]
+            public var values: [String]
+
+            public init(path: [Int], values: [String]) {
+                self.path = path
+                self.values = values
+            }
+        }
+
+        public var id: String
+        public var columns: [String]
+        public var nodes: [Node]
+        public var selectedPaths: [[Int]]
+
+        public init(id: String, columns: [String], nodes: [Node], selectedPaths: [[Int]]) {
+            self.id = id
+            self.columns = columns
+            self.nodes = nodes
+            self.selectedPaths = selectedPaths
+        }
+    }
+
     public struct SpCodePresenter: Equatable, Sendable {
         public var id: String
         public var text: String
@@ -259,6 +283,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         case missingListPayload(String)
         case missingTablePayload(String)
         case missingTreePayload(String)
+        case missingTreeTablePayload(String)
         case missingCodePayload(String)
         case missingMicScrolledTextMorphPayload(String)
         case missingNativeWidgetPayload(String)
@@ -286,6 +311,7 @@ public struct CiderSpecModel: Equatable, Sendable {
     public var lists: [String: SpListPresenter]
     public var tables: [String: SpTablePresenter]
     public var trees: [String: SpTreePresenter]
+    public var treeTables: [String: SpTreeTablePresenter]
     public var codePresenters: [String: SpCodePresenter]
     public var micScrolledTextMorphs: [String: MicScrolledTextMorph]
     public var nativeWidgets: [String: SpNativeWidget]
@@ -305,6 +331,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         lists: [String: SpListPresenter] = [:],
         tables: [String: SpTablePresenter] = [:],
         trees: [String: SpTreePresenter] = [:],
+        treeTables: [String: SpTreeTablePresenter] = [:],
         codePresenters: [String: SpCodePresenter] = [:],
         micScrolledTextMorphs: [String: MicScrolledTextMorph] = [:],
         nativeWidgets: [String: SpNativeWidget] = [:],
@@ -323,6 +350,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         self.lists = lists
         self.tables = tables
         self.trees = trees
+        self.treeTables = treeTables
         self.codePresenters = codePresenters
         self.micScrolledTextMorphs = micScrolledTextMorphs
         self.nativeWidgets = nativeWidgets
@@ -549,6 +577,33 @@ public struct CiderSpecModel: Equatable, Sendable {
                 }
                 tree.selectedPaths = selectedPaths
                 model.trees[event.id] = tree
+
+            case .treeTablePresenterBuild:
+                guard
+                    let columns = event.columns,
+                    let treeTableNodes = event.treeTableNodes,
+                    let selectedPaths = event.selectedPaths
+                else {
+                    throw BuildError.missingTreeTablePayload(event.id)
+                }
+                model.treeTables[event.id] = SpTreeTablePresenter(
+                    id: event.id,
+                    columns: columns,
+                    nodes: treeTableNodes.map {
+                        SpTreeTablePresenter.Node(path: $0.path, values: $0.values)
+                    },
+                    selectedPaths: selectedPaths
+                )
+
+            case .treeTablePresenterSetSelectedPaths:
+                guard let selectedPaths = event.selectedPaths else {
+                    throw BuildError.missingTreeTablePayload(event.id)
+                }
+                guard var treeTable = model.treeTables[event.id] else {
+                    throw BuildError.missingTreeTablePayload(event.id)
+                }
+                treeTable.selectedPaths = selectedPaths
+                model.treeTables[event.id] = treeTable
 
             case .codePresenterBuild:
                 guard

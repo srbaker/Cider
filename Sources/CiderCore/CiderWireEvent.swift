@@ -11,6 +11,16 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         }
     }
 
+    public struct TreeTableNode: Codable, Equatable, Sendable {
+        public var path: [Int]
+        public var values: [String]
+
+        public init(path: [Int], values: [String]) {
+            self.path = path
+            self.values = values
+        }
+    }
+
     public enum Kind: Equatable, Sendable {
         case windowOpen
         case boxLayoutBuild
@@ -32,6 +42,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case tablePresenterSetSelectedIndexes
         case treePresenterBuild
         case treePresenterSetSelectedPaths
+        case treeTablePresenterBuild
+        case treeTablePresenterSetSelectedPaths
         case codePresenterBuild
         case micScrolledTextMorphBuild
         case nativeWidgetBuild
@@ -66,6 +78,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public var rows: [[String]]?
     public var roots: [String]?
     public var nodes: [TreeNode]?
+    public var treeTableNodes: [TreeTableNode]?
     public var selectedIndexes: [Int]?
     public var selectedIndex: Int?
     public var selectedPaths: [[Int]]?
@@ -102,6 +115,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         rows: [[String]]? = nil,
         roots: [String]? = nil,
         nodes: [TreeNode]? = nil,
+        treeTableNodes: [TreeTableNode]? = nil,
         selectedIndexes: [Int]? = nil,
         selectedIndex: Int? = nil,
         selectedPaths: [[Int]]? = nil,
@@ -137,6 +151,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         self.rows = rows
         self.roots = roots
         self.nodes = nodes
+        self.treeTableNodes = treeTableNodes
         self.selectedIndexes = selectedIndexes
         self.selectedIndex = selectedIndex
         self.selectedPaths = selectedPaths
@@ -192,6 +207,10 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .treePresenterBuild
         case ("SpTreePresenter", "selectedPaths:"):
             .treePresenterSetSelectedPaths
+        case ("SpTreeTablePresenter", "build"):
+            .treeTablePresenterBuild
+        case ("SpTreeTablePresenter", "selectedPaths:"):
+            .treeTablePresenterSetSelectedPaths
         case ("SpCodePresenter", "build"):
             .codePresenterBuild
         case ("MicScrolledTextMorph", "build"):

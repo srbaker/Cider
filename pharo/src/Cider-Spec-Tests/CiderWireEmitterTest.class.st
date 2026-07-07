@@ -143,6 +143,46 @@ CiderWireEmitterTest >> testTreePresenterSelectionUpdateBuildsSpecShapedEvent [
 ]
 
 { #category : 'tests' }
+CiderWireEmitterTest >> testTreeTablePresenterBuildsSpecShapedEvent [
+	| stream emitter node treeNode |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #TreeTableAdapter.
+	treeNode := Dictionary new
+		at: #path put: #( 1 );
+		at: #values put: #( 'Object' '512' );
+		yourself.
+
+	emitter
+		treeTablePresenterBuilt: node
+		columns: #( 'Class' 'Methods' )
+		nodes: { treeNode }
+		selectedPaths: #( #( 1 ) ).
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"SpTreeTablePresenter","selector":"build","id":"n1","adapter":"TreeTableAdapter","columns":["Class","Methods"],"treeTableNodes":[{"path":[1],"values":["Object","512"]}],"selectedPaths":[[1]]}'
+]
+
+{ #category : 'tests' }
+CiderWireEmitterTest >> testTreeTablePresenterSelectionUpdateBuildsSpecShapedEvent [
+	| stream emitter node |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #TreeTableAdapter.
+
+	emitter
+		treeTablePresenter: node
+		selectedPathsChangedTo: #( #( 1 1 ) ).
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"SpTreeTablePresenter","selector":"selectedPaths:","id":"n1","selectedPaths":[[1,1]]}'
+]
+
+{ #category : 'tests' }
 CiderWireEmitterTest >> testTreePresenterBuildsSpecShapedEvent [
 	| stream emitter node output treeNode |
 
