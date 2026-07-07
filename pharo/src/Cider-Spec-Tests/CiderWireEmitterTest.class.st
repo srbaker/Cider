@@ -56,6 +56,23 @@ CiderWireEmitterTest >> testLabelPresenterUpdateBuildsSpecShapedEvent [
 ]
 
 { #category : 'tests' }
+CiderWireEmitterTest >> testCheckBoxPresenterStateUpdateBuildsSpecShapedEvent [
+	| stream emitter node |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #CheckBoxAdapter.
+
+	emitter
+		checkBoxPresenter: node
+		stateChangedTo: true.
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"SpCheckBoxPresenter","selector":"state:","id":"n1","state":true}'
+]
+
+{ #category : 'tests' }
 CiderWireEmitterTest >> testListPresenterSelectionUpdateBuildsSpecShapedEvent [
 	| stream emitter node |
 

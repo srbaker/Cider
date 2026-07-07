@@ -125,6 +125,16 @@ public final class CiderPharoLiveSession: @unchecked Sendable {
         try await send(event)
     }
 
+    public func setCheckBoxState(id: String, state: Bool) async throws {
+        let event = CiderWireEvent(
+            receiver: "SpCheckBoxPresenter",
+            selector: "state:",
+            id: id,
+            state: state
+        )
+        try await send(event)
+    }
+
     public func selectDropListIndex(id: String, index: Int) async throws {
         let event = CiderWireEvent(
             receiver: "SpDropListPresenter",

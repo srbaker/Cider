@@ -19,6 +19,10 @@ struct CiderApp: App {
                 Task {
                     await setTextInput(id: id, text: text)
                 }
+            } onCheckBoxStateChange: { id, state in
+                Task {
+                    await setCheckBoxState(id: id, state: state)
+                }
             } onDropListSelection: { id, index in
                 Task {
                     await selectDropListIndex(id: id, index: index)
@@ -67,6 +71,11 @@ struct CiderApp: App {
     @MainActor
     private func setTextInput(id: String, text: String) async {
         try? await session?.setTextInput(id: id, text: text)
+    }
+
+    @MainActor
+    private func setCheckBoxState(id: String, state: Bool) async {
+        try? await session?.setCheckBoxState(id: id, state: state)
     }
 
     @MainActor

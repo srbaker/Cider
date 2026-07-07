@@ -86,6 +86,16 @@ CiderWireEmitter >> checkBoxPresenterBuilt: aNode label: aString state: stateBoo
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> checkBoxPresenter: aNode stateChangedTo: stateBoolean [
+
+	self emit: {
+		#receiver -> 'SpCheckBoxPresenter'.
+		#selector -> 'state:'.
+		#id -> aNode id.
+		#state -> stateBoolean }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> dropListPresenterBuilt: aNode items: itemStrings selectedIndex: selectedIndex [
 
 	self emit: {

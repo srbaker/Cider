@@ -404,6 +404,16 @@ public struct CiderSpecModel: Equatable, Sendable {
                     enabled: enabled
                 )
 
+            case .checkBoxPresenterSetState:
+                guard let state = event.state else {
+                    throw BuildError.missingCheckBoxPayload(event.id)
+                }
+                guard var checkBox = model.checkBoxes[event.id] else {
+                    throw BuildError.missingCheckBoxPayload(event.id)
+                }
+                checkBox.state = state
+                model.checkBoxes[event.id] = checkBox
+
             case .dropListPresenterBuild:
                 guard let items = event.items, let selectedIndex = event.selectedIndex else {
                     throw BuildError.missingDropListPayload(event.id)

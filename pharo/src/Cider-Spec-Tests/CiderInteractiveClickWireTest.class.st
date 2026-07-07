@@ -125,6 +125,44 @@ CiderInteractiveClickWireTest >> testDropListSelectionDispatchesSelectionAndEmit
 ]
 
 { #category : 'tests' }
+CiderInteractiveClickWireTest >> testCheckBoxStateDispatchesStateAndEmitsLabelUpdate [
+	| stream emitter application presenter lines checkBoxLine checkBoxId labelLine labelId |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	application := StPharoApplication new.
+	application useBackend: #Cider.
+	application backend emitter: emitter.
+
+	presenter := application newPresenter: CiderInteractiveClickPresenter.
+	presenter open.
+
+	lines := stream contents lines.
+	labelLine := lines detect: [ :line |
+		(line includesSubstring: '"receiver":"SpLabelPresenter"')
+			and: [ line includesSubstring: '"label":"Not clicked"' ] ].
+	labelId := self idFromLine: labelLine.
+	checkBoxLine := lines detect: [ :line |
+		(line includesSubstring: '"receiver":"SpCheckBoxPresenter"')
+			and: [ line includesSubstring: '"label":"Enabled"' ] ].
+	checkBoxId := self idFromLine: checkBoxLine.
+
+	application backend dispatchIncomingEvent: (Dictionary new
+		at: 'receiver' put: 'SpCheckBoxPresenter';
+		at: 'selector' put: 'state:';
+		at: 'id' put: checkBoxId;
+		at: 'state' put: true;
+		yourself).
+
+	self assert: presenter checkBox state.
+	self assert: presenter label label equals: 'Checked'.
+	self assert: (stream contents lines anySatisfy: [ :line |
+		line = ('CIDER:{"receiver":"SpCheckBoxPresenter","selector":"state:","id":"' , checkBoxId , '","state":true}') ]).
+	self assert: (stream contents lines anySatisfy: [ :line |
+		line = ('CIDER:{"receiver":"SpLabelPresenter","selector":"label:","id":"' , labelId , '","label":"Checked"}') ])
+]
+
+{ #category : 'tests' }
 CiderInteractiveClickWireTest >> testListSelectionDispatchesSelectionAndEmitsLabelUpdate [
 	| stream emitter application presenter lines listLine listId labelLine labelId |
 

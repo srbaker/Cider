@@ -21,6 +21,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case imagePresenterBuild
         case buttonPresenterBuild
         case checkBoxPresenterBuild
+        case checkBoxPresenterSetState
         case dropListPresenterBuild
         case dropListPresenterSelectIndex
         case textInputFieldPresenterBuild
@@ -161,6 +162,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .buttonPresenterBuild
         case ("SpCheckBoxPresenter", "build"):
             .checkBoxPresenterBuild
+        case ("SpCheckBoxPresenter", "state:"):
+            .checkBoxPresenterSetState
         case ("SpDropListPresenter", "build"):
             .dropListPresenterBuild
         case ("SpDropListPresenter", "selectIndex:"):

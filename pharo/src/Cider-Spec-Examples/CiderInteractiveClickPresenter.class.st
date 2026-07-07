@@ -7,7 +7,8 @@ Class {
 		'list',
 		'tree',
 		'input',
-		'dropList'
+		'dropList',
+		'checkBox'
 	],
 	#category : 'Cider-Spec-Examples',
 	#package : 'Cider-Spec-Examples'
@@ -21,6 +22,7 @@ CiderInteractiveClickPresenter >> defaultLayout [
 		add: button expand: false;
 		add: input expand: false;
 		add: dropList expand: false;
+		add: checkBox expand: false;
 		add: list expand: true;
 		add: tree expand: true;
 		yourself
@@ -49,6 +51,15 @@ CiderInteractiveClickPresenter >> initializePresenters [
 	dropList whenSelectionChangedDo: [
 		dropList selectedItem ifNotNil: [ :item |
 			label label: 'Choice ' , item ] ].
+
+	checkBox := self newCheckBox.
+	checkBox
+		label: 'Enabled';
+		state: false.
+	checkBox whenChangedDo: [ :state |
+		label label: (state
+			ifTrue: [ 'Checked' ]
+			ifFalse: [ 'Unchecked' ]) ].
 
 	list := self newList.
 	list items: #( 'Alpha' 'Beta' 'Gamma' ).
@@ -93,6 +104,12 @@ CiderInteractiveClickPresenter >> input [
 CiderInteractiveClickPresenter >> dropList [
 
 	^ dropList
+]
+
+{ #category : 'accessing' }
+CiderInteractiveClickPresenter >> checkBox [
+
+	^ checkBox
 ]
 
 { #category : 'accessing' }

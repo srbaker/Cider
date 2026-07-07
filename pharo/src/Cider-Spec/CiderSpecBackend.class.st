@@ -61,6 +61,12 @@ CiderSpecBackend >> dispatchIncomingEvent: aDictionary [
 				ifTrue: [ adapter click ].
 			^ self ].
 
+	(receiver = 'SpCheckBoxPresenter' and: [ selector = 'state:' ])
+		ifTrue: [
+			(adapter notNil and: [ adapter respondsTo: #state: ])
+				ifTrue: [ adapter state: (aDictionary at: 'state' ifAbsent: [ false ]) ].
+			^ self ].
+
 	(receiver = 'SpListPresenter' and: [ selector = 'selectedIndexes:' ])
 		ifTrue: [
 			(adapter notNil and: [ adapter respondsTo: #selectedIndexes: ])

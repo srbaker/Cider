@@ -24,8 +24,9 @@ DEMO_WIRE="$(
     'CIDER:{"receiver":"SpButtonPresenter","selector":"click","id":"n4"}' \
     'CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"text:","id":"n5","text":"Edited"}' \
     'CIDER:{"receiver":"SpDropListPresenter","selector":"selectIndex:","id":"n6","selectedIndex":2}' \
-    'CIDER:{"receiver":"SpListPresenter","selector":"selectedIndexes:","id":"n7","selectedIndexes":[2]}' \
-    'CIDER:{"receiver":"SpTreePresenter","selector":"selectedPaths:","id":"n8","selectedPaths":[[1,1]]}' |
+    'CIDER:{"receiver":"SpCheckBoxPresenter","selector":"state:","id":"n7","state":true}' \
+    'CIDER:{"receiver":"SpListPresenter","selector":"selectedIndexes:","id":"n8","selectedIndexes":[2]}' \
+    'CIDER:{"receiver":"SpTreePresenter","selector":"selectedPaths:","id":"n9","selectedPaths":[[1,1]]}' |
   HOME="${CIDER_PHARO_HOME}" "${CIDER_PHARO_VM}" \
     --headless "${CIDER_PHARO_IMAGE}" \
     st pharo/scripts/serve-interactive-click.st
@@ -37,12 +38,14 @@ if [[ "${DEMO_WIRE}" != *'"title":"Cider Interactive Click"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"label":"Typed Edited"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"selectedIndex":2'* ]] ||
   [[ "${DEMO_WIRE}" != *'"label":"Choice Two"'* ]] ||
+  [[ "${DEMO_WIRE}" != *'"state":true'* ]] ||
+  [[ "${DEMO_WIRE}" != *'"label":"Checked"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"selectedIndexes":[2]'* ]] ||
   [[ "${DEMO_WIRE}" != *'"label":"Selected Beta"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"selectedPaths":[[1,1]]'* ]] ||
   [[ "${DEMO_WIRE}" != *'"label":"Tree Spec"'* ]]; then
   cat >&2 <<MESSAGE
-The interactive demo did not emit the expected live button, text, drop-list, list, and tree updates.
+The interactive demo did not emit the expected live button, text, drop-list, checkbox, list, and tree updates.
 MESSAGE
   exit 1
 fi

@@ -5,6 +5,7 @@ struct CiderSpecRenderer: View {
     let model: CiderSpecModel
     let onButtonClick: (String) -> Void
     let onTextInputChange: (String, String) -> Void
+    let onCheckBoxStateChange: (String, Bool) -> Void
     let onDropListSelection: (String, Int) -> Void
     let onListSelection: (String, [Int]) -> Void
     let onTreeSelection: (String, [[Int]]) -> Void
@@ -110,7 +111,12 @@ struct CiderSpecRenderer: View {
     }
 
     private func renderCheckBox(_ checkBox: CiderSpecModel.SpCheckBoxPresenter) -> AnyView {
-        AnyView(Toggle(checkBox.label, isOn: .constant(checkBox.state))
+        let state = Binding(
+            get: { checkBox.state },
+            set: { onCheckBoxStateChange(checkBox.id, $0) }
+        )
+
+        return AnyView(Toggle(checkBox.label, isOn: state)
             .toggleStyle(.checkbox)
             .disabled(!checkBox.enabled))
     }

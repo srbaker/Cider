@@ -213,6 +213,26 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelAppliesCheckBoxStateUpdates() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpCheckBoxPresenter","selector":"build","id":"n1","adapter":"CheckBoxAdapter","label":"Enabled","state":false,"enabled":true}
+    CIDER:{"receiver":"SpCheckBoxPresenter","selector":"state:","id":"n1","state":true}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.map(\.kind) == [
+        .checkBoxPresenterBuild,
+        .checkBoxPresenterSetState
+    ])
+    #expect(model.checkBoxes["n1"] == CiderSpecModel.SpCheckBoxPresenter(
+        id: "n1",
+        label: "Enabled",
+        state: true,
+        enabled: true
+    ))
+}
+
 @Test func ciderSpecModelAppliesTextInputUpdates() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"build","id":"n1","adapter":"TextInputFieldAdapter","text":"Editable text","placeholder":"Type here","editable":true,"password":false}
