@@ -63,6 +63,8 @@ struct CiderSpecRenderer: View {
             return renderCodePresenter(codePresenter)
         } else if let micScrolledTextMorph = model.micScrolledTextMorphs[id] {
             return renderMicScrolledTextMorph(micScrolledTextMorph)
+        } else if let clyFullBrowserMorph = model.clyFullBrowserMorphs[id] {
+            return renderClyFullBrowserMorph(clyFullBrowserMorph)
         } else if let nativeWidget = model.nativeWidgets[id] {
             return renderNativeWidget(nativeWidget)
         } else if let paginator = model.paginators[id] {
@@ -170,6 +172,36 @@ struct CiderSpecRenderer: View {
                 .padding(8)
         }
         .frame(minHeight: 120)
+        .background(Color.secondary.opacity(0.04)))
+    }
+
+    private func renderClyFullBrowserMorph(_ morph: CiderSpecModel.ClyFullBrowserMorph) -> AnyView {
+        AnyView(ScrollView([.horizontal, .vertical]) {
+            HStack(alignment: .top, spacing: 12) {
+                ForEach(morph.panes, id: \.title) { pane in
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            Text(pane.title)
+                                .font(.headline)
+                            Spacer()
+                            Text("\(pane.items.count)/\(pane.totalRows)")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        }
+
+                        ForEach(Array(pane.items.enumerated()), id: \.offset) { _, item in
+                            Text(item)
+                                .lineLimit(1)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.vertical, 2)
+                        }
+                    }
+                    .frame(width: 220, alignment: .topLeading)
+                }
+            }
+            .padding(8)
+        }
+        .frame(minHeight: 260)
         .background(Color.secondary.opacity(0.04)))
     }
 

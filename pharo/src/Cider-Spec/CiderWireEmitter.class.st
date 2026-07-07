@@ -96,6 +96,17 @@ CiderWireEmitter >> checkBoxPresenter: aNode stateChangedTo: stateBoolean [
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> clyFullBrowserMorphBuilt: aNode panes: paneDictionaries [
+
+	self emit: {
+		#receiver -> 'ClyFullBrowserMorph'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'MorphAdapter'.
+		#panes -> paneDictionaries }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> dropListPresenterBuilt: aNode items: itemStrings selectedIndex: selectedIndex [
 
 	self emit: {

@@ -21,6 +21,18 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         }
     }
 
+    public struct CalypsoPane: Codable, Equatable, Sendable {
+        public var title: String
+        public var items: [String]
+        public var totalRows: Int
+
+        public init(title: String, items: [String], totalRows: Int) {
+            self.title = title
+            self.items = items
+            self.totalRows = totalRows
+        }
+    }
+
     public enum Kind: Equatable, Sendable {
         case windowOpen
         case boxLayoutBuild
@@ -50,6 +62,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case treeTablePresenterActivateAtPath
         case codePresenterBuild
         case micScrolledTextMorphBuild
+        case clyFullBrowserMorphBuild
         case nativeWidgetBuild
         case paginatorPresenterBuild
         case boxLayoutAdd
@@ -83,6 +96,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public var roots: [String]?
     public var nodes: [TreeNode]?
     public var treeTableNodes: [TreeTableNode]?
+    public var panes: [CalypsoPane]?
     public var selectedIndexes: [Int]?
     public var selectedIndex: Int?
     public var selectedPaths: [[Int]]?
@@ -122,6 +136,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         roots: [String]? = nil,
         nodes: [TreeNode]? = nil,
         treeTableNodes: [TreeTableNode]? = nil,
+        panes: [CalypsoPane]? = nil,
         selectedIndexes: [Int]? = nil,
         selectedIndex: Int? = nil,
         selectedPaths: [[Int]]? = nil,
@@ -160,6 +175,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         self.roots = roots
         self.nodes = nodes
         self.treeTableNodes = treeTableNodes
+        self.panes = panes
         self.selectedIndexes = selectedIndexes
         self.selectedIndex = selectedIndex
         self.selectedPaths = selectedPaths
@@ -233,6 +249,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .codePresenterBuild
         case ("MicScrolledTextMorph", "build"):
             .micScrolledTextMorphBuild
+        case ("ClyFullBrowserMorph", "build"):
+            .clyFullBrowserMorphBuild
         case ("SpNativeWidget", "build"):
             .nativeWidgetBuild
         case ("SpPaginatorPresenter", "build"):

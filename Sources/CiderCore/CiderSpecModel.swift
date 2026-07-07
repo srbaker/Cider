@@ -255,6 +255,28 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct ClyFullBrowserMorph: Equatable, Sendable {
+        public struct Pane: Equatable, Sendable {
+            public var title: String
+            public var items: [String]
+            public var totalRows: Int
+
+            public init(title: String, items: [String], totalRows: Int) {
+                self.title = title
+                self.items = items
+                self.totalRows = totalRows
+            }
+        }
+
+        public var id: String
+        public var panes: [Pane]
+
+        public init(id: String, panes: [Pane]) {
+            self.id = id
+            self.panes = panes
+        }
+    }
+
     public struct SpPaginatorPresenter: Equatable, Sendable {
         public var id: String
         public var pages: Int
@@ -286,6 +308,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         case missingTreeTablePayload(String)
         case missingCodePayload(String)
         case missingMicScrolledTextMorphPayload(String)
+        case missingClyFullBrowserMorphPayload(String)
         case missingNativeWidgetPayload(String)
         case missingPaginatorPayload(String)
         case missingBoxChildPayload(String)
@@ -314,6 +337,7 @@ public struct CiderSpecModel: Equatable, Sendable {
     public var treeTables: [String: SpTreeTablePresenter]
     public var codePresenters: [String: SpCodePresenter]
     public var micScrolledTextMorphs: [String: MicScrolledTextMorph]
+    public var clyFullBrowserMorphs: [String: ClyFullBrowserMorph]
     public var nativeWidgets: [String: SpNativeWidget]
     public var paginators: [String: SpPaginatorPresenter]
 
@@ -334,6 +358,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         treeTables: [String: SpTreeTablePresenter] = [:],
         codePresenters: [String: SpCodePresenter] = [:],
         micScrolledTextMorphs: [String: MicScrolledTextMorph] = [:],
+        clyFullBrowserMorphs: [String: ClyFullBrowserMorph] = [:],
         nativeWidgets: [String: SpNativeWidget] = [:],
         paginators: [String: SpPaginatorPresenter] = [:]
     ) {
@@ -353,6 +378,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         self.treeTables = treeTables
         self.codePresenters = codePresenters
         self.micScrolledTextMorphs = micScrolledTextMorphs
+        self.clyFullBrowserMorphs = clyFullBrowserMorphs
         self.nativeWidgets = nativeWidgets
         self.paginators = paginators
     }
@@ -639,6 +665,21 @@ public struct CiderSpecModel: Equatable, Sendable {
                 model.micScrolledTextMorphs[event.id] = MicScrolledTextMorph(
                     id: event.id,
                     text: text
+                )
+
+            case .clyFullBrowserMorphBuild:
+                guard let panes = event.panes else {
+                    throw BuildError.missingClyFullBrowserMorphPayload(event.id)
+                }
+                model.clyFullBrowserMorphs[event.id] = ClyFullBrowserMorph(
+                    id: event.id,
+                    panes: panes.map {
+                        ClyFullBrowserMorph.Pane(
+                            title: $0.title,
+                            items: $0.items,
+                            totalRows: $0.totalRows
+                        )
+                    }
                 )
 
             case .nativeWidgetBuild:

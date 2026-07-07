@@ -256,6 +256,31 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelReconstructsCalypsoBrowserMorph() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"ClyFullBrowserMorph","selector":"build","id":"n1","adapter":"MorphAdapter","panes":[{"title":"Packages","items":["Kernel","Collections"],"totalRows":775},{"title":"Classes","items":[],"totalRows":0}]}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.first?.kind == .clyFullBrowserMorphBuild)
+    #expect(model.clyFullBrowserMorphs["n1"] == CiderSpecModel.ClyFullBrowserMorph(
+        id: "n1",
+        panes: [
+            CiderSpecModel.ClyFullBrowserMorph.Pane(
+                title: "Packages",
+                items: ["Kernel", "Collections"],
+                totalRows: 775
+            ),
+            CiderSpecModel.ClyFullBrowserMorph.Pane(
+                title: "Classes",
+                items: [],
+                totalRows: 0
+            )
+        ]
+    ))
+}
+
 @Test func ciderSpecModelReconstructsCheckBoxPresenter() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpCheckBoxPresenter","selector":"build","id":"n1","adapter":"CheckBoxAdapter","label":"Full Screen","state":true,"enabled":false}
