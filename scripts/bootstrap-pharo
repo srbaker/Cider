@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REQUIRED_PHARO_VERSION="${CIDER_PHARO_VERSION:-12}"
+
+if ! command -v pharo >/dev/null 2>&1; then
+  cat >&2 <<MESSAGE
+Pharo is not available on PATH.
+
+Cider Phase 0 expects a local, pinned headless Pharo installation.
+Install Pharo ${REQUIRED_PHARO_VERSION}, then make the pharo executable available on PATH.
+
+The container backend is intentionally deferred until the CI/reproducibility phase.
+MESSAGE
+  exit 1
+fi
+
+pharo --headless --version >/dev/null
+echo "Pharo is available for headless bootstrap checks."
