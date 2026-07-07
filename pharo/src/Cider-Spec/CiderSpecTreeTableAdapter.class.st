@@ -70,6 +70,12 @@ CiderSpecTreeTableAdapter >> selectedPaths: paths [
 	self presenter selectPaths: paths
 ]
 
+{ #category : 'events' }
+CiderSpecTreeTableAdapter >> activateAtPath: aPath [
+
+	self presenter doActivateAtPath: aPath
+]
+
 { #category : 'private' }
 CiderSpecTreeTableAdapter >> treeTableNodesFrom: items pathPrefix: pathPrefix [
 	| nodes |

@@ -31,6 +31,12 @@ CiderSpecListAdapter >> elementAt: anIndex [
 ]
 
 { #category : 'events' }
+CiderSpecListAdapter >> activateAtIndex: anIndex [
+
+	self presenter doActivateAtIndex: anIndex
+]
+
+{ #category : 'events' }
 CiderSpecListAdapter >> selectedIndexes: indexes [
 
 	self presenter selection selectIndexes: indexes

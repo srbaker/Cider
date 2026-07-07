@@ -31,17 +31,33 @@ struct CiderApp: App {
                 Task {
                     await selectListIndexes(id: id, indexes: indexes)
                 }
+            } onListActivation: { id, index in
+                Task {
+                    await activateListIndex(id: id, index: index)
+                }
             } onTableSelection: { id, indexes in
                 Task {
                     await selectTableIndexes(id: id, indexes: indexes)
+                }
+            } onTableActivation: { id, index in
+                Task {
+                    await activateTableIndex(id: id, index: index)
                 }
             } onTreeSelection: { id, paths in
                 Task {
                     await selectTreePaths(id: id, paths: paths)
                 }
+            } onTreeActivation: { id, path in
+                Task {
+                    await activateTreePath(id: id, path: path)
+                }
             } onTreeTableSelection: { id, paths in
                 Task {
                     await selectTreeTablePaths(id: id, paths: paths)
+                }
+            } onTreeTableActivation: { id, path in
+                Task {
+                    await activateTreeTablePath(id: id, path: path)
                 }
             }
                 .frame(minWidth: 720, minHeight: 480)
@@ -97,8 +113,18 @@ struct CiderApp: App {
     }
 
     @MainActor
+    private func activateListIndex(id: String, index: Int) async {
+        try? await session?.activateListIndex(id: id, index: index)
+    }
+
+    @MainActor
     private func selectTableIndexes(id: String, indexes: [Int]) async {
         try? await session?.selectTableIndexes(id: id, indexes: indexes)
+    }
+
+    @MainActor
+    private func activateTableIndex(id: String, index: Int) async {
+        try? await session?.activateTableIndex(id: id, index: index)
     }
 
     @MainActor
@@ -107,8 +133,18 @@ struct CiderApp: App {
     }
 
     @MainActor
+    private func activateTreePath(id: String, path: [Int]) async {
+        try? await session?.activateTreePath(id: id, path: path)
+    }
+
+    @MainActor
     private func selectTreeTablePaths(id: String, paths: [[Int]]) async {
         try? await session?.selectTreeTablePaths(id: id, paths: paths)
+    }
+
+    @MainActor
+    private func activateTreeTablePath(id: String, path: [Int]) async {
+        try? await session?.activateTreeTablePath(id: id, path: path)
     }
 
     @MainActor

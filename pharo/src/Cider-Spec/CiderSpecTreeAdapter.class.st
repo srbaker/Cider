@@ -55,6 +55,12 @@ CiderSpecTreeAdapter >> isExpanded: aPath [
 	^ false
 ]
 
+{ #category : 'events' }
+CiderSpecTreeAdapter >> activateAtPath: aPath [
+
+	self presenter doActivateAtPath: aPath
+]
+
 { #category : 'accessing' }
 CiderSpecTreeAdapter >> itemAtPath: aPath [
 	| items item |

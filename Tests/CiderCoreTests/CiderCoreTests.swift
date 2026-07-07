@@ -130,6 +130,26 @@ import Testing
     ))
 }
 
+@Test func ciderWireDecoderParsesActivationEvents() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpListPresenter","selector":"doActivateAtIndex:","id":"n1","index":2}
+    CIDER:{"receiver":"SpTablePresenter","selector":"doActivateAtIndex:","id":"n2","index":3}
+    CIDER:{"receiver":"SpTreePresenter","selector":"doActivateAtPath:","id":"n3","path":[1,2]}
+    CIDER:{"receiver":"SpTreeTablePresenter","selector":"doActivateAtPath:","id":"n4","path":[1,3]}
+    """)
+
+    #expect(events.map(\.kind) == [
+        .listPresenterActivateAtIndex,
+        .tablePresenterActivateAtIndex,
+        .treePresenterActivateAtPath,
+        .treeTablePresenterActivateAtPath
+    ])
+    #expect(events[0].index == 2)
+    #expect(events[1].index == 3)
+    #expect(events[2].path == [1, 2])
+    #expect(events[3].path == [1, 3])
+}
+
 @Test func ciderSpecModelReconstructsTablePresenter() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpTablePresenter","selector":"build","id":"n1","adapter":"TableAdapter","columns":["Name","Result"],"rows":[["CiderWireEmitterTest","passed"],["CiderCoreTests","passed"]],"selectedIndexes":[1]}

@@ -8,9 +8,13 @@ struct CiderSpecRenderer: View {
     let onCheckBoxStateChange: (String, Bool) -> Void
     let onDropListSelection: (String, Int) -> Void
     let onListSelection: (String, [Int]) -> Void
+    let onListActivation: (String, Int) -> Void
     let onTableSelection: (String, [Int]) -> Void
+    let onTableActivation: (String, Int) -> Void
     let onTreeSelection: (String, [[Int]]) -> Void
+    let onTreeActivation: (String, [Int]) -> Void
     let onTreeTableSelection: (String, [[Int]]) -> Void
+    let onTreeTableActivation: (String, [Int]) -> Void
 
     private var rootWindow: CiderSpecModel.SpWindowPresenter? {
         model.windows.values.sorted { $0.id < $1.id }.first
@@ -190,6 +194,9 @@ struct CiderSpecRenderer: View {
                     .padding(.vertical, 2)
             }
             .buttonStyle(.plain)
+            .simultaneousGesture(TapGesture(count: 2).onEnded {
+                onListActivation(list.id, index + 1)
+            })
             .listRowBackground(
                 list.selectedIndexes.contains(index + 1)
                     ? Color.accentColor.opacity(0.18)
@@ -230,6 +237,9 @@ struct CiderSpecRenderer: View {
                                 )
                         }
                         .buttonStyle(.plain)
+                        .simultaneousGesture(TapGesture(count: 2).onEnded {
+                            onTableActivation(table.id, rowIndex + 1)
+                        })
                     }
                 }
             }
@@ -249,6 +259,9 @@ struct CiderSpecRenderer: View {
                     .padding(.vertical, 2)
             }
             .buttonStyle(.plain)
+            .simultaneousGesture(TapGesture(count: 2).onEnded {
+                onTreeActivation(tree.id, node.path)
+            })
             .listRowBackground(
                 tree.selectedPaths.contains(node.path)
                     ? Color.accentColor.opacity(0.18)
@@ -290,6 +303,9 @@ struct CiderSpecRenderer: View {
                                 )
                         }
                         .buttonStyle(.plain)
+                        .simultaneousGesture(TapGesture(count: 2).onEnded {
+                            onTreeTableActivation(treeTable.id, node.path)
+                        })
                     }
                 }
             }

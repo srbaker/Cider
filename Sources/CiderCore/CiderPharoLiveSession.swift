@@ -105,12 +105,32 @@ public final class CiderPharoLiveSession: @unchecked Sendable {
         try await send(event)
     }
 
+    public func activateListIndex(id: String, index: Int) async throws {
+        let event = CiderWireEvent(
+            receiver: "SpListPresenter",
+            selector: "doActivateAtIndex:",
+            id: id,
+            index: index
+        )
+        try await send(event)
+    }
+
     public func selectTableIndexes(id: String, indexes: [Int]) async throws {
         let event = CiderWireEvent(
             receiver: "SpTablePresenter",
             selector: "selectedIndexes:",
             id: id,
             selectedIndexes: indexes
+        )
+        try await send(event)
+    }
+
+    public func activateTableIndex(id: String, index: Int) async throws {
+        let event = CiderWireEvent(
+            receiver: "SpTablePresenter",
+            selector: "doActivateAtIndex:",
+            id: id,
+            index: index
         )
         try await send(event)
     }
@@ -125,12 +145,32 @@ public final class CiderPharoLiveSession: @unchecked Sendable {
         try await send(event)
     }
 
+    public func activateTreePath(id: String, path: [Int]) async throws {
+        let event = CiderWireEvent(
+            receiver: "SpTreePresenter",
+            selector: "doActivateAtPath:",
+            id: id,
+            path: path
+        )
+        try await send(event)
+    }
+
     public func selectTreeTablePaths(id: String, paths: [[Int]]) async throws {
         let event = CiderWireEvent(
             receiver: "SpTreeTablePresenter",
             selector: "selectedPaths:",
             id: id,
             selectedPaths: paths
+        )
+        try await send(event)
+    }
+
+    public func activateTreeTablePath(id: String, path: [Int]) async throws {
+        let event = CiderWireEvent(
+            receiver: "SpTreeTablePresenter",
+            selector: "doActivateAtPath:",
+            id: id,
+            path: path
         )
         try await send(event)
     }

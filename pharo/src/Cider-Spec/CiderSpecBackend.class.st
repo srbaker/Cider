@@ -73,10 +73,22 @@ CiderSpecBackend >> dispatchIncomingEvent: aDictionary [
 				ifTrue: [ adapter selectedIndexes: (aDictionary at: 'selectedIndexes' ifAbsent: [ #() ]) ].
 			^ self ].
 
+	(receiver = 'SpListPresenter' and: [ selector = 'doActivateAtIndex:' ])
+		ifTrue: [
+			(adapter notNil and: [ adapter respondsTo: #activateAtIndex: ])
+				ifTrue: [ adapter activateAtIndex: (aDictionary at: 'index' ifAbsent: [ 0 ]) ].
+			^ self ].
+
 	(receiver = 'SpTablePresenter' and: [ selector = 'selectedIndexes:' ])
 		ifTrue: [
 			(adapter notNil and: [ adapter respondsTo: #selectedIndexes: ])
 				ifTrue: [ adapter selectedIndexes: (aDictionary at: 'selectedIndexes' ifAbsent: [ #() ]) ].
+			^ self ].
+
+	(receiver = 'SpTablePresenter' and: [ selector = 'doActivateAtIndex:' ])
+		ifTrue: [
+			(adapter notNil and: [ adapter respondsTo: #activateAtIndex: ])
+				ifTrue: [ adapter activateAtIndex: (aDictionary at: 'index' ifAbsent: [ 0 ]) ].
 			^ self ].
 
 	(receiver = 'SpTreePresenter' and: [ selector = 'selectedPaths:' ])
@@ -85,10 +97,22 @@ CiderSpecBackend >> dispatchIncomingEvent: aDictionary [
 				ifTrue: [ adapter selectedPaths: (aDictionary at: 'selectedPaths' ifAbsent: [ #() ]) ].
 			^ self ].
 
+	(receiver = 'SpTreePresenter' and: [ selector = 'doActivateAtPath:' ])
+		ifTrue: [
+			(adapter notNil and: [ adapter respondsTo: #activateAtPath: ])
+				ifTrue: [ adapter activateAtPath: (aDictionary at: 'path' ifAbsent: [ #() ]) ].
+			^ self ].
+
 	(receiver = 'SpTreeTablePresenter' and: [ selector = 'selectedPaths:' ])
 		ifTrue: [
 			(adapter notNil and: [ adapter respondsTo: #selectedPaths: ])
 				ifTrue: [ adapter selectedPaths: (aDictionary at: 'selectedPaths' ifAbsent: [ #() ]) ].
+			^ self ].
+
+	(receiver = 'SpTreeTablePresenter' and: [ selector = 'doActivateAtPath:' ])
+		ifTrue: [
+			(adapter notNil and: [ adapter respondsTo: #activateAtPath: ])
+				ifTrue: [ adapter activateAtPath: (aDictionary at: 'path' ifAbsent: [ #() ]) ].
 			^ self ].
 
 	(receiver = 'SpTextInputFieldPresenter' and: [ selector = 'text:' ])

@@ -527,6 +527,9 @@ public struct CiderSpecModel: Equatable, Sendable {
                 list.selectedIndexes = selectedIndexes
                 model.lists[event.id] = list
 
+            case .listPresenterActivateAtIndex:
+                break
+
             case .tablePresenterBuild:
                 guard
                     let columns = event.columns,
@@ -551,6 +554,9 @@ public struct CiderSpecModel: Equatable, Sendable {
                 }
                 table.selectedIndexes = selectedIndexes
                 model.tables[event.id] = table
+
+            case .tablePresenterActivateAtIndex:
+                break
 
             case .treePresenterBuild:
                 guard let roots = event.roots, let selectedPaths = event.selectedPaths else {
@@ -578,6 +584,9 @@ public struct CiderSpecModel: Equatable, Sendable {
                 tree.selectedPaths = selectedPaths
                 model.trees[event.id] = tree
 
+            case .treePresenterActivateAtPath:
+                break
+
             case .treeTablePresenterBuild:
                 guard
                     let columns = event.columns,
@@ -604,6 +613,9 @@ public struct CiderSpecModel: Equatable, Sendable {
                 }
                 treeTable.selectedPaths = selectedPaths
                 model.treeTables[event.id] = treeTable
+
+            case .treeTablePresenterActivateAtPath:
+                break
 
             case .codePresenterBuild:
                 guard

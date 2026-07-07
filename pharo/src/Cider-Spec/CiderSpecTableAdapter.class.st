@@ -36,6 +36,12 @@ CiderSpecTableAdapter >> refreshWidgetSelection [
 ]
 
 { #category : 'events' }
+CiderSpecTableAdapter >> activateAtIndex: anIndex [
+
+	self presenter doActivateAtIndex: anIndex
+]
+
+{ #category : 'events' }
 CiderSpecTableAdapter >> selectedIndexes: indexes [
 
 	self presenter selection selectIndexes: indexes

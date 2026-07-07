@@ -66,6 +66,9 @@ CiderInteractiveClickPresenter >> initializePresenters [
 	list whenSelectionChangedDo: [ :selection |
 		selection selectedItem ifNotNil: [ :item |
 			label label: 'Selected ' , item ] ].
+	list whenActivatedDo: [ :selection |
+		selection selectedItem ifNotNil: [ :item |
+			label label: 'Activated ' , item ] ].
 
 	tree := self newTree.
 	tree
@@ -79,7 +82,10 @@ CiderInteractiveClickPresenter >> initializePresenters [
 						ifFalse: [ #() ] ] ].
 	tree whenSelectionChangedDo: [ :selection |
 		selection selectedItem ifNotNil: [ :item |
-			label label: 'Tree ' , item ] ]
+			label label: 'Tree ' , item ] ].
+	tree whenActivatedDo: [ :selection |
+		selection selectedItem ifNotNil: [ :item |
+			label label: 'Activated Tree ' , item ] ]
 ]
 
 { #category : 'accessing' }

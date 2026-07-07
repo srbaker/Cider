@@ -38,12 +38,16 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case textInputFieldSetText
         case listPresenterBuild
         case listPresenterSetSelectedIndexes
+        case listPresenterActivateAtIndex
         case tablePresenterBuild
         case tablePresenterSetSelectedIndexes
+        case tablePresenterActivateAtIndex
         case treePresenterBuild
         case treePresenterSetSelectedPaths
+        case treePresenterActivateAtPath
         case treeTablePresenterBuild
         case treeTablePresenterSetSelectedPaths
+        case treeTablePresenterActivateAtPath
         case codePresenterBuild
         case micScrolledTextMorphBuild
         case nativeWidgetBuild
@@ -82,6 +86,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public var selectedIndexes: [Int]?
     public var selectedIndex: Int?
     public var selectedPaths: [[Int]]?
+    public var index: Int?
+    public var path: [Int]?
     public var lineNumbers: Bool?
     public var syntaxHighlight: Bool?
     public var widgetClass: String?
@@ -119,6 +125,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         selectedIndexes: [Int]? = nil,
         selectedIndex: Int? = nil,
         selectedPaths: [[Int]]? = nil,
+        index: Int? = nil,
+        path: [Int]? = nil,
         lineNumbers: Bool? = nil,
         syntaxHighlight: Bool? = nil,
         widgetClass: String? = nil,
@@ -155,6 +163,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         self.selectedIndexes = selectedIndexes
         self.selectedIndex = selectedIndex
         self.selectedPaths = selectedPaths
+        self.index = index
+        self.path = path
         self.lineNumbers = lineNumbers
         self.syntaxHighlight = syntaxHighlight
         self.widgetClass = widgetClass
@@ -199,18 +209,26 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .listPresenterBuild
         case ("SpListPresenter", "selectedIndexes:"):
             .listPresenterSetSelectedIndexes
+        case ("SpListPresenter", "doActivateAtIndex:"):
+            .listPresenterActivateAtIndex
         case ("SpTablePresenter", "build"):
             .tablePresenterBuild
         case ("SpTablePresenter", "selectedIndexes:"):
             .tablePresenterSetSelectedIndexes
+        case ("SpTablePresenter", "doActivateAtIndex:"):
+            .tablePresenterActivateAtIndex
         case ("SpTreePresenter", "build"):
             .treePresenterBuild
         case ("SpTreePresenter", "selectedPaths:"):
             .treePresenterSetSelectedPaths
+        case ("SpTreePresenter", "doActivateAtPath:"):
+            .treePresenterActivateAtPath
         case ("SpTreeTablePresenter", "build"):
             .treeTablePresenterBuild
         case ("SpTreeTablePresenter", "selectedPaths:"):
             .treeTablePresenterSetSelectedPaths
+        case ("SpTreeTablePresenter", "doActivateAtPath:"):
+            .treeTablePresenterActivateAtPath
         case ("SpCodePresenter", "build"):
             .codePresenterBuild
         case ("MicScrolledTextMorph", "build"):

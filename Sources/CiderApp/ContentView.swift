@@ -8,9 +8,13 @@ struct ContentView: View {
     let onCheckBoxStateChange: (String, Bool) -> Void
     let onDropListSelection: (String, Int) -> Void
     let onListSelection: (String, [Int]) -> Void
+    let onListActivation: (String, Int) -> Void
     let onTableSelection: (String, [Int]) -> Void
+    let onTableActivation: (String, Int) -> Void
     let onTreeSelection: (String, [[Int]]) -> Void
+    let onTreeActivation: (String, [Int]) -> Void
     let onTreeTableSelection: (String, [[Int]]) -> Void
+    let onTreeTableActivation: (String, [Int]) -> Void
 
     var body: some View {
         Group {
@@ -22,9 +26,13 @@ struct ContentView: View {
                     onCheckBoxStateChange: onCheckBoxStateChange,
                     onDropListSelection: onDropListSelection,
                     onListSelection: onListSelection,
+                    onListActivation: onListActivation,
                     onTableSelection: onTableSelection,
+                    onTableActivation: onTableActivation,
                     onTreeSelection: onTreeSelection,
-                    onTreeTableSelection: onTreeTableSelection
+                    onTreeActivation: onTreeActivation,
+                    onTreeTableSelection: onTreeTableSelection,
+                    onTreeTableActivation: onTreeTableActivation
                 )
             } else {
                 Text(model.title)
