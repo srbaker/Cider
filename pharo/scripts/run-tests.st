@@ -4,19 +4,21 @@ Metacello new
 	load: 'Tests'.
 
 Smalltalk globals at: #CiderHelloWorldWireTest ifPresent: [ :testClass |
-	[
-		testClass new testHelloWorldPresenterEmitsWindowBoxLabelAndEdges.
-		Smalltalk snapshot: false andQuit: true ]
-		on: Error
-		do: [ :error |
-			Stdio stderr
-				nextPutAll: error printString;
-				lf;
-				flush.
-			Smalltalk exitFailure ] ].
+	Smalltalk globals at: #CiderClassMethodBrowserWireTest ifPresent: [ :browserTestClass |
+		[
+			testClass new testHelloWorldPresenterEmitsWindowBoxLabelAndEdges.
+			browserTestClass new testClassMethodBrowserEmitsExistingSpecBrowserShape.
+			Smalltalk snapshot: false andQuit: true ]
+			on: Error
+			do: [ :error |
+				Stdio stderr
+					nextPutAll: error printString;
+					lf;
+					flush.
+				Smalltalk exitFailure ] ] ].
 
 Stdio stderr
-	nextPutAll: 'CiderHelloWorldWireTest was not loaded.';
+	nextPutAll: 'Cider Pharo tests were not loaded.';
 	lf;
 	flush.
 Smalltalk exitFailure

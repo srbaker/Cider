@@ -3,7 +3,7 @@ import SwiftUI
 
 @main
 struct CiderApp: App {
-    private static let helloWorldScript = "pharo/scripts/emit-hello-world.st"
+    private static let demoScript = "pharo/scripts/emit-class-method-browser.st"
 
     @State private var model = CiderAppModel.helloWorld
 
@@ -12,17 +12,17 @@ struct CiderApp: App {
             ContentView(model: model)
                 .frame(minWidth: 720, minHeight: 480)
                 .task {
-                    await loadHelloWorldFromPharo()
+                    await loadDemoFromPharo()
                 }
         }
     }
 
     @MainActor
-    private func loadHelloWorldFromPharo() async {
+    private func loadDemoFromPharo() async {
         guard let bridge = try? CiderPharoBridge.preparedLocal() else {
             return
         }
-        guard let specModel = try? await bridge.model(from: Self.helloWorldScript) else {
+        guard let specModel = try? await bridge.model(from: Self.demoScript) else {
             return
         }
 

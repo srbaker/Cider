@@ -101,6 +101,20 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct SpCodePresenter: Equatable, Sendable {
+        public var id: String
+        public var text: String
+        public var lineNumbers: Bool
+        public var syntaxHighlight: Bool
+
+        public init(id: String, text: String, lineNumbers: Bool, syntaxHighlight: Bool) {
+            self.id = id
+            self.text = text
+            self.lineNumbers = lineNumbers
+            self.syntaxHighlight = syntaxHighlight
+        }
+    }
+
     public enum BuildError: Error, Equatable, Sendable {
         case missingWindowPayload(String)
         case missingBoxPayload(String)
@@ -109,6 +123,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         case missingButtonPayload(String)
         case missingTextInputFieldPayload(String)
         case missingListPayload(String)
+        case missingCodePayload(String)
         case missingBoxChildPayload(String)
         case missingPanedChildPayload(String)
         case missingWindowPresenterPayload(String)
@@ -124,6 +139,7 @@ public struct CiderSpecModel: Equatable, Sendable {
     public var buttons: [String: SpButtonPresenter]
     public var textInputFields: [String: SpTextInputFieldPresenter]
     public var lists: [String: SpListPresenter]
+    public var codePresenters: [String: SpCodePresenter]
 
     public init(
         windows: [String: SpWindowPresenter] = [:],
@@ -132,7 +148,8 @@ public struct CiderSpecModel: Equatable, Sendable {
         labels: [String: SpLabelPresenter] = [:],
         buttons: [String: SpButtonPresenter] = [:],
         textInputFields: [String: SpTextInputFieldPresenter] = [:],
-        lists: [String: SpListPresenter] = [:]
+        lists: [String: SpListPresenter] = [:],
+        codePresenters: [String: SpCodePresenter] = [:]
     ) {
         self.windows = windows
         self.boxLayouts = boxLayouts
@@ -141,6 +158,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         self.buttons = buttons
         self.textInputFields = textInputFields
         self.lists = lists
+        self.codePresenters = codePresenters
     }
 
     public static func build(from events: [CiderWireEvent]) throws -> CiderSpecModel {
@@ -208,6 +226,21 @@ public struct CiderSpecModel: Equatable, Sendable {
                     throw BuildError.missingListPayload(event.id)
                 }
                 model.lists[event.id] = SpListPresenter(id: event.id, items: items)
+
+            case .codePresenterBuild:
+                guard
+                    let text = event.text,
+                    let lineNumbers = event.lineNumbers,
+                    let syntaxHighlight = event.syntaxHighlight
+                else {
+                    throw BuildError.missingCodePayload(event.id)
+                }
+                model.codePresenters[event.id] = SpCodePresenter(
+                    id: event.id,
+                    text: text,
+                    lineNumbers: lineNumbers,
+                    syntaxHighlight: syntaxHighlight
+                )
 
             case .boxLayoutAdd:
                 guard let child = event.child, let expand = event.expand else {

@@ -73,6 +73,22 @@ import Testing
     #expect(model.lists["n7"]?.items == ["Packages", "Classes", "Protocols", "Methods"])
 }
 
+@Test func ciderSpecModelReconstructsCodePresenter() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpCodePresenter","selector":"build","id":"n1","adapter":"CodeAdapter","text":"Object subclass: #CiderDemo","lineNumbers":true,"syntaxHighlight":true}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.first?.kind == .codePresenterBuild)
+    #expect(model.codePresenters["n1"] == CiderSpecModel.SpCodePresenter(
+        id: "n1",
+        text: "Object subclass: #CiderDemo",
+        lineNumbers: true,
+        syntaxHighlight: true
+    ))
+}
+
 @Test func ciderWireOutputIgnoresNonProtocolLines() throws {
     let output = """
     MetacelloNotification: Loading baseline of BaselineOfCider...

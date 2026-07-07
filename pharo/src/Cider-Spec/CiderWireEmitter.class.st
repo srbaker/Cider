@@ -60,6 +60,19 @@ CiderWireEmitter >> buttonPresenterBuilt: aNode label: aString enabled: aBoolean
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> codePresenterBuilt: aNode text: aString lineNumbers: lineNumbersBoolean syntaxHighlight: syntaxHighlightBoolean [
+
+	self emit: {
+		#receiver -> 'SpCodePresenter'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'CodeAdapter'.
+		#text -> aString.
+		#lineNumbers -> lineNumbersBoolean.
+		#syntaxHighlight -> syntaxHighlightBoolean }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> emit: associations [
 
 	stream

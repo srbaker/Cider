@@ -31,9 +31,22 @@ struct CiderSpecRenderer: View {
             return renderTextInputField(textInputField)
         } else if let list = model.lists[id] {
             return renderList(list)
+        } else if let codePresenter = model.codePresenters[id] {
+            return renderCodePresenter(codePresenter)
         } else {
             return AnyView(EmptyView())
         }
+    }
+
+    private func renderCodePresenter(_ codePresenter: CiderSpecModel.SpCodePresenter) -> AnyView {
+        AnyView(ScrollView([.horizontal, .vertical]) {
+            Text(codePresenter.text)
+                .font(.system(.body, design: .monospaced))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .padding(8)
+                .textSelection(.enabled)
+        }
+        .frame(minHeight: 160))
     }
 
     private func renderList(_ list: CiderSpecModel.SpListPresenter) -> AnyView {
