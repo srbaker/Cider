@@ -31,6 +31,12 @@ Run the full local check with:
 scripts/test
 ```
 
+Emit a headless snapshot of Pharo's default Calypso system browser with:
+
+```sh
+scripts/calypso
+```
+
 Run Swift-only checks with:
 
 ```sh
