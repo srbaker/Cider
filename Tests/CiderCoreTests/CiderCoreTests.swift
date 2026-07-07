@@ -256,6 +256,29 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelAppliesTreeSelectionUpdates() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpTreePresenter","selector":"build","id":"n1","adapter":"TreeAdapter","roots":["Smalltalk"],"nodes":[{"path":[1],"label":"Smalltalk"},{"path":[1,1],"label":"Spec"}],"selectedPaths":[]}
+    CIDER:{"receiver":"SpTreePresenter","selector":"selectedPaths:","id":"n1","selectedPaths":[[1,1]]}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.map(\.kind) == [
+        .treePresenterBuild,
+        .treePresenterSetSelectedPaths
+    ])
+    #expect(model.trees["n1"] == CiderSpecModel.SpTreePresenter(
+        id: "n1",
+        roots: ["Smalltalk"],
+        nodes: [
+            CiderSpecModel.SpTreePresenter.Node(path: [1], label: "Smalltalk"),
+            CiderSpecModel.SpTreePresenter.Node(path: [1, 1], label: "Spec")
+        ],
+        selectedPaths: [[1, 1]]
+    ))
+}
+
 @Test func ciderSpecModelReconstructsPaginatorPresenter() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpPaginatorPresenter","selector":"build","id":"n1","adapter":"PaginatorAdapter","pages":7,"selectedPage":3,"visiblePages":2}

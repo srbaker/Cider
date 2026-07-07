@@ -5,6 +5,7 @@ struct CiderSpecRenderer: View {
     let model: CiderSpecModel
     let onButtonClick: (String) -> Void
     let onListSelection: (String, [Int]) -> Void
+    let onTreeSelection: (String, [[Int]]) -> Void
 
     private var rootWindow: CiderSpecModel.SpWindowPresenter? {
         model.windows.values.sorted { $0.id < $1.id }.first
@@ -187,15 +188,20 @@ struct CiderSpecRenderer: View {
 
     private func renderTree(_ tree: CiderSpecModel.SpTreePresenter) -> AnyView {
         AnyView(List(tree.nodes, id: \.path) { node in
-            Text(node.label)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, CGFloat(max(node.path.count - 1, 0) * 14))
-                .padding(.vertical, 2)
-                .listRowBackground(
-                    tree.selectedPaths.contains(node.path)
-                        ? Color.accentColor.opacity(0.18)
-                        : Color.clear
-                )
+            Button {
+                onTreeSelection(tree.id, [node.path])
+            } label: {
+                Text(node.label)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, CGFloat(max(node.path.count - 1, 0) * 14))
+                    .padding(.vertical, 2)
+            }
+            .buttonStyle(.plain)
+            .listRowBackground(
+                tree.selectedPaths.contains(node.path)
+                    ? Color.accentColor.opacity(0.18)
+                    : Color.clear
+            )
         }
         .frame(minHeight: 120))
     }

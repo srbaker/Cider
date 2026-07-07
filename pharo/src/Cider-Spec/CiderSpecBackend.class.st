@@ -64,7 +64,13 @@ CiderSpecBackend >> dispatchIncomingEvent: aDictionary [
 	(receiver = 'SpListPresenter' and: [ selector = 'selectedIndexes:' ])
 		ifTrue: [
 			(adapter notNil and: [ adapter respondsTo: #selectedIndexes: ])
-				ifTrue: [ adapter selectedIndexes: (aDictionary at: 'selectedIndexes' ifAbsent: [ #() ]) ] ]
+				ifTrue: [ adapter selectedIndexes: (aDictionary at: 'selectedIndexes' ifAbsent: [ #() ]) ].
+			^ self ].
+
+	(receiver = 'SpTreePresenter' and: [ selector = 'selectedPaths:' ])
+		ifTrue: [
+			(adapter notNil and: [ adapter respondsTo: #selectedPaths: ])
+				ifTrue: [ adapter selectedPaths: (aDictionary at: 'selectedPaths' ifAbsent: [ #() ]) ] ]
 ]
 
 { #category : 'ui' }

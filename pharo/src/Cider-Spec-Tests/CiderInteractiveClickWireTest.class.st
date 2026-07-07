@@ -85,3 +85,41 @@ CiderInteractiveClickWireTest >> testListSelectionDispatchesSelectionAndEmitsLab
 	self assert: (stream contents lines anySatisfy: [ :line |
 		line = ('CIDER:{"receiver":"SpLabelPresenter","selector":"label:","id":"' , labelId , '","label":"Selected Beta"}') ])
 ]
+
+{ #category : 'tests' }
+CiderInteractiveClickWireTest >> testTreeSelectionDispatchesSelectionAndEmitsLabelUpdate [
+	| stream emitter application presenter lines treeLine treeId labelLine labelId |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	application := StPharoApplication new.
+	application useBackend: #Cider.
+	application backend emitter: emitter.
+
+	presenter := application newPresenter: CiderInteractiveClickPresenter.
+	presenter open.
+
+	lines := stream contents lines.
+	labelLine := lines detect: [ :line |
+		(line includesSubstring: '"receiver":"SpLabelPresenter"')
+			and: [ line includesSubstring: '"label":"Not clicked"' ] ].
+	labelId := self idFromLine: labelLine.
+	treeLine := lines detect: [ :line |
+		(line includesSubstring: '"receiver":"SpTreePresenter"')
+			and: [ line includesSubstring: '"Spec"' ] ].
+	treeId := self idFromLine: treeLine.
+
+	application backend dispatchIncomingEvent: (Dictionary new
+		at: 'receiver' put: 'SpTreePresenter';
+		at: 'selector' put: 'selectedPaths:';
+		at: 'id' put: treeId;
+		at: 'selectedPaths' put: #( #( 1 1 ) );
+		yourself).
+
+	self assert: presenter tree selection selectedPaths asArray equals: #( #( 1 1 ) ).
+	self assert: presenter label label equals: 'Tree Spec'.
+	self assert: (stream contents lines anySatisfy: [ :line |
+		line = ('CIDER:{"receiver":"SpTreePresenter","selector":"selectedPaths:","id":"' , treeId , '","selectedPaths":[[1,1]]}') ]).
+	self assert: (stream contents lines anySatisfy: [ :line |
+		line = ('CIDER:{"receiver":"SpLabelPresenter","selector":"label:","id":"' , labelId , '","label":"Tree Spec"}') ])
+]

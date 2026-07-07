@@ -467,6 +467,16 @@ public struct CiderSpecModel: Equatable, Sendable {
                     selectedPaths: selectedPaths
                 )
 
+            case .treePresenterSetSelectedPaths:
+                guard let selectedPaths = event.selectedPaths else {
+                    throw BuildError.missingTreePayload(event.id)
+                }
+                guard var tree = model.trees[event.id] else {
+                    throw BuildError.missingTreePayload(event.id)
+                }
+                tree.selectedPaths = selectedPaths
+                model.trees[event.id] = tree
+
             case .codePresenterBuild:
                 guard
                     let text = event.text,

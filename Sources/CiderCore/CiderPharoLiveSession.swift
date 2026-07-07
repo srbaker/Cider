@@ -105,6 +105,16 @@ public final class CiderPharoLiveSession: @unchecked Sendable {
         try await send(event)
     }
 
+    public func selectTreePaths(id: String, paths: [[Int]]) async throws {
+        let event = CiderWireEvent(
+            receiver: "SpTreePresenter",
+            selector: "selectedPaths:",
+            id: id,
+            selectedPaths: paths
+        )
+        try await send(event)
+    }
+
     public func send(_ event: CiderWireEvent) async throws {
         try await withCheckedThrowingContinuation { continuation in
             writeQueue.async {

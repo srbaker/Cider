@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'label',
 		'button',
-		'list'
+		'list',
+		'tree'
 	],
 	#category : 'Cider-Spec-Examples',
 	#package : 'Cider-Spec-Examples'
@@ -17,6 +18,7 @@ CiderInteractiveClickPresenter >> defaultLayout [
 		add: label expand: false;
 		add: button expand: false;
 		add: list expand: true;
+		add: tree expand: true;
 		yourself
 ]
 
@@ -35,7 +37,21 @@ CiderInteractiveClickPresenter >> initializePresenters [
 	list items: #( 'Alpha' 'Beta' 'Gamma' ).
 	list whenSelectionChangedDo: [ :selection |
 		selection selectedItem ifNotNil: [ :item |
-			label label: 'Selected ' , item ] ]
+			label label: 'Selected ' , item ] ].
+
+	tree := self newTree.
+	tree
+		roots: #( 'Smalltalk' 'Swift' );
+		children: [ :item |
+			item = 'Smalltalk'
+				ifTrue: [ #( 'Spec' 'SUnit' ) ]
+				ifFalse: [
+					item = 'Swift'
+						ifTrue: [ #( 'SwiftUI' 'Swift Testing' ) ]
+						ifFalse: [ #() ] ] ].
+	tree whenSelectionChangedDo: [ :selection |
+		selection selectedItem ifNotNil: [ :item |
+			label label: 'Tree ' , item ] ]
 ]
 
 { #category : 'accessing' }
@@ -54,6 +70,12 @@ CiderInteractiveClickPresenter >> label [
 CiderInteractiveClickPresenter >> list [
 
 	^ list
+]
+
+{ #category : 'accessing' }
+CiderInteractiveClickPresenter >> tree [
+
+	^ tree
 ]
 
 { #category : 'accessing' }

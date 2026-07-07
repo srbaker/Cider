@@ -5,6 +5,7 @@ struct ContentView: View {
     let model: CiderAppModel
     let onButtonClick: (String) -> Void
     let onListSelection: (String, [Int]) -> Void
+    let onTreeSelection: (String, [[Int]]) -> Void
 
     var body: some View {
         Group {
@@ -12,7 +13,8 @@ struct ContentView: View {
                 CiderSpecRenderer(
                     model: specModel,
                     onButtonClick: onButtonClick,
-                    onListSelection: onListSelection
+                    onListSelection: onListSelection,
+                    onTreeSelection: onTreeSelection
                 )
             } else {
                 Text(model.title)

@@ -280,6 +280,16 @@ CiderWireEmitter >> treePresenterBuilt: aNode roots: rootStrings nodes: nodeDict
 		#selectedPaths -> selectedPaths }
 ]
 
+{ #category : 'emitting' }
+CiderWireEmitter >> treePresenter: aNode selectedPathsChangedTo: selectedPaths [
+
+	self emit: {
+		#receiver -> 'SpTreePresenter'.
+		#selector -> 'selectedPaths:'.
+		#id -> aNode id.
+		#selectedPaths -> selectedPaths }
+]
+
 { #category : 'initialization' }
 CiderWireEmitter >> initialize [
 
