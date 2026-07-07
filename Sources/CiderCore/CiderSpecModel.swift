@@ -45,10 +45,23 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct SpButtonPresenter: Equatable, Sendable {
+        public var id: String
+        public var label: String
+        public var enabled: Bool
+
+        public init(id: String, label: String, enabled: Bool) {
+            self.id = id
+            self.label = label
+            self.enabled = enabled
+        }
+    }
+
     public enum BuildError: Error, Equatable, Sendable {
         case missingWindowPayload(String)
         case missingBoxPayload(String)
         case missingLabelPayload(String)
+        case missingButtonPayload(String)
         case missingBoxChildPayload(String)
         case missingWindowPresenterPayload(String)
         case unknownBox(String)
@@ -58,15 +71,18 @@ public struct CiderSpecModel: Equatable, Sendable {
     public var windows: [String: SpWindowPresenter]
     public var boxLayouts: [String: SpBoxLayout]
     public var labels: [String: SpLabelPresenter]
+    public var buttons: [String: SpButtonPresenter]
 
     public init(
         windows: [String: SpWindowPresenter] = [:],
         boxLayouts: [String: SpBoxLayout] = [:],
-        labels: [String: SpLabelPresenter] = [:]
+        labels: [String: SpLabelPresenter] = [:],
+        buttons: [String: SpButtonPresenter] = [:]
     ) {
         self.windows = windows
         self.boxLayouts = boxLayouts
         self.labels = labels
+        self.buttons = buttons
     }
 
     public static func build(from events: [CiderWireEvent]) throws -> CiderSpecModel {
@@ -95,6 +111,16 @@ public struct CiderSpecModel: Equatable, Sendable {
                     throw BuildError.missingLabelPayload(event.id)
                 }
                 model.labels[event.id] = SpLabelPresenter(id: event.id, label: label)
+
+            case .buttonPresenterBuild:
+                guard let label = event.label, let enabled = event.enabled else {
+                    throw BuildError.missingButtonPayload(event.id)
+                }
+                model.buttons[event.id] = SpButtonPresenter(
+                    id: event.id,
+                    label: label,
+                    enabled: enabled
+                )
 
             case .boxLayoutAdd:
                 guard let child = event.child, let expand = event.expand else {

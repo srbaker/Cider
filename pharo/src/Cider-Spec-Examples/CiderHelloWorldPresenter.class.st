@@ -2,7 +2,8 @@ Class {
 	#name : 'CiderHelloWorldPresenter',
 	#superclass : 'SpPresenter',
 	#instVars : [
-		'label'
+		'label',
+		'button'
 	],
 	#category : 'Cider-Spec-Examples',
 	#package : 'Cider-Spec-Examples'
@@ -13,6 +14,7 @@ CiderHelloWorldPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
 		add: label expand: false;
+		add: button expand: false;
 		yourself
 ]
 
@@ -20,7 +22,16 @@ CiderHelloWorldPresenter >> defaultLayout [
 CiderHelloWorldPresenter >> initializePresenters [
 
 	label := self newLabel.
-	label label: 'Hello, World!'
+	label label: 'Hello, World!'.
+
+	button := self newButton.
+	button label: 'Click me!'
+]
+
+{ #category : 'accessing' }
+CiderHelloWorldPresenter >> button [
+
+	^ button
 ]
 
 { #category : 'accessing' }

@@ -22,6 +22,9 @@ struct CiderSpecRenderer: View {
             return renderBoxLayout(boxLayout)
         } else if let label = model.labels[id] {
             return AnyView(Text(label.label))
+        } else if let button = model.buttons[id] {
+            return AnyView(Button(button.label) {}
+                .disabled(!button.enabled))
         } else {
             return AnyView(EmptyView())
         }

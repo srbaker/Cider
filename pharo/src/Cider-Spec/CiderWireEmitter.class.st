@@ -37,6 +37,18 @@ CiderWireEmitter >> boxLayout: aNode added: childNode expand: aBoolean [
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> buttonPresenterBuilt: aNode label: aString enabled: aBoolean [
+
+	self emit: {
+		#receiver -> 'SpButtonPresenter'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'ButtonAdapter'.
+		#label -> aString.
+		#enabled -> aBoolean }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> emit: associations [
 
 	stream

@@ -4,7 +4,7 @@ Cider is a macOS-first SwiftUI frontend for Smalltalk. The Swift app will receiv
 
 Phase 0 establishes the project floor: SwiftPM structure, a minimal SwiftUI app shell, a pure Swift core module, Swift Testing coverage, and a headless Pharo availability check.
 
-Phase 1 adds the first Spec-shaped wire slice. A minimal Pharo Spec application emits `CIDER:`-prefixed NDJSON records whose payloads use Spec vocabulary such as `SpWindowPresenter`, `SpBoxLayout`, `SpLabelPresenter`, adapter names, selectors, and presenter relationships.
+Phase 1 adds the first Spec-shaped wire slice. A minimal Pharo Spec application emits `CIDER:`-prefixed NDJSON records whose payloads use Spec vocabulary such as `SpWindowPresenter`, `SpBoxLayout`, `SpLabelPresenter`, `SpButtonPresenter`, adapter names, selectors, and presenter relationships.
 
 ## Requirements
 

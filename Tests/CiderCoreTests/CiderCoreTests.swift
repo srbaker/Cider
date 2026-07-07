@@ -16,6 +16,8 @@ import Testing
         .boxLayoutBuild,
         .labelPresenterBuild,
         .boxLayoutAdd,
+        .buttonPresenterBuild,
+        .boxLayoutAdd,
         .windowPresenterSet
     ])
     #expect(events[0].presenter == "CiderHelloWorldPresenter")
@@ -24,7 +26,11 @@ import Testing
     #expect(events[2].label == "Hello, World!")
     #expect(events[3].child == "n3")
     #expect(events[3].expand == false)
-    #expect(events[4].presenterLayout == "n2")
+    #expect(events[4].label == "Click me!")
+    #expect(events[4].enabled == true)
+    #expect(events[5].child == "n4")
+    #expect(events[5].expand == false)
+    #expect(events[6].presenterLayout == "n2")
 }
 
 @Test func ciderSpecModelReconstructsHelloWorldTree() throws {
@@ -35,9 +41,12 @@ import Testing
     #expect(model.windows["n1"]?.presenterLayout == "n2")
     #expect(model.boxLayouts["n2"]?.direction == "topToBottom")
     #expect(model.boxLayouts["n2"]?.children == [
-        CiderSpecModel.SpBoxLayout.Child(id: "n3", expand: false)
+        CiderSpecModel.SpBoxLayout.Child(id: "n3", expand: false),
+        CiderSpecModel.SpBoxLayout.Child(id: "n4", expand: false)
     ])
     #expect(model.labels["n3"]?.label == "Hello, World!")
+    #expect(model.buttons["n4"]?.label == "Click me!")
+    #expect(model.buttons["n4"]?.enabled == true)
 }
 
 @Test func ciderWireOutputIgnoresNonProtocolLines() throws {
