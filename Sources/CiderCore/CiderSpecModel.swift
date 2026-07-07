@@ -47,6 +47,20 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct SpMillerLayout: Equatable, Sendable {
+        public var id: String
+        public var direction: String
+        public var visiblePages: Int
+        public var children: [String]
+
+        public init(id: String, direction: String, visiblePages: Int, children: [String] = []) {
+            self.id = id
+            self.direction = direction
+            self.visiblePages = visiblePages
+            self.children = children
+        }
+    }
+
     public struct SpLabelPresenter: Equatable, Sendable {
         public var id: String
         public var label: String
@@ -54,6 +68,20 @@ public struct CiderSpecModel: Equatable, Sendable {
         public init(id: String, label: String) {
             self.id = id
             self.label = label
+        }
+    }
+
+    public struct SpImagePresenter: Equatable, Sendable {
+        public var id: String
+        public var width: Int
+        public var height: Int
+        public var autoScale: Bool
+
+        public init(id: String, width: Int, height: Int, autoScale: Bool) {
+            self.id = id
+            self.width = width
+            self.height = height
+            self.autoScale = autoScale
         }
     }
 
@@ -65,6 +93,20 @@ public struct CiderSpecModel: Equatable, Sendable {
         public init(id: String, label: String, enabled: Bool) {
             self.id = id
             self.label = label
+            self.enabled = enabled
+        }
+    }
+
+    public struct SpCheckBoxPresenter: Equatable, Sendable {
+        public var id: String
+        public var label: String
+        public var state: Bool
+        public var enabled: Bool
+
+        public init(id: String, label: String, state: Bool, enabled: Bool) {
+            self.id = id
+            self.label = label
+            self.state = state
             self.enabled = enabled
         }
     }
@@ -117,50 +159,96 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct SpNativeWidget: Equatable, Sendable {
+        public var id: String
+        public var widgetClass: String
+
+        public init(id: String, widgetClass: String) {
+            self.id = id
+            self.widgetClass = widgetClass
+        }
+    }
+
+    public struct SpPaginatorPresenter: Equatable, Sendable {
+        public var id: String
+        public var pages: Int
+        public var selectedPage: Int
+        public var visiblePages: Int
+
+        public init(id: String, pages: Int, selectedPage: Int, visiblePages: Int) {
+            self.id = id
+            self.pages = pages
+            self.selectedPage = selectedPage
+            self.visiblePages = visiblePages
+        }
+    }
+
     public enum BuildError: Error, Equatable, Sendable {
         case missingWindowPayload(String)
         case missingBoxPayload(String)
         case missingPanedPayload(String)
+        case missingMillerPayload(String)
         case missingLabelPayload(String)
+        case missingImagePayload(String)
         case missingButtonPayload(String)
+        case missingCheckBoxPayload(String)
         case missingTextInputFieldPayload(String)
         case missingListPayload(String)
         case missingCodePayload(String)
+        case missingNativeWidgetPayload(String)
+        case missingPaginatorPayload(String)
         case missingBoxChildPayload(String)
         case missingPanedChildPayload(String)
+        case missingMillerChildPayload(String)
         case missingWindowPresenterPayload(String)
         case unknownBox(String)
         case unknownPaned(String)
+        case unknownMiller(String)
         case unknownWindow(String)
     }
 
     public var windows: [String: SpWindowPresenter]
     public var boxLayouts: [String: SpBoxLayout]
     public var panedLayouts: [String: SpPanedLayout]
+    public var millerLayouts: [String: SpMillerLayout]
     public var labels: [String: SpLabelPresenter]
+    public var images: [String: SpImagePresenter]
     public var buttons: [String: SpButtonPresenter]
+    public var checkBoxes: [String: SpCheckBoxPresenter]
     public var textInputFields: [String: SpTextInputFieldPresenter]
     public var lists: [String: SpListPresenter]
     public var codePresenters: [String: SpCodePresenter]
+    public var nativeWidgets: [String: SpNativeWidget]
+    public var paginators: [String: SpPaginatorPresenter]
 
     public init(
         windows: [String: SpWindowPresenter] = [:],
         boxLayouts: [String: SpBoxLayout] = [:],
         panedLayouts: [String: SpPanedLayout] = [:],
+        millerLayouts: [String: SpMillerLayout] = [:],
         labels: [String: SpLabelPresenter] = [:],
+        images: [String: SpImagePresenter] = [:],
         buttons: [String: SpButtonPresenter] = [:],
+        checkBoxes: [String: SpCheckBoxPresenter] = [:],
         textInputFields: [String: SpTextInputFieldPresenter] = [:],
         lists: [String: SpListPresenter] = [:],
-        codePresenters: [String: SpCodePresenter] = [:]
+        codePresenters: [String: SpCodePresenter] = [:],
+        nativeWidgets: [String: SpNativeWidget] = [:],
+        paginators: [String: SpPaginatorPresenter] = [:]
     ) {
         self.windows = windows
         self.boxLayouts = boxLayouts
         self.panedLayouts = panedLayouts
+        self.millerLayouts = millerLayouts
         self.labels = labels
+        self.images = images
         self.buttons = buttons
+        self.checkBoxes = checkBoxes
         self.textInputFields = textInputFields
         self.lists = lists
         self.codePresenters = codePresenters
+        self.nativeWidgets = nativeWidgets
+        self.paginators = paginators
     }
 
     public var primaryWindow: SpWindowPresenter? {
@@ -194,11 +282,36 @@ public struct CiderSpecModel: Equatable, Sendable {
                 }
                 model.panedLayouts[event.id] = SpPanedLayout(id: event.id, direction: direction)
 
+            case .millerLayoutBuild:
+                guard let direction = event.direction, let visiblePages = event.visiblePages else {
+                    throw BuildError.missingMillerPayload(event.id)
+                }
+                model.millerLayouts[event.id] = SpMillerLayout(
+                    id: event.id,
+                    direction: direction,
+                    visiblePages: visiblePages
+                )
+
             case .labelPresenterBuild:
                 guard let label = event.label else {
                     throw BuildError.missingLabelPayload(event.id)
                 }
                 model.labels[event.id] = SpLabelPresenter(id: event.id, label: label)
+
+            case .imagePresenterBuild:
+                guard
+                    let width = event.width,
+                    let height = event.height,
+                    let autoScale = event.autoScale
+                else {
+                    throw BuildError.missingImagePayload(event.id)
+                }
+                model.images[event.id] = SpImagePresenter(
+                    id: event.id,
+                    width: width,
+                    height: height,
+                    autoScale: autoScale
+                )
 
             case .buttonPresenterBuild:
                 guard let label = event.label, let enabled = event.enabled else {
@@ -207,6 +320,21 @@ public struct CiderSpecModel: Equatable, Sendable {
                 model.buttons[event.id] = SpButtonPresenter(
                     id: event.id,
                     label: label,
+                    enabled: enabled
+                )
+
+            case .checkBoxPresenterBuild:
+                guard
+                    let label = event.label,
+                    let state = event.state,
+                    let enabled = event.enabled
+                else {
+                    throw BuildError.missingCheckBoxPayload(event.id)
+                }
+                model.checkBoxes[event.id] = SpCheckBoxPresenter(
+                    id: event.id,
+                    label: label,
+                    state: state,
                     enabled: enabled
                 )
 
@@ -252,6 +380,30 @@ public struct CiderSpecModel: Equatable, Sendable {
                     syntaxHighlight: syntaxHighlight
                 )
 
+            case .nativeWidgetBuild:
+                guard let widgetClass = event.widgetClass else {
+                    throw BuildError.missingNativeWidgetPayload(event.id)
+                }
+                model.nativeWidgets[event.id] = SpNativeWidget(
+                    id: event.id,
+                    widgetClass: widgetClass
+                )
+
+            case .paginatorPresenterBuild:
+                guard
+                    let pages = event.pages,
+                    let selectedPage = event.selectedPage,
+                    let visiblePages = event.visiblePages
+                else {
+                    throw BuildError.missingPaginatorPayload(event.id)
+                }
+                model.paginators[event.id] = SpPaginatorPresenter(
+                    id: event.id,
+                    pages: pages,
+                    selectedPage: selectedPage,
+                    visiblePages: visiblePages
+                )
+
             case .boxLayoutAdd:
                 guard let child = event.child, let expand = event.expand else {
                     throw BuildError.missingBoxChildPayload(event.id)
@@ -271,6 +423,16 @@ public struct CiderSpecModel: Equatable, Sendable {
                 }
                 panedLayout.children.append(child)
                 model.panedLayouts[event.id] = panedLayout
+
+            case .millerLayoutAdd:
+                guard let child = event.child else {
+                    throw BuildError.missingMillerChildPayload(event.id)
+                }
+                guard var millerLayout = model.millerLayouts[event.id] else {
+                    throw BuildError.unknownMiller(event.id)
+                }
+                millerLayout.children.append(child)
+                model.millerLayouts[event.id] = millerLayout
 
             case .windowPresenterSet:
                 guard let presenterLayout = event.presenterLayout else {

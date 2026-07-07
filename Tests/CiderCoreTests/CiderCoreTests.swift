@@ -93,6 +93,90 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelReconstructsMillerLayout() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpMillerLayout","selector":"build","id":"n1","adapter":"MillerAdapter","direction":"leftToRight","visiblePages":2}
+    CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n2","adapter":"LabelAdapter","label":"Page"}
+    CIDER:{"receiver":"SpMillerLayout","selector":"add:","id":"n1","child":"n2"}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.map(\.kind) == [
+        .millerLayoutBuild,
+        .labelPresenterBuild,
+        .millerLayoutAdd
+    ])
+    #expect(model.millerLayouts["n1"] == CiderSpecModel.SpMillerLayout(
+        id: "n1",
+        direction: "leftToRight",
+        visiblePages: 2,
+        children: ["n2"]
+    ))
+}
+
+@Test func ciderSpecModelReconstructsImagePresenter() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpImagePresenter","selector":"build","id":"n1","adapter":"ImageAdapter","width":128,"height":64,"autoScale":true}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.first?.kind == .imagePresenterBuild)
+    #expect(model.images["n1"] == CiderSpecModel.SpImagePresenter(
+        id: "n1",
+        width: 128,
+        height: 64,
+        autoScale: true
+    ))
+}
+
+@Test func ciderSpecModelReconstructsNativeWidgetPlaceholder() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpNativeWidget","selector":"build","id":"n1","adapter":"NativeAdapter","widgetClass":"MicScrolledTextMorph"}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.first?.kind == .nativeWidgetBuild)
+    #expect(model.nativeWidgets["n1"] == CiderSpecModel.SpNativeWidget(
+        id: "n1",
+        widgetClass: "MicScrolledTextMorph"
+    ))
+}
+
+@Test func ciderSpecModelReconstructsCheckBoxPresenter() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpCheckBoxPresenter","selector":"build","id":"n1","adapter":"CheckBoxAdapter","label":"Full Screen","state":true,"enabled":false}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.first?.kind == .checkBoxPresenterBuild)
+    #expect(model.checkBoxes["n1"] == CiderSpecModel.SpCheckBoxPresenter(
+        id: "n1",
+        label: "Full Screen",
+        state: true,
+        enabled: false
+    ))
+}
+
+@Test func ciderSpecModelReconstructsPaginatorPresenter() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpPaginatorPresenter","selector":"build","id":"n1","adapter":"PaginatorAdapter","pages":7,"selectedPage":3,"visiblePages":2}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.first?.kind == .paginatorPresenterBuild)
+    #expect(model.paginators["n1"] == CiderSpecModel.SpPaginatorPresenter(
+        id: "n1",
+        pages: 7,
+        selectedPage: 3,
+        visiblePages: 2
+    ))
+}
+
 @Test func ciderWireOutputIgnoresNonProtocolLines() throws {
     let output = """
     MetacelloNotification: Loading baseline of BaselineOfCider...

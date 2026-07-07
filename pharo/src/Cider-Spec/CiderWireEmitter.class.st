@@ -73,6 +73,19 @@ CiderWireEmitter >> codePresenterBuilt: aNode text: aString lineNumbers: lineNum
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> checkBoxPresenterBuilt: aNode label: aString state: stateBoolean enabled: enabledBoolean [
+
+	self emit: {
+		#receiver -> 'SpCheckBoxPresenter'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'CheckBoxAdapter'.
+		#label -> aString.
+		#state -> stateBoolean.
+		#enabled -> enabledBoolean }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> emit: associations [
 
 	stream
@@ -95,6 +108,19 @@ CiderWireEmitter >> labelPresenterBuilt: aNode text: aString [
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> imagePresenterBuilt: aNode width: width height: height autoScale: aBoolean [
+
+	self emit: {
+		#receiver -> 'SpImagePresenter'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'ImageAdapter'.
+		#width -> width.
+		#height -> height.
+		#autoScale -> aBoolean }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> listPresenterBuilt: aNode items: itemStrings selectedIndexes: indexes [
 
 	self emit: {
@@ -104,6 +130,52 @@ CiderWireEmitter >> listPresenterBuilt: aNode items: itemStrings selectedIndexes
 		#adapter -> 'ListAdapter'.
 		#items -> itemStrings.
 		#selectedIndexes -> indexes }
+]
+
+{ #category : 'emitting' }
+CiderWireEmitter >> millerLayout: aNode added: childNode [
+
+	self emit: {
+		#receiver -> 'SpMillerLayout'.
+		#selector -> 'add:'.
+		#id -> aNode id.
+		#child -> childNode id }
+]
+
+{ #category : 'emitting' }
+CiderWireEmitter >> millerLayoutBuilt: aNode direction: aString visiblePages: aNumber [
+
+	self emit: {
+		#receiver -> 'SpMillerLayout'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'MillerAdapter'.
+		#direction -> aString.
+		#visiblePages -> aNumber }
+]
+
+{ #category : 'emitting' }
+CiderWireEmitter >> nativeWidgetBuilt: aNode widgetClass: aString [
+
+	self emit: {
+		#receiver -> 'SpNativeWidget'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'NativeAdapter'.
+		#widgetClass -> aString }
+]
+
+{ #category : 'emitting' }
+CiderWireEmitter >> paginatorPresenterBuilt: aNode pages: pageCount selectedPage: selectedPage visiblePages: visiblePages [
+
+	self emit: {
+		#receiver -> 'SpPaginatorPresenter'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'PaginatorAdapter'.
+		#pages -> pageCount.
+		#selectedPage -> selectedPage.
+		#visiblePages -> visiblePages }
 ]
 
 { #category : 'emitting' }

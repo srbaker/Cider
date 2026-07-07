@@ -10,9 +10,7 @@ Class {
 CiderSpecBoxAdapter >> add: anAdapter constraints: constraints [
 	| childNode |
 
-	childNode := (anAdapter respondsTo: #widget)
-		ifTrue: [ anAdapter widget ]
-		ifFalse: [ anAdapter build ].
+	childNode := self nodeFrom: anAdapter.
 	self widget addChild: childNode.
 	self emitter
 		boxLayout: self widget

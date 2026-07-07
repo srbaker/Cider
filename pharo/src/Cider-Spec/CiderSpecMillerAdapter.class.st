@@ -1,5 +1,5 @@
 Class {
-	#name : 'CiderSpecPanedAdapter',
+	#name : 'CiderSpecMillerAdapter',
 	#superclass : 'CiderSpecAbstractAdapter',
 	#category : 'Cider-Spec-Adapters',
 	#package : 'Cider-Spec',
@@ -7,28 +7,29 @@ Class {
 }
 
 { #category : 'protocol' }
-CiderSpecPanedAdapter >> add: anAdapter constraints: constraints [
+CiderSpecMillerAdapter >> add: anAdapter constraints: constraints [
 	| childNode |
 
 	childNode := self nodeFrom: anAdapter.
 	self widget addChild: childNode.
 	self emitter
-		panedLayout: self widget
+		millerLayout: self widget
 		added: childNode
 ]
 
 { #category : 'factory' }
-CiderSpecPanedAdapter >> buildWidget [
+CiderSpecMillerAdapter >> buildWidget [
 
-	^ self emitter newNodeFor: #PanedAdapter
+	^ self emitter newNodeFor: #MillerAdapter
 ]
 
 { #category : 'protocol' }
-CiderSpecPanedAdapter >> layout: aLayout [
+CiderSpecMillerAdapter >> layout: aLayout [
 
 	self emitter
-		panedLayoutBuilt: self widget
+		millerLayoutBuilt: self widget
 		direction: (aLayout isHorizontal
 			ifTrue: [ 'leftToRight' ]
 			ifFalse: [ 'topToBottom' ])
+		visiblePages: aLayout visiblePages
 ]

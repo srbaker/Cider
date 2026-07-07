@@ -44,6 +44,23 @@ CiderSpecAbstractAdapter >> emitter [
 	^ self presenter application backend emitter
 ]
 
+{ #category : 'private' }
+CiderSpecAbstractAdapter >> nodeFrom: anAdapter [
+	| childNode node |
+
+	childNode := (anAdapter respondsTo: #widget)
+		ifTrue: [ anAdapter widget ]
+		ifFalse: [ anAdapter build ].
+	(childNode respondsTo: #id)
+		ifTrue: [ ^ childNode ].
+
+	node := self emitter newNodeFor: #NativeAdapter.
+	self emitter
+		nativeWidgetBuilt: node
+		widgetClass: childNode class name asString.
+	^ node
+]
+
 { #category : 'protocol' }
 CiderSpecAbstractAdapter >> hRigid [
 ]
