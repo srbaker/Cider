@@ -1,4 +1,5 @@
 import CiderCore
+import Foundation
 import Testing
 
 @Test func ciderCoreModuleIsImportable() {
@@ -53,4 +54,30 @@ import Testing
         .windowOpen,
         .labelPresenterBuild
     ])
+}
+
+@Test func ciderPharoBridgeConfigurationLoadsPreparedEnvironment() throws {
+    let directory = FileManager.default.temporaryDirectory
+        .appendingPathComponent("CiderCoreTests-\(UUID().uuidString)", isDirectory: true)
+    let buildDirectory = directory.appendingPathComponent(".build/pharo", isDirectory: true)
+    try FileManager.default.createDirectory(at: buildDirectory, withIntermediateDirectories: true)
+    defer {
+        try? FileManager.default.removeItem(at: directory)
+    }
+
+    let envFile = buildDirectory.appendingPathComponent("env")
+    try """
+    CIDER_PHARO_VM=/tmp/Pharo
+    CIDER_PHARO_IMAGE=/tmp/Cider.image
+    """.write(to: envFile, atomically: true, encoding: .utf8)
+
+    let configuration = try CiderPharoBridge.Configuration.preparedLocal(
+        envFile: envFile,
+        workingDirectory: directory
+    )
+
+    #expect(configuration.pharoExecutable.path == "/tmp/Pharo")
+    #expect(configuration.image.path == "/tmp/Cider.image")
+    #expect(configuration.workingDirectory.path == directory.standardizedFileURL.path)
+    #expect(configuration.home.path == buildDirectory.appendingPathComponent("home").path)
 }

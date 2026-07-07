@@ -6,20 +6,17 @@ public struct CiderPharoBridge: Sendable {
         public var image: URL
         public var workingDirectory: URL
         public var home: URL
-        public var script: String
 
         public init(
             pharoExecutable: URL,
             image: URL,
             workingDirectory: URL,
-            home: URL,
-            script: String = "pharo/scripts/emit-hello-world.st"
+            home: URL
         ) {
             self.pharoExecutable = pharoExecutable
             self.image = image
             self.workingDirectory = workingDirectory
             self.home = home
-            self.script = script
         }
 
         public static func preparedLocal(
@@ -27,7 +24,15 @@ public struct CiderPharoBridge: Sendable {
         ) throws -> Configuration {
             let root = workingDirectory.standardizedFileURL
             let buildDirectory = root.appendingPathComponent(".build/pharo", isDirectory: true)
-            let env = try EnvironmentFile.load(from: buildDirectory.appendingPathComponent("env"))
+            return try preparedLocal(
+                envFile: buildDirectory.appendingPathComponent("env"),
+                workingDirectory: root
+            )
+        }
+
+        public static func preparedLocal(envFile: URL, workingDirectory: URL) throws -> Configuration {
+            let root = workingDirectory.standardizedFileURL
+            let env = try EnvironmentFile.load(from: envFile)
 
             guard let pharoExecutable = env["CIDER_PHARO_VM"] else {
                 throw Failure.missingEnvironmentValue("CIDER_PHARO_VM")
@@ -40,7 +45,10 @@ public struct CiderPharoBridge: Sendable {
                 pharoExecutable: URL(fileURLWithPath: pharoExecutable),
                 image: URL(fileURLWithPath: image),
                 workingDirectory: root,
-                home: URL(fileURLWithPath: env["CIDER_PHARO_HOME"] ?? buildDirectory.appendingPathComponent("home").path)
+                home: URL(
+                    fileURLWithPath: env["CIDER_PHARO_HOME"]
+                        ?? envFile.deletingLastPathComponent().appendingPathComponent("home").path
+                )
             )
         }
     }
@@ -83,23 +91,23 @@ public struct CiderPharoBridge: Sendable {
         try CiderPharoBridge(configuration: .preparedLocal(workingDirectory: workingDirectory))
     }
 
-    public func helloWorldEvents() async throws -> [CiderWireEvent] {
-        let output = try await runHelloWorld()
+    public func run(script: String) async throws -> String {
+        try await Task.detached(priority: .userInitiated) {
+            try runPharo(configuration: configuration, script: script)
+        }.value
+    }
+
+    public func events(from script: String) async throws -> [CiderWireEvent] {
+        let output = try await run(script: script)
         return try CiderWireOutput.decodeEvents(from: output)
     }
 
-    public func helloWorldModel() async throws -> CiderSpecModel {
-        try await CiderSpecModel.build(from: helloWorldEvents())
-    }
-
-    private func runHelloWorld() async throws -> String {
-        try await Task.detached(priority: .userInitiated) {
-            try runPharo(configuration: configuration)
-        }.value
+    public func model(from script: String) async throws -> CiderSpecModel {
+        try await CiderSpecModel.build(from: events(from: script))
     }
 }
 
-private func runPharo(configuration: CiderPharoBridge.Configuration) throws -> String {
+private func runPharo(configuration: CiderPharoBridge.Configuration, script: String) throws -> String {
     let process = Process()
     let output = Pipe()
     let error = Pipe()
@@ -109,7 +117,7 @@ private func runPharo(configuration: CiderPharoBridge.Configuration) throws -> S
         "--headless",
         configuration.image.path,
         "st",
-        configuration.script
+        script
     ]
     process.currentDirectoryURL = configuration.workingDirectory
     process.environment = ProcessInfo.processInfo.environment.merging([
