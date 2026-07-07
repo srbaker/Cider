@@ -3,6 +3,7 @@ import SwiftUI
 
 struct CiderSpecRenderer: View {
     let model: CiderSpecModel
+    let onButtonClick: (String) -> Void
 
     private var rootWindow: CiderSpecModel.SpWindowPresenter? {
         model.windows.values.sorted { $0.id < $1.id }.first
@@ -29,7 +30,9 @@ struct CiderSpecRenderer: View {
         } else if let image = model.images[id] {
             return renderImage(image)
         } else if let button = model.buttons[id] {
-            return AnyView(Button(button.label) {}
+            return AnyView(Button(button.label) {
+                onButtonClick(button.id)
+            }
                 .disabled(!button.enabled))
         } else if let checkBox = model.checkBoxes[id] {
             return renderCheckBox(checkBox)

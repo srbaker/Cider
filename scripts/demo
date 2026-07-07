@@ -16,20 +16,20 @@ mkdir -p \
 
 "${ROOT_DIR}/scripts/prepare-pharo"
 
-# Prove the same script the app loads can produce a completed DrTests model.
+# Prove the same script the app loads can accept an event and emit a live update.
 # This keeps a no-window demo run useful and fails early before opening the app.
 source "${ROOT_DIR}/.build/pharo/env"
 DEMO_WIRE="$(
+  printf '%s\n' 'CIDER:{"receiver":"SpButtonPresenter","selector":"click","id":"n4"}' |
   HOME="${CIDER_PHARO_HOME}" "${CIDER_PHARO_VM}" \
     --headless "${CIDER_PHARO_IMAGE}" \
-    st pharo/scripts/emit-drtests.st
+    st pharo/scripts/serve-interactive-click.st
 )"
-if [[ "${DEMO_WIRE}" != *'"title":"Dr Tests - Tests Runner"'* ]] ||
-  [[ "${DEMO_WIRE}" != *'Passing tests'* ]] ||
-  [[ "${DEMO_WIRE}" != *'Failures (0)'* ]] ||
-  [[ "${DEMO_WIRE}" != *'CiderWireEmitterTest>>#testWideStringValuesStayByteOriented'* ]]; then
+if [[ "${DEMO_WIRE}" != *'"title":"Cider Interactive Click"'* ]] ||
+  [[ "${DEMO_WIRE}" != *'"label":"Not clicked"'* ]] ||
+  [[ "${DEMO_WIRE}" != *'"label":"Clicked"'* ]]; then
   cat >&2 <<MESSAGE
-The DrTests demo did not emit a completed passing test run.
+The interactive demo did not emit the expected live button-click update.
 MESSAGE
   exit 1
 fi
