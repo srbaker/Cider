@@ -105,6 +105,16 @@ public final class CiderPharoLiveSession: @unchecked Sendable {
         try await send(event)
     }
 
+    public func selectTableIndexes(id: String, indexes: [Int]) async throws {
+        let event = CiderWireEvent(
+            receiver: "SpTablePresenter",
+            selector: "selectedIndexes:",
+            id: id,
+            selectedIndexes: indexes
+        )
+        try await send(event)
+    }
+
     public func selectTreePaths(id: String, paths: [[Int]]) async throws {
         let event = CiderWireEvent(
             receiver: "SpTreePresenter",

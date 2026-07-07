@@ -109,6 +109,23 @@ CiderWireEmitterTest >> testTablePresenterBuildsSpecShapedEvent [
 ]
 
 { #category : 'tests' }
+CiderWireEmitterTest >> testTablePresenterSelectionUpdateBuildsSpecShapedEvent [
+	| stream emitter node |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #TableAdapter.
+
+	emitter
+		tablePresenter: node
+		selectedIndexesChangedTo: #( 2 ).
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"SpTablePresenter","selector":"selectedIndexes:","id":"n1","selectedIndexes":[2]}'
+]
+
+{ #category : 'tests' }
 CiderWireEmitterTest >> testTreePresenterSelectionUpdateBuildsSpecShapedEvent [
 	| stream emitter node |
 

@@ -149,6 +149,26 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelAppliesTableSelectionUpdates() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpTablePresenter","selector":"build","id":"n1","adapter":"TableAdapter","columns":["Name"],"rows":[["Alpha"],["Beta"]],"selectedIndexes":[]}
+    CIDER:{"receiver":"SpTablePresenter","selector":"selectedIndexes:","id":"n1","selectedIndexes":[2]}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.map(\.kind) == [
+        .tablePresenterBuild,
+        .tablePresenterSetSelectedIndexes
+    ])
+    #expect(model.tables["n1"] == CiderSpecModel.SpTablePresenter(
+        id: "n1",
+        columns: ["Name"],
+        rows: [["Alpha"], ["Beta"]],
+        selectedIndexes: [2]
+    ))
+}
+
 @Test func ciderSpecModelReconstructsMillerLayout() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpMillerLayout","selector":"build","id":"n1","adapter":"MillerAdapter","direction":"leftToRight","visiblePages":2}

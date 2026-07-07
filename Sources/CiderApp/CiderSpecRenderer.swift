@@ -8,6 +8,7 @@ struct CiderSpecRenderer: View {
     let onCheckBoxStateChange: (String, Bool) -> Void
     let onDropListSelection: (String, Int) -> Void
     let onListSelection: (String, [Int]) -> Void
+    let onTableSelection: (String, [Int]) -> Void
     let onTreeSelection: (String, [[Int]]) -> Void
 
     private var rootWindow: CiderSpecModel.SpWindowPresenter? {
@@ -211,16 +212,21 @@ struct CiderSpecRenderer: View {
 
                 ForEach(Array(table.rows.enumerated()), id: \.offset) { rowIndex, row in
                     ForEach(0..<columnCount, id: \.self) { columnIndex in
-                        Text(columnIndex < row.count ? row[columnIndex] : "")
-                            .lineLimit(1)
-                            .padding(.vertical, 2)
-                            .padding(.horizontal, 4)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(
-                                table.selectedIndexes.contains(rowIndex + 1)
-                                    ? Color.accentColor.opacity(0.16)
-                                    : Color.clear
-                            )
+                        Button {
+                            onTableSelection(table.id, [rowIndex + 1])
+                        } label: {
+                            Text(columnIndex < row.count ? row[columnIndex] : "")
+                                .lineLimit(1)
+                                .padding(.vertical, 2)
+                                .padding(.horizontal, 4)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(
+                                    table.selectedIndexes.contains(rowIndex + 1)
+                                        ? Color.accentColor.opacity(0.16)
+                                        : Color.clear
+                                )
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }

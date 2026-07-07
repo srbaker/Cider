@@ -8,6 +8,7 @@ struct ContentView: View {
     let onCheckBoxStateChange: (String, Bool) -> Void
     let onDropListSelection: (String, Int) -> Void
     let onListSelection: (String, [Int]) -> Void
+    let onTableSelection: (String, [Int]) -> Void
     let onTreeSelection: (String, [[Int]]) -> Void
 
     var body: some View {
@@ -20,6 +21,7 @@ struct ContentView: View {
                     onCheckBoxStateChange: onCheckBoxStateChange,
                     onDropListSelection: onDropListSelection,
                     onListSelection: onListSelection,
+                    onTableSelection: onTableSelection,
                     onTreeSelection: onTreeSelection
                 )
             } else {

@@ -514,6 +514,16 @@ public struct CiderSpecModel: Equatable, Sendable {
                     selectedIndexes: selectedIndexes
                 )
 
+            case .tablePresenterSetSelectedIndexes:
+                guard let selectedIndexes = event.selectedIndexes else {
+                    throw BuildError.missingTablePayload(event.id)
+                }
+                guard var table = model.tables[event.id] else {
+                    throw BuildError.missingTablePayload(event.id)
+                }
+                table.selectedIndexes = selectedIndexes
+                model.tables[event.id] = table
+
             case .treePresenterBuild:
                 guard let roots = event.roots, let selectedPaths = event.selectedPaths else {
                     throw BuildError.missingTreePayload(event.id)

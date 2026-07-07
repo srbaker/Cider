@@ -198,6 +198,16 @@ CiderWireEmitter >> tablePresenterBuilt: aNode columns: columnStrings rows: rowS
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> tablePresenter: aNode selectedIndexesChangedTo: indexes [
+
+	self emit: {
+		#receiver -> 'SpTablePresenter'.
+		#selector -> 'selectedIndexes:'.
+		#id -> aNode id.
+		#selectedIndexes -> indexes }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> millerLayout: aNode added: childNode [
 
 	self emit: {

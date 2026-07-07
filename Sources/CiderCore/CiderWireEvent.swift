@@ -29,6 +29,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case listPresenterBuild
         case listPresenterSetSelectedIndexes
         case tablePresenterBuild
+        case tablePresenterSetSelectedIndexes
         case treePresenterBuild
         case treePresenterSetSelectedPaths
         case codePresenterBuild
@@ -185,6 +186,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .listPresenterSetSelectedIndexes
         case ("SpTablePresenter", "build"):
             .tablePresenterBuild
+        case ("SpTablePresenter", "selectedIndexes:"):
+            .tablePresenterSetSelectedIndexes
         case ("SpTreePresenter", "build"):
             .treePresenterBuild
         case ("SpTreePresenter", "selectedPaths:"):

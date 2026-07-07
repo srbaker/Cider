@@ -11,6 +11,11 @@ CiderSpecTableAdapter >> buildWidget [
 	| node columns rows selectedIndexes |
 
 	node := self emitter newNodeFor: #TableAdapter.
+	self presenter application backend registerAdapter: self forNode: node.
+	self presenter whenSelectionChangedDo: [ :selection |
+		self emitter
+			tablePresenter: node
+			selectedIndexesChangedTo: selection selectedIndexes asArray ].
 	columns := self presenter columns collect: [ :column | column title asString ].
 	rows := (1 to: self presenter items size) collect: [ :rowIndex |
 		(1 to: self presenter columns size) collect: [ :columnIndex |
@@ -24,4 +29,14 @@ CiderSpecTableAdapter >> buildWidget [
 		rows: rows asArray
 		selectedIndexes: selectedIndexes.
 	^ node
+]
+
+{ #category : 'updating' }
+CiderSpecTableAdapter >> refreshWidgetSelection [
+]
+
+{ #category : 'events' }
+CiderSpecTableAdapter >> selectedIndexes: indexes [
+
+	self presenter selection selectIndexes: indexes
 ]
