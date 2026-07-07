@@ -130,6 +130,25 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelReconstructsTablePresenter() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpTablePresenter","selector":"build","id":"n1","adapter":"TableAdapter","columns":["Name","Result"],"rows":[["CiderWireEmitterTest","passed"],["CiderCoreTests","passed"]],"selectedIndexes":[1]}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.first?.kind == .tablePresenterBuild)
+    #expect(model.tables["n1"] == CiderSpecModel.SpTablePresenter(
+        id: "n1",
+        columns: ["Name", "Result"],
+        rows: [
+            ["CiderWireEmitterTest", "passed"],
+            ["CiderCoreTests", "passed"]
+        ],
+        selectedIndexes: [1]
+    ))
+}
+
 @Test func ciderSpecModelReconstructsMillerLayout() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpMillerLayout","selector":"build","id":"n1","adapter":"MillerAdapter","direction":"leftToRight","visiblePages":2}

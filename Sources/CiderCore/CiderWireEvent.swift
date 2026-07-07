@@ -28,6 +28,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case textInputFieldSetText
         case listPresenterBuild
         case listPresenterSetSelectedIndexes
+        case tablePresenterBuild
         case treePresenterBuild
         case treePresenterSetSelectedPaths
         case codePresenterBuild
@@ -60,6 +61,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public var editable: Bool?
     public var password: Bool?
     public var items: [String]?
+    public var columns: [String]?
+    public var rows: [[String]]?
     public var roots: [String]?
     public var nodes: [TreeNode]?
     public var selectedIndexes: [Int]?
@@ -94,6 +97,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         editable: Bool? = nil,
         password: Bool? = nil,
         items: [String]? = nil,
+        columns: [String]? = nil,
+        rows: [[String]]? = nil,
         roots: [String]? = nil,
         nodes: [TreeNode]? = nil,
         selectedIndexes: [Int]? = nil,
@@ -127,6 +132,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         self.editable = editable
         self.password = password
         self.items = items
+        self.columns = columns
+        self.rows = rows
         self.roots = roots
         self.nodes = nodes
         self.selectedIndexes = selectedIndexes
@@ -176,6 +183,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .listPresenterBuild
         case ("SpListPresenter", "selectedIndexes:"):
             .listPresenterSetSelectedIndexes
+        case ("SpTablePresenter", "build"):
+            .tablePresenterBuild
         case ("SpTreePresenter", "build"):
             .treePresenterBuild
         case ("SpTreePresenter", "selectedPaths:"):

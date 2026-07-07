@@ -157,6 +157,20 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct SpTablePresenter: Equatable, Sendable {
+        public var id: String
+        public var columns: [String]
+        public var rows: [[String]]
+        public var selectedIndexes: [Int]
+
+        public init(id: String, columns: [String], rows: [[String]], selectedIndexes: [Int]) {
+            self.id = id
+            self.columns = columns
+            self.rows = rows
+            self.selectedIndexes = selectedIndexes
+        }
+    }
+
     public struct SpTreePresenter: Equatable, Sendable {
         public struct Node: Equatable, Sendable {
             public var path: [Int]
@@ -243,6 +257,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         case missingDropListPayload(String)
         case missingTextInputFieldPayload(String)
         case missingListPayload(String)
+        case missingTablePayload(String)
         case missingTreePayload(String)
         case missingCodePayload(String)
         case missingMicScrolledTextMorphPayload(String)
@@ -269,6 +284,7 @@ public struct CiderSpecModel: Equatable, Sendable {
     public var dropLists: [String: SpDropListPresenter]
     public var textInputFields: [String: SpTextInputFieldPresenter]
     public var lists: [String: SpListPresenter]
+    public var tables: [String: SpTablePresenter]
     public var trees: [String: SpTreePresenter]
     public var codePresenters: [String: SpCodePresenter]
     public var micScrolledTextMorphs: [String: MicScrolledTextMorph]
@@ -287,6 +303,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         dropLists: [String: SpDropListPresenter] = [:],
         textInputFields: [String: SpTextInputFieldPresenter] = [:],
         lists: [String: SpListPresenter] = [:],
+        tables: [String: SpTablePresenter] = [:],
         trees: [String: SpTreePresenter] = [:],
         codePresenters: [String: SpCodePresenter] = [:],
         micScrolledTextMorphs: [String: MicScrolledTextMorph] = [:],
@@ -304,6 +321,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         self.dropLists = dropLists
         self.textInputFields = textInputFields
         self.lists = lists
+        self.tables = tables
         self.trees = trees
         self.codePresenters = codePresenters
         self.micScrolledTextMorphs = micScrolledTextMorphs
@@ -480,6 +498,21 @@ public struct CiderSpecModel: Equatable, Sendable {
                 }
                 list.selectedIndexes = selectedIndexes
                 model.lists[event.id] = list
+
+            case .tablePresenterBuild:
+                guard
+                    let columns = event.columns,
+                    let rows = event.rows,
+                    let selectedIndexes = event.selectedIndexes
+                else {
+                    throw BuildError.missingTablePayload(event.id)
+                }
+                model.tables[event.id] = SpTablePresenter(
+                    id: event.id,
+                    columns: columns,
+                    rows: rows,
+                    selectedIndexes: selectedIndexes
+                )
 
             case .treePresenterBuild:
                 guard let roots = event.roots, let selectedPaths = event.selectedPaths else {

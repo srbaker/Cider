@@ -47,6 +47,8 @@ struct CiderSpecRenderer: View {
             return renderTextInputField(textInputField)
         } else if let list = model.lists[id] {
             return renderList(list)
+        } else if let table = model.tables[id] {
+            return renderTable(table)
         } else if let tree = model.trees[id] {
             return renderTree(tree)
         } else if let codePresenter = model.codePresenters[id] {
@@ -191,6 +193,40 @@ struct CiderSpecRenderer: View {
             )
         }
         .frame(minHeight: 120))
+    }
+
+    private func renderTable(_ table: CiderSpecModel.SpTablePresenter) -> AnyView {
+        let columnCount = max(table.columns.count, table.rows.map(\.count).max() ?? 0)
+        let gridColumns = Array(
+            repeating: GridItem(.flexible(minimum: 96, maximum: 1_000), spacing: 12, alignment: .leading),
+            count: max(columnCount, 1)
+        )
+
+        return AnyView(ScrollView([.horizontal, .vertical]) {
+            LazyVGrid(columns: gridColumns, alignment: .leading, spacing: 4) {
+                ForEach(0..<columnCount, id: \.self) { index in
+                    Text(index < table.columns.count ? table.columns[index] : "")
+                        .font(.headline)
+                }
+
+                ForEach(Array(table.rows.enumerated()), id: \.offset) { rowIndex, row in
+                    ForEach(0..<columnCount, id: \.self) { columnIndex in
+                        Text(columnIndex < row.count ? row[columnIndex] : "")
+                            .lineLimit(1)
+                            .padding(.vertical, 2)
+                            .padding(.horizontal, 4)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(
+                                table.selectedIndexes.contains(rowIndex + 1)
+                                    ? Color.accentColor.opacity(0.16)
+                                    : Color.clear
+                            )
+                    }
+                }
+            }
+            .padding(6)
+        }
+        .frame(minHeight: 160))
     }
 
     private func renderTree(_ tree: CiderSpecModel.SpTreePresenter) -> AnyView {
