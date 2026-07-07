@@ -1,0 +1,38 @@
+Class {
+	#name : 'CiderWireEmitterTest',
+	#superclass : 'TestCase',
+	#category : 'Cider-Spec-Tests',
+	#package : 'Cider-Spec-Tests'
+}
+
+{ #category : 'tests' }
+CiderWireEmitterTest >> testStringValuesEscapeJsonControlCharacters [
+	| stream emitter node text |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #LabelAdapter.
+	text := 'before' , (String with: (Character value: 1)) , 'after'.
+
+	emitter labelPresenterBuilt: node text: text.
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n1","adapter":"LabelAdapter","label":"before\u0001after"}'
+]
+
+{ #category : 'tests' }
+CiderWireEmitterTest >> testWideStringValuesStayByteOriented [
+	| stream emitter node text |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #LabelAdapter.
+	text := WideString withAll: 'caf' , (String with: (Character value: 233)).
+
+	emitter labelPresenterBuilt: node text: text.
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n1","adapter":"LabelAdapter","label":"caf\u00e9"}'
+]

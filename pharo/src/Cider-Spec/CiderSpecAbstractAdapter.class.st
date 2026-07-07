@@ -57,8 +57,19 @@ CiderSpecAbstractAdapter >> nodeFrom: anAdapter [
 	node := self emitter newNodeFor: #NativeAdapter.
 	self emitter
 		nativeWidgetBuilt: node
-		widgetClass: childNode class name asString.
+		widgetClass: childNode class name asString
+		text: (self textFromNativeWidget: childNode).
 	^ node
+]
+
+{ #category : 'private' }
+CiderSpecAbstractAdapter >> textFromNativeWidget: aWidget [
+
+	(aWidget respondsTo: #text)
+		ifTrue: [ ^ [ aWidget text asString ] on: Error do: [ '' ] ].
+	(aWidget respondsTo: #contents)
+		ifTrue: [ ^ [ aWidget contents asString ] on: Error do: [ '' ] ].
+	^ ''
 ]
 
 { #category : 'protocol' }

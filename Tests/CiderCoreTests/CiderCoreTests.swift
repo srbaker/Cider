@@ -133,7 +133,7 @@ import Testing
 
 @Test func ciderSpecModelReconstructsNativeWidgetPlaceholder() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
-    CIDER:{"receiver":"SpNativeWidget","selector":"build","id":"n1","adapter":"NativeAdapter","widgetClass":"MicScrolledTextMorph"}
+    CIDER:{"receiver":"SpNativeWidget","selector":"build","id":"n1","adapter":"NativeAdapter","widgetClass":"MicScrolledTextMorph","text":"Welcome\\u0001to Pharo"}
     """)
 
     let model = try CiderSpecModel.build(from: events)
@@ -141,7 +141,8 @@ import Testing
     #expect(events.first?.kind == .nativeWidgetBuild)
     #expect(model.nativeWidgets["n1"] == CiderSpecModel.SpNativeWidget(
         id: "n1",
-        widgetClass: "MicScrolledTextMorph"
+        widgetClass: "MicScrolledTextMorph",
+        text: "Welcome\u{1}to Pharo"
     ))
 }
 

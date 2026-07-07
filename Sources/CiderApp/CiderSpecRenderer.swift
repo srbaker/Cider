@@ -77,17 +77,18 @@ struct CiderSpecRenderer: View {
     private func renderImage(_ image: CiderSpecModel.SpImagePresenter) -> AnyView {
         let width = image.width > 0 ? CGFloat(image.width) : 80
         let height = image.height > 0 ? CGFloat(image.height) : 80
+        let displayWidth = min(width, 240)
+        let displayHeight = min(height, 180)
 
-        return AnyView(RoundedRectangle(cornerRadius: 4)
-            .fill(Color.secondary.opacity(0.16))
-            .overlay {
-                Text("\(image.width)x\(image.height)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+        if width <= 32, height <= 32 {
+            return AnyView(Color.clear.frame(width: width, height: height))
+        }
+
+        return AnyView(Rectangle()
+            .fill(Color.secondary.opacity(0.06))
             .frame(
-                width: image.autoScale ? nil : min(width, 240),
-                height: image.autoScale ? nil : min(height, 180)
+                width: image.autoScale ? nil : displayWidth,
+                height: image.autoScale ? nil : displayHeight
             )
             .frame(
                 maxWidth: image.autoScale ? .infinity : nil,
@@ -102,11 +103,20 @@ struct CiderSpecRenderer: View {
     }
 
     private func renderNativeWidget(_ nativeWidget: CiderSpecModel.SpNativeWidget) -> AnyView {
-        AnyView(Text(nativeWidget.widgetClass)
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity, minHeight: 80, alignment: .center)
-            .background(Color.secondary.opacity(0.08)))
+        let text = nativeWidget.text.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if text.isEmpty {
+            return AnyView(EmptyView())
+        }
+
+        return AnyView(ScrollView([.horizontal, .vertical]) {
+            Text(text)
+                .textSelection(.enabled)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .padding(8)
+        }
+        .frame(minHeight: 120)
+        .background(Color.secondary.opacity(0.04)))
     }
 
     private func renderPaginator(_ paginator: CiderSpecModel.SpPaginatorPresenter) -> AnyView {

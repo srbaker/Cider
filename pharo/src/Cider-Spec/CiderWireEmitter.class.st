@@ -155,14 +155,15 @@ CiderWireEmitter >> millerLayoutBuilt: aNode direction: aString visiblePages: aN
 ]
 
 { #category : 'emitting' }
-CiderWireEmitter >> nativeWidgetBuilt: aNode widgetClass: aString [
+CiderWireEmitter >> nativeWidgetBuilt: aNode widgetClass: aString text: textString [
 
 	self emit: {
 		#receiver -> 'SpNativeWidget'.
 		#selector -> 'build'.
 		#id -> aNode id.
 		#adapter -> 'NativeAdapter'.
-		#widgetClass -> aString }
+		#widgetClass -> aString.
+		#text -> textString }
 ]
 
 { #category : 'emitting' }
@@ -230,6 +231,14 @@ CiderWireEmitter >> jsonBoolean: aBoolean [
 ]
 
 { #category : 'private' }
+CiderWireEmitter >> jsonEscapedCharacter: aCharacter [
+	| hex |
+
+	hex := aCharacter asciiValue printStringBase: 16.
+	^ '\u' , (('0000' , hex) last: 4)
+]
+
+{ #category : 'private' }
 CiderWireEmitter >> jsonObjectFrom: associations [
 
 	^ String streamContents: [ :json |
@@ -249,12 +258,15 @@ CiderWireEmitter >> jsonString: aString [
 	^ String streamContents: [ :json |
 		json nextPut: $".
 		aString do: [ :character |
+			| codePoint |
+			codePoint := character asciiValue.
 			character = $" ifTrue: [ json nextPutAll: '\"' ] ifFalse: [
 			character = $\ ifTrue: [ json nextPutAll: '\\' ] ifFalse: [
 			character = Character lf ifTrue: [ json nextPutAll: '\n' ] ifFalse: [
 			character = Character cr ifTrue: [ json nextPutAll: '\r' ] ifFalse: [
 			character = Character tab ifTrue: [ json nextPutAll: '\t' ] ifFalse: [
-				json nextPut: character ] ] ] ] ] ].
+			(codePoint < 32 or: [ codePoint > 126 ]) ifTrue: [ json nextPutAll: (self jsonEscapedCharacter: character) ] ifFalse: [
+				json nextPut: character ] ] ] ] ] ] ].
 		json nextPut: $" ]
 ]
 

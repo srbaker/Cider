@@ -162,10 +162,12 @@ public struct CiderSpecModel: Equatable, Sendable {
     public struct SpNativeWidget: Equatable, Sendable {
         public var id: String
         public var widgetClass: String
+        public var text: String
 
-        public init(id: String, widgetClass: String) {
+        public init(id: String, widgetClass: String, text: String) {
             self.id = id
             self.widgetClass = widgetClass
+            self.text = text
         }
     }
 
@@ -386,7 +388,8 @@ public struct CiderSpecModel: Equatable, Sendable {
                 }
                 model.nativeWidgets[event.id] = SpNativeWidget(
                     id: event.id,
-                    widgetClass: widgetClass
+                    widgetClass: widgetClass,
+                    text: event.text ?? ""
                 )
 
             case .paginatorPresenterBuild:
