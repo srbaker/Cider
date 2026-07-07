@@ -23,6 +23,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case checkBoxPresenterBuild
         case dropListPresenterBuild
         case textInputFieldPresenterBuild
+        case textInputFieldSetText
         case listPresenterBuild
         case listPresenterSetSelectedIndexes
         case treePresenterBuild
@@ -163,6 +164,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .dropListPresenterBuild
         case ("SpTextInputFieldPresenter", "build"):
             .textInputFieldPresenterBuild
+        case ("SpTextInputFieldPresenter", "text:"):
+            .textInputFieldSetText
         case ("SpListPresenter", "build"):
             .listPresenterBuild
         case ("SpListPresenter", "selectedIndexes:"):

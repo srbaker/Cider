@@ -5,7 +5,8 @@ Class {
 		'label',
 		'button',
 		'list',
-		'tree'
+		'tree',
+		'input'
 	],
 	#category : 'Cider-Spec-Examples',
 	#package : 'Cider-Spec-Examples'
@@ -17,6 +18,7 @@ CiderInteractiveClickPresenter >> defaultLayout [
 	^ SpBoxLayout newTopToBottom
 		add: label expand: false;
 		add: button expand: false;
+		add: input expand: false;
 		add: list expand: true;
 		add: tree expand: true;
 		yourself
@@ -32,6 +34,13 @@ CiderInteractiveClickPresenter >> initializePresenters [
 	button
 		label: 'Click';
 		action: [ label label: 'Clicked' ].
+
+	input := self newTextInput.
+	input
+		placeholder: 'Type here';
+		text: 'Editable text'.
+	input whenTextChangedDo: [ :text |
+		label label: 'Typed ' , text asString ].
 
 	list := self newList.
 	list items: #( 'Alpha' 'Beta' 'Gamma' ).
@@ -64,6 +73,12 @@ CiderInteractiveClickPresenter >> button [
 CiderInteractiveClickPresenter >> label [
 
 	^ label
+]
+
+{ #category : 'accessing' }
+CiderInteractiveClickPresenter >> input [
+
+	^ input
 ]
 
 { #category : 'accessing' }

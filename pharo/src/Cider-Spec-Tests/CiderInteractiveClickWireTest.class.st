@@ -49,6 +49,44 @@ CiderInteractiveClickWireTest >> testButtonClickDispatchesActionAndEmitsLabelUpd
 ]
 
 { #category : 'tests' }
+CiderInteractiveClickWireTest >> testTextInputDispatchesTextAndEmitsLabelUpdate [
+	| stream emitter application presenter lines inputLine inputId labelLine labelId |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	application := StPharoApplication new.
+	application useBackend: #Cider.
+	application backend emitter: emitter.
+
+	presenter := application newPresenter: CiderInteractiveClickPresenter.
+	presenter open.
+
+	lines := stream contents lines.
+	labelLine := lines detect: [ :line |
+		(line includesSubstring: '"receiver":"SpLabelPresenter"')
+			and: [ line includesSubstring: '"label":"Not clicked"' ] ].
+	labelId := self idFromLine: labelLine.
+	inputLine := lines detect: [ :line |
+		(line includesSubstring: '"receiver":"SpTextInputFieldPresenter"')
+			and: [ line includesSubstring: '"text":"Editable text"' ] ].
+	inputId := self idFromLine: inputLine.
+
+	application backend dispatchIncomingEvent: (Dictionary new
+		at: 'receiver' put: 'SpTextInputFieldPresenter';
+		at: 'selector' put: 'text:';
+		at: 'id' put: inputId;
+		at: 'text' put: 'Edited';
+		yourself).
+
+	self assert: presenter input text equals: 'Edited'.
+	self assert: presenter label label equals: 'Typed Edited'.
+	self assert: (stream contents lines anySatisfy: [ :line |
+		line = ('CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"text:","id":"' , inputId , '","text":"Edited"}') ]).
+	self assert: (stream contents lines anySatisfy: [ :line |
+		line = ('CIDER:{"receiver":"SpLabelPresenter","selector":"label:","id":"' , labelId , '","label":"Typed Edited"}') ])
+]
+
+{ #category : 'tests' }
 CiderInteractiveClickWireTest >> testListSelectionDispatchesSelectionAndEmitsLabelUpdate [
 	| stream emitter application presenter lines listLine listId labelLine labelId |
 

@@ -4,6 +4,7 @@ import SwiftUI
 struct CiderSpecRenderer: View {
     let model: CiderSpecModel
     let onButtonClick: (String) -> Void
+    let onTextInputChange: (String, String) -> Void
     let onListSelection: (String, [Int]) -> Void
     let onTreeSelection: (String, [[Int]]) -> Void
 
@@ -207,7 +208,10 @@ struct CiderSpecRenderer: View {
     }
 
     private func renderTextInputField(_ textInputField: CiderSpecModel.SpTextInputFieldPresenter) -> AnyView {
-        let text = Binding.constant(textInputField.text)
+        let text = Binding(
+            get: { textInputField.text },
+            set: { onTextInputChange(textInputField.id, $0) }
+        )
 
         if textInputField.password {
             return AnyView(SecureField(textInputField.placeholder, text: text)

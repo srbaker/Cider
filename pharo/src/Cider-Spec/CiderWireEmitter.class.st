@@ -258,6 +258,16 @@ CiderWireEmitter >> textInputFieldPresenterBuilt: aNode text: aString placeholde
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> textInputFieldPresenter: aNode textChangedTo: aString [
+
+	self emit: {
+		#receiver -> 'SpTextInputFieldPresenter'.
+		#selector -> 'text:'.
+		#id -> aNode id.
+		#text -> aString }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> treePresenterBuilt: aNode roots: rootStrings selectedPaths: selectedPaths [
 
 	self

@@ -15,6 +15,10 @@ struct CiderApp: App {
                 Task {
                     await clickButton(id: id)
                 }
+            } onTextInputChange: { id, text in
+                Task {
+                    await setTextInput(id: id, text: text)
+                }
             } onListSelection: { id, indexes in
                 Task {
                     await selectListIndexes(id: id, indexes: indexes)
@@ -54,6 +58,11 @@ struct CiderApp: App {
     @MainActor
     private func clickButton(id: String) async {
         try? await session?.clickButton(id: id)
+    }
+
+    @MainActor
+    private func setTextInput(id: String, text: String) async {
+        try? await session?.setTextInput(id: id, text: text)
     }
 
     @MainActor

@@ -4,6 +4,7 @@ import SwiftUI
 struct ContentView: View {
     let model: CiderAppModel
     let onButtonClick: (String) -> Void
+    let onTextInputChange: (String, String) -> Void
     let onListSelection: (String, [Int]) -> Void
     let onTreeSelection: (String, [[Int]]) -> Void
 
@@ -13,6 +14,7 @@ struct ContentView: View {
                 CiderSpecRenderer(
                     model: specModel,
                     onButtonClick: onButtonClick,
+                    onTextInputChange: onTextInputChange,
                     onListSelection: onListSelection,
                     onTreeSelection: onTreeSelection
                 )

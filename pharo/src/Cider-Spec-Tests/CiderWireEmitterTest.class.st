@@ -22,6 +22,23 @@ CiderWireEmitterTest >> testStringValuesEscapeJsonControlCharacters [
 ]
 
 { #category : 'tests' }
+CiderWireEmitterTest >> testTextInputFieldTextUpdateBuildsSpecShapedEvent [
+	| stream emitter node |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #TextInputFieldAdapter.
+
+	emitter
+		textInputFieldPresenter: node
+		textChangedTo: 'Edited'.
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"text:","id":"n1","text":"Edited"}'
+]
+
+{ #category : 'tests' }
 CiderWireEmitterTest >> testLabelPresenterUpdateBuildsSpecShapedEvent [
 	| stream emitter node |
 

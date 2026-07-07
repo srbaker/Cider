@@ -431,6 +431,16 @@ public struct CiderSpecModel: Equatable, Sendable {
                     password: password
                 )
 
+            case .textInputFieldSetText:
+                guard let text = event.text else {
+                    throw BuildError.missingTextInputFieldPayload(event.id)
+                }
+                guard var textInputField = model.textInputFields[event.id] else {
+                    throw BuildError.missingTextInputFieldPayload(event.id)
+                }
+                textInputField.text = text
+                model.textInputFields[event.id] = textInputField
+
             case .listPresenterBuild:
                 guard let items = event.items, let selectedIndexes = event.selectedIndexes else {
                     throw BuildError.missingListPayload(event.id)

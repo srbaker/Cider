@@ -115,6 +115,16 @@ public final class CiderPharoLiveSession: @unchecked Sendable {
         try await send(event)
     }
 
+    public func setTextInput(id: String, text: String) async throws {
+        let event = CiderWireEvent(
+            receiver: "SpTextInputFieldPresenter",
+            selector: "text:",
+            id: id,
+            text: text
+        )
+        try await send(event)
+    }
+
     public func send(_ event: CiderWireEvent) async throws {
         try await withCheckedThrowingContinuation { continuation in
             writeQueue.async {

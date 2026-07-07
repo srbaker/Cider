@@ -213,6 +213,27 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelAppliesTextInputUpdates() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"build","id":"n1","adapter":"TextInputFieldAdapter","text":"Editable text","placeholder":"Type here","editable":true,"password":false}
+    CIDER:{"receiver":"SpTextInputFieldPresenter","selector":"text:","id":"n1","text":"Edited"}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.map(\.kind) == [
+        .textInputFieldPresenterBuild,
+        .textInputFieldSetText
+    ])
+    #expect(model.textInputFields["n1"] == CiderSpecModel.SpTextInputFieldPresenter(
+        id: "n1",
+        text: "Edited",
+        placeholder: "Type here",
+        editable: true,
+        password: false
+    ))
+}
+
 @Test func ciderSpecModelReconstructsDropListPresenter() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpDropListPresenter","selector":"build","id":"n1","adapter":"DropListAdapter","items":["Tests Runner","Coverage"],"selectedIndex":1}
