@@ -35,6 +35,14 @@ Run the Pharo availability check with:
 scripts/bootstrap-pharo
 ```
 
+Prepare a cached local Pharo image and VM with:
+
+```sh
+scripts/prepare-pharo
+```
+
+By default this uses the full Pharo 13.1 image and stores the prepared image, VM, sources, and Pharo home directory under `.build/pharo`. The minimal image can be selected with `CIDER_PHARO_IMAGE_FLAVOR=minimal`, but the full image is the supported default because it already includes the released Spec stack.
+
 ## Project Shape
 
 - `CiderApp` is the macOS SwiftUI executable target.

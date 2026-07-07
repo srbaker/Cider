@@ -11,14 +11,7 @@ BaselineOfCider >> baseline: spec [
 
 	spec for: #common do: [
 		spec
-			baseline: 'Spec2'
-			with: [
-				spec
-					repository: 'github://pharo-spec/Spec:Pharo13/src';
-					loads: #( 'Core' 'Tests' ) ].
-
-		spec
-			package: 'Cider-Spec' with: [ spec requires: #( 'Spec2' ) ];
+			package: 'Cider-Spec';
 			package: 'Cider-Spec-Examples' with: [ spec requires: #( 'Cider-Spec' ) ];
 			package: 'Cider-Spec-Tests' with: [ spec requires: #( 'Cider-Spec' 'Cider-Spec-Examples' ) ].
 

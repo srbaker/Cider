@@ -8,11 +8,15 @@ Class {
 
 { #category : 'protocol' }
 CiderSpecBoxAdapter >> add: anAdapter constraints: constraints [
+	| childNode |
 
-	self widget addChild: anAdapter widget.
+	childNode := (anAdapter respondsTo: #widget)
+		ifTrue: [ anAdapter widget ]
+		ifFalse: [ anAdapter build ].
+	self widget addChild: childNode.
 	self emitter
 		boxLayout: self widget
-		added: anAdapter widget
+		added: childNode
 		expand: constraints isExpand
 ]
 

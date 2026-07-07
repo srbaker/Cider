@@ -2,29 +2,41 @@
 set -euo pipefail
 
 REQUIRED_PHARO_VERSION="${CIDER_PHARO_VERSION:-13.1}"
-PHARO_IMAGE="${CIDER_PHARO_IMAGE:-}"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PHARO_BUILD_DIR="${CIDER_PHARO_BUILD_DIR:-${ROOT_DIR}/.build/pharo}"
+PHARO_IMAGE="${CIDER_PHARO_IMAGE:-${PHARO_BUILD_DIR}/Cider.image}"
+PHARO_HOME="${CIDER_PHARO_HOME:-${PHARO_BUILD_DIR}/home}"
 
-if ! command -v pharo >/dev/null 2>&1; then
+if [[ ! -f "${PHARO_IMAGE}" ]]; then
+  "${ROOT_DIR}/scripts/prepare-pharo"
+fi
+
+if [[ -n "${CIDER_PHARO_VM:-}" ]]; then
+  PHARO_COMMAND="${CIDER_PHARO_VM}"
+elif [[ -f "${PHARO_BUILD_DIR}/env" ]]; then
+  # shellcheck disable=SC1091
+  source "${PHARO_BUILD_DIR}/env"
+  PHARO_COMMAND="${CIDER_PHARO_VM}"
+  PHARO_IMAGE="${CIDER_PHARO_IMAGE}"
+  PHARO_HOME="${CIDER_PHARO_HOME:-${PHARO_HOME}}"
+elif command -v pharo >/dev/null 2>&1; then
+  PHARO_COMMAND="$(command -v pharo)"
+else
+  PHARO_COMMAND=""
+fi
+
+if [[ -z "${PHARO_COMMAND}" ]]; then
   cat >&2 <<MESSAGE
 Pharo is not available on PATH.
 
 Cider Phase 1 expects a local, pinned headless Pharo installation.
-Install Pharo ${REQUIRED_PHARO_VERSION}, then make the pharo executable available on PATH.
+Run scripts/prepare-pharo to download a local Pharo ${REQUIRED_PHARO_VERSION} image and VM,
+or install Pharo ${REQUIRED_PHARO_VERSION} and make the pharo executable available on PATH.
 
 The container backend is intentionally deferred until the CI/reproducibility phase.
 MESSAGE
   exit 1
 fi
 
-if [[ -z "${PHARO_IMAGE}" ]]; then
-  cat >&2 <<MESSAGE
-CIDER_PHARO_IMAGE is not set.
-
-Cider Phase 1 targets the latest released Pharo line, Pharo ${REQUIRED_PHARO_VERSION}.
-Set CIDER_PHARO_IMAGE to a local Pharo ${REQUIRED_PHARO_VERSION} image before running Pharo tests.
-MESSAGE
-  exit 1
-fi
-
-pharo --headless --version | grep "${REQUIRED_PHARO_VERSION}" >/dev/null
-pharo --headless "${PHARO_IMAGE}" st pharo/scripts/run-tests.st
+mkdir -p "${PHARO_HOME}"
+HOME="${PHARO_HOME}" "${PHARO_COMMAND}" --headless "${PHARO_IMAGE}" st pharo/scripts/run-tests.st

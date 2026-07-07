@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BUILD_DIR="${CIDER_PHARO_BUILD_DIR:-${ROOT_DIR}/.build/pharo}"
+DOWNLOAD_DIR="${BUILD_DIR}/downloads"
+IMAGE_FLAVOR="${CIDER_PHARO_IMAGE_FLAVOR:-full}"
+BASE_IMAGE_DIR="${BUILD_DIR}/base-image-${IMAGE_FLAVOR}-13.1"
+VM_DIR="${BUILD_DIR}/vm"
+PHARO_HOME="${CIDER_PHARO_HOME:-${BUILD_DIR}/home}"
+PREPARED_IMAGE="${CIDER_PHARO_IMAGE:-${BUILD_DIR}/Cider.image}"
+SOURCES_URL="${CIDER_PHARO_SOURCES_URL:-https://files.pharo.org/sources/PharoV60.sources}"
+PREPARED_MARKER="${BUILD_DIR}/.prepared"
+
+case "${IMAGE_FLAVOR}" in
+  full)
+    DEFAULT_IMAGE_URL="https://files.pharo.org/image/131/latest-64.zip"
+    ;;
+  minimal)
+    DEFAULT_IMAGE_URL="https://files.pharo.org/image/131/latest-minimal-64.zip"
+    ;;
+  *)
+    cat >&2 <<MESSAGE
+Unknown CIDER_PHARO_IMAGE_FLAVOR: ${IMAGE_FLAVOR}
+Use "full" or "minimal".
+MESSAGE
+    exit 1
+    ;;
+esac
+
+IMAGE_URL="${CIDER_PHARO_IMAGE_URL:-${DEFAULT_IMAGE_URL}}"
+
+case "$(uname -s)-$(uname -m)" in
+  Darwin-arm64)
+    DEFAULT_VM_URL="https://files.pharo.org/vm/pharo-spur64-headless/Darwin-arm64/latest10.zip"
+    ;;
+  Darwin-x86_64)
+    DEFAULT_VM_URL="https://files.pharo.org/vm/pharo-spur64-headless/Darwin-x86_64/latest10.zip"
+    ;;
+  Linux-aarch64 | Linux-arm64)
+    DEFAULT_VM_URL="https://files.pharo.org/vm/pharo-spur64-headless/Linux-aarch64/latest10.zip"
+    ;;
+  Linux-x86_64)
+    DEFAULT_VM_URL="https://files.pharo.org/vm/pharo-spur64-headless/Linux-x86_64/latest10.zip"
+    ;;
+  *)
+    DEFAULT_VM_URL=""
+    ;;
+esac
+
+VM_URL="${CIDER_PHARO_VM_URL:-${DEFAULT_VM_URL}}"
+
+mkdir -p "${DOWNLOAD_DIR}" "${BASE_IMAGE_DIR}" "${VM_DIR}" "${PHARO_HOME}"
+
+download() {
+  local url="$1"
+  local destination="$2"
+
+  if [[ -f "${destination}" ]]; then
+    return
+  fi
+
+  curl -fsSL "${url}" -o "${destination}"
+}
+
+if [[ ! -f "${BASE_IMAGE_DIR}/Pharo.image" ]]; then
+  image_zip="${DOWNLOAD_DIR}/pharo-image-${IMAGE_FLAVOR}.zip"
+  download "${IMAGE_URL}" "${image_zip}"
+  unzip -oq "${image_zip}" -d "${BASE_IMAGE_DIR}"
+
+  base_image="$(find "${BASE_IMAGE_DIR}" -name "*.image" -type f | head -n 1)"
+  base_changes="${base_image%.image}.changes"
+
+  cp "${base_image}" "${BASE_IMAGE_DIR}/Pharo.image"
+  if [[ -f "${base_changes}" ]]; then
+    cp "${base_changes}" "${BASE_IMAGE_DIR}/Pharo.changes"
+  fi
+fi
+
+download "${SOURCES_URL}" "${BUILD_DIR}/PharoV60.sources"
+
+if [[ -n "${CIDER_PHARO_VM:-}" ]]; then
+  PHARO_COMMAND="${CIDER_PHARO_VM}"
+elif command -v pharo >/dev/null 2>&1; then
+  PHARO_COMMAND="$(command -v pharo)"
+else
+  if [[ -z "${VM_URL}" ]]; then
+    cat >&2 <<MESSAGE
+No Pharo executable was found on PATH and this platform does not have a default VM URL.
+Set CIDER_PHARO_VM to a local Pharo VM executable.
+MESSAGE
+    exit 1
+  fi
+
+  vm_zip="${DOWNLOAD_DIR}/pharo-vm.zip"
+  download "${VM_URL}" "${vm_zip}"
+  unzip -oq "${vm_zip}" -d "${VM_DIR}"
+
+  PHARO_COMMAND="$(find "${VM_DIR}" \( -name pharo -o -name Pharo \) -type f | head -n 1)"
+  if [[ -z "${PHARO_COMMAND}" ]]; then
+    cat >&2 <<MESSAGE
+Downloaded the Pharo VM, but could not find a pharo executable under ${VM_DIR}.
+Set CIDER_PHARO_VM to the VM executable path.
+MESSAGE
+    exit 1
+  fi
+  chmod +x "${PHARO_COMMAND}"
+fi
+
+if [[ ! -f "${PREPARED_IMAGE}" || ! -f "${PREPARED_MARKER}" ]]; then
+  cp "${BASE_IMAGE_DIR}/Pharo.image" "${PREPARED_IMAGE}"
+  if [[ -f "${BASE_IMAGE_DIR}/Pharo.changes" ]]; then
+    cp "${BASE_IMAGE_DIR}/Pharo.changes" "${PREPARED_IMAGE%.image}.changes"
+  fi
+  base_sources="$(find "${BASE_IMAGE_DIR}" -name "*.sources" -type f | head -n 1)"
+  if [[ -n "${base_sources}" ]]; then
+    cp "${base_sources}" "${BUILD_DIR}/$(basename "${base_sources}")"
+  fi
+fi
+
+HOME="${PHARO_HOME}" "${PHARO_COMMAND}" --headless "${PREPARED_IMAGE}" st pharo/scripts/prepare-image.st
+touch "${PREPARED_MARKER}"
+
+cat > "${BUILD_DIR}/env" <<MESSAGE
+CIDER_PHARO_VM=${PHARO_COMMAND}
+CIDER_PHARO_IMAGE=${PREPARED_IMAGE}
+CIDER_PHARO_HOME=${PHARO_HOME}
+MESSAGE
+
+echo "Prepared Pharo image: ${PREPARED_IMAGE}"

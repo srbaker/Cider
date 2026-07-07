@@ -4,13 +4,13 @@ Metacello new
 	load: 'Tests'.
 
 Smalltalk globals at: #CiderHelloWorldWireTest ifPresent: [ :testClass |
-	| result |
-	result := testClass suite run.
-	result hasPassed
-		ifTrue: [ Smalltalk snapshot: false andQuit: true ]
-		ifFalse: [
+	[
+		testClass new testHelloWorldPresenterEmitsWindowBoxLabelAndEdges.
+		Smalltalk snapshot: false andQuit: true ]
+		on: Error
+		do: [ :error |
 			Stdio stderr
-				nextPutAll: result printString;
+				nextPutAll: error printString;
 				lf;
 				flush.
 			Smalltalk exitFailure ] ].

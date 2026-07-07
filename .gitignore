@@ -8,3 +8,4 @@ DerivedData/
 *.xcworkspace
 *.xcuserstate
 .netrc
+PharoDebug.log
