@@ -8,15 +8,7 @@ import Testing
 }
 
 @Test func ciderWireDecoderParsesSpecShapedEvents() throws {
-    let ndjson = """
-    CIDER:{"receiver":"SpWindowPresenter","selector":"open","id":"n1","adapter":"WindowAdapter","presenter":"CiderHelloWorldPresenter","title":"Cider Hello"}
-    CIDER:{"receiver":"SpBoxLayout","selector":"build","id":"n2","adapter":"BoxAdapter","direction":"topToBottom"}
-    CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n3","adapter":"LabelAdapter","label":"Hello, World!"}
-    CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n3","expand":false}
-    CIDER:{"receiver":"SpWindowPresenter","selector":"presenter:","id":"n1","presenterLayout":"n2"}
-    """
-
-    let events = try CiderWireEventDecoder.decodeEvents(from: ndjson)
+    let events = try CiderWireFixture.helloWorldEvents()
 
     #expect(events.map(\.kind) == [
         .windowOpen,
@@ -35,16 +27,7 @@ import Testing
 }
 
 @Test func ciderSpecModelReconstructsHelloWorldTree() throws {
-    let ndjson = """
-    CIDER:{"receiver":"SpWindowPresenter","selector":"open","id":"n1","adapter":"WindowAdapter","presenter":"CiderHelloWorldPresenter","title":"Cider Hello"}
-    CIDER:{"receiver":"SpBoxLayout","selector":"build","id":"n2","adapter":"BoxAdapter","direction":"topToBottom"}
-    CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n3","adapter":"LabelAdapter","label":"Hello, World!"}
-    CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n3","expand":false}
-    CIDER:{"receiver":"SpWindowPresenter","selector":"presenter:","id":"n1","presenterLayout":"n2"}
-    """
-
-    let events = try CiderWireEventDecoder.decodeEvents(from: ndjson)
-    let model = try CiderSpecModel.build(from: events)
+    let model = try CiderWireFixture.helloWorldModel()
 
     #expect(model.windows["n1"]?.presenter == "CiderHelloWorldPresenter")
     #expect(model.windows["n1"]?.title == "Cider Hello")

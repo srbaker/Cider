@@ -17,7 +17,7 @@ Pharo is intentionally local-first in this phase. Containerized Pharo is deferre
 
 ## Bootstrap
 
-Run the full Phase 0 check with:
+Run the full local check with:
 
 ```sh
 scripts/test
@@ -35,6 +35,8 @@ Run the Pharo availability check with:
 scripts/bootstrap-pharo
 ```
 
+`scripts/bootstrap-pharo` also runs the Hello World Spec application headlessly and compares its `CIDER:` output with `Sources/CiderCore/Resources/hello-world.ndjson`, which is the canonical Swift fixture for this slice.
+
 Prepare a cached local Pharo image and VM with:
 
 ```sh
@@ -49,7 +51,7 @@ By default this uses the full Pharo 13.1 image and stores the prepared image, VM
 - `CiderCore` is the pure Swift module for protocol and domain boundaries.
 - `CiderCoreTests` contains Swift Testing coverage for core behavior.
 
-The actual Spec adapter protocol, transport, serialization format, and widget schema are not defined in Phase 0.
+The full Spec adapter protocol, transport, serialization format, and widget schema are not defined yet.
 
 ## Pharo Packages
 

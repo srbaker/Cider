@@ -24,7 +24,10 @@ let package = Package(
             dependencies: ["CiderCore"]
         ),
         .target(
-            name: "CiderCore"
+            name: "CiderCore",
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "CiderCoreTests",

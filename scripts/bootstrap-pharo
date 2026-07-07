@@ -40,3 +40,14 @@ fi
 
 mkdir -p "${PHARO_HOME}"
 HOME="${PHARO_HOME}" "${PHARO_COMMAND}" --headless "${PHARO_IMAGE}" st pharo/scripts/run-tests.st
+
+expected_wire="$(<"${ROOT_DIR}/Sources/CiderCore/Resources/hello-world.ndjson")"
+actual_wire="$(HOME="${PHARO_HOME}" "${PHARO_COMMAND}" --headless "${PHARO_IMAGE}" st pharo/scripts/emit-hello-world.st | grep '^CIDER:')"
+
+if [[ "${actual_wire}" != "${expected_wire}" ]]; then
+  cat >&2 <<MESSAGE
+Pharo Hello World wire output did not match Sources/CiderCore/Resources/hello-world.ndjson.
+Regenerate or update the fixture only when the Spec-shaped wire contract intentionally changes.
+MESSAGE
+  exit 1
+fi
