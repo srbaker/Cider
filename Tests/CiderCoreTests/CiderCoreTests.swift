@@ -38,3 +38,19 @@ import Testing
     ])
     #expect(model.labels["n3"]?.label == "Hello, World!")
 }
+
+@Test func ciderWireOutputIgnoresNonProtocolLines() throws {
+    let output = """
+    MetacelloNotification: Loading baseline of BaselineOfCider...
+    CIDER:{"receiver":"SpWindowPresenter","selector":"open","id":"n1","adapter":"WindowAdapter","presenter":"CiderHelloWorldPresenter","title":"Cider Hello"}
+    CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n3","adapter":"LabelAdapter","label":"Hello, World!"}
+    MetacelloNotification: ...finished baseline
+    """
+
+    let events = try CiderWireOutput.decodeEvents(from: output)
+
+    #expect(events.map(\.kind) == [
+        .windowOpen,
+        .labelPresenterBuild
+    ])
+}
