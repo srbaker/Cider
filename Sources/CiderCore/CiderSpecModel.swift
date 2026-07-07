@@ -1,0 +1,126 @@
+public struct CiderSpecModel: Equatable, Sendable {
+    public struct SpWindowPresenter: Equatable, Sendable {
+        public var id: String
+        public var presenter: String
+        public var title: String
+        public var presenterLayout: String?
+
+        public init(id: String, presenter: String, title: String, presenterLayout: String? = nil) {
+            self.id = id
+            self.presenter = presenter
+            self.title = title
+            self.presenterLayout = presenterLayout
+        }
+    }
+
+    public struct SpBoxLayout: Equatable, Sendable {
+        public struct Child: Equatable, Sendable {
+            public var id: String
+            public var expand: Bool
+
+            public init(id: String, expand: Bool) {
+                self.id = id
+                self.expand = expand
+            }
+        }
+
+        public var id: String
+        public var direction: String
+        public var children: [Child]
+
+        public init(id: String, direction: String, children: [Child] = []) {
+            self.id = id
+            self.direction = direction
+            self.children = children
+        }
+    }
+
+    public struct SpLabelPresenter: Equatable, Sendable {
+        public var id: String
+        public var label: String
+
+        public init(id: String, label: String) {
+            self.id = id
+            self.label = label
+        }
+    }
+
+    public enum BuildError: Error, Equatable, Sendable {
+        case missingWindowPayload(String)
+        case missingBoxPayload(String)
+        case missingLabelPayload(String)
+        case missingBoxChildPayload(String)
+        case missingWindowPresenterPayload(String)
+        case unknownBox(String)
+        case unknownWindow(String)
+    }
+
+    public var windows: [String: SpWindowPresenter]
+    public var boxLayouts: [String: SpBoxLayout]
+    public var labels: [String: SpLabelPresenter]
+
+    public init(
+        windows: [String: SpWindowPresenter] = [:],
+        boxLayouts: [String: SpBoxLayout] = [:],
+        labels: [String: SpLabelPresenter] = [:]
+    ) {
+        self.windows = windows
+        self.boxLayouts = boxLayouts
+        self.labels = labels
+    }
+
+    public static func build(from events: [CiderWireEvent]) throws -> CiderSpecModel {
+        var model = CiderSpecModel()
+
+        for event in events {
+            switch event.kind {
+            case .windowOpen:
+                guard let presenter = event.presenter, let title = event.title else {
+                    throw BuildError.missingWindowPayload(event.id)
+                }
+                model.windows[event.id] = SpWindowPresenter(
+                    id: event.id,
+                    presenter: presenter,
+                    title: title
+                )
+
+            case .boxLayoutBuild:
+                guard let direction = event.direction else {
+                    throw BuildError.missingBoxPayload(event.id)
+                }
+                model.boxLayouts[event.id] = SpBoxLayout(id: event.id, direction: direction)
+
+            case .labelPresenterBuild:
+                guard let label = event.label else {
+                    throw BuildError.missingLabelPayload(event.id)
+                }
+                model.labels[event.id] = SpLabelPresenter(id: event.id, label: label)
+
+            case .boxLayoutAdd:
+                guard let child = event.child, let expand = event.expand else {
+                    throw BuildError.missingBoxChildPayload(event.id)
+                }
+                guard var boxLayout = model.boxLayouts[event.id] else {
+                    throw BuildError.unknownBox(event.id)
+                }
+                boxLayout.children.append(SpBoxLayout.Child(id: child, expand: expand))
+                model.boxLayouts[event.id] = boxLayout
+
+            case .windowPresenterSet:
+                guard let presenterLayout = event.presenterLayout else {
+                    throw BuildError.missingWindowPresenterPayload(event.id)
+                }
+                guard var window = model.windows[event.id] else {
+                    throw BuildError.unknownWindow(event.id)
+                }
+                window.presenterLayout = presenterLayout
+                model.windows[event.id] = window
+
+            case .unknown:
+                continue
+            }
+        }
+
+        return model
+    }
+}

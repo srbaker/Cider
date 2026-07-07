@@ -33,3 +33,25 @@ import Testing
     #expect(events[3].expand == false)
     #expect(events[4].presenterLayout == "n2")
 }
+
+@Test func ciderSpecModelReconstructsHelloWorldTree() throws {
+    let ndjson = """
+    CIDER:{"receiver":"SpWindowPresenter","selector":"open","id":"n1","adapter":"WindowAdapter","presenter":"CiderHelloWorldPresenter","title":"Cider Hello"}
+    CIDER:{"receiver":"SpBoxLayout","selector":"build","id":"n2","adapter":"BoxAdapter","direction":"topToBottom"}
+    CIDER:{"receiver":"SpLabelPresenter","selector":"build","id":"n3","adapter":"LabelAdapter","label":"Hello, World!"}
+    CIDER:{"receiver":"SpBoxLayout","selector":"add:expand:","id":"n2","child":"n3","expand":false}
+    CIDER:{"receiver":"SpWindowPresenter","selector":"presenter:","id":"n1","presenterLayout":"n2"}
+    """
+
+    let events = try CiderWireEventDecoder.decodeEvents(from: ndjson)
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(model.windows["n1"]?.presenter == "CiderHelloWorldPresenter")
+    #expect(model.windows["n1"]?.title == "Cider Hello")
+    #expect(model.windows["n1"]?.presenterLayout == "n2")
+    #expect(model.boxLayouts["n2"]?.direction == "topToBottom")
+    #expect(model.boxLayouts["n2"]?.children == [
+        CiderSpecModel.SpBoxLayout.Child(id: "n3", expand: false)
+    ])
+    #expect(model.labels["n3"]?.label == "Hello, World!")
+}
