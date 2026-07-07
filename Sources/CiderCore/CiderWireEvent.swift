@@ -1,6 +1,16 @@
 import Foundation
 
 public struct CiderWireEvent: Codable, Equatable, Sendable {
+    public struct TreeNode: Codable, Equatable, Sendable {
+        public var path: [Int]
+        public var label: String
+
+        public init(path: [Int], label: String) {
+            self.path = path
+            self.label = label
+        }
+    }
+
     public enum Kind: Equatable, Sendable {
         case windowOpen
         case boxLayoutBuild
@@ -45,6 +55,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public var password: Bool?
     public var items: [String]?
     public var roots: [String]?
+    public var nodes: [TreeNode]?
     public var selectedIndexes: [Int]?
     public var selectedIndex: Int?
     public var selectedPaths: [[Int]]?
@@ -78,6 +89,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         password: Bool? = nil,
         items: [String]? = nil,
         roots: [String]? = nil,
+        nodes: [TreeNode]? = nil,
         selectedIndexes: [Int]? = nil,
         selectedIndex: Int? = nil,
         selectedPaths: [[Int]]? = nil,
@@ -110,6 +122,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         self.password = password
         self.items = items
         self.roots = roots
+        self.nodes = nodes
         self.selectedIndexes = selectedIndexes
         self.selectedIndex = selectedIndex
         self.selectedPaths = selectedPaths

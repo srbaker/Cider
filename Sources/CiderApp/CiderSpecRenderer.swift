@@ -177,12 +177,13 @@ struct CiderSpecRenderer: View {
     }
 
     private func renderTree(_ tree: CiderSpecModel.SpTreePresenter) -> AnyView {
-        AnyView(List(Array(tree.roots.enumerated()), id: \.offset) { index, root in
-            Text(root)
+        AnyView(List(tree.nodes, id: \.path) { node in
+            Text(node.label)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, CGFloat(max(node.path.count - 1, 0) * 14))
                 .padding(.vertical, 2)
                 .listRowBackground(
-                    tree.selectedPaths.contains([index + 1])
+                    tree.selectedPaths.contains(node.path)
                         ? Color.accentColor.opacity(0.18)
                         : Color.clear
                 )

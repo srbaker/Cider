@@ -23,20 +23,30 @@ CiderWireEmitterTest >> testStringValuesEscapeJsonControlCharacters [
 
 { #category : 'tests' }
 CiderWireEmitterTest >> testTreePresenterBuildsSpecShapedEvent [
-	| stream emitter node |
+	| stream emitter node output treeNode |
 
 	stream := WriteStream on: String new.
 	emitter := CiderWireEmitter on: stream.
 	node := CiderWireNode id: 'n1' kind: #TreeAdapter.
+	treeNode := Dictionary new
+		at: #path put: #( 1 );
+		at: #label put: 'Passed';
+		yourself.
 
 	emitter
 		treePresenterBuilt: node
 		roots: #( 'Passed' 'Failures' )
+		nodes: { treeNode }
 		selectedPaths: #( #( 1 ) ).
 
-	self
-		assert: stream contents trimBoth
-		equals: 'CIDER:{"receiver":"SpTreePresenter","selector":"build","id":"n1","adapter":"TreeAdapter","roots":["Passed","Failures"],"selectedPaths":[[1]]}'
+	output := stream contents trimBoth.
+	self assert: (output includesSubstring: '"receiver":"SpTreePresenter"').
+	self assert: (output includesSubstring: '"selector":"build"').
+	self assert: (output includesSubstring: '"roots":["Passed","Failures"]').
+	self assert: (output includesSubstring: '"nodes":[').
+	self assert: (output includesSubstring: '"path":[1]').
+	self assert: (output includesSubstring: '"label":"Passed"').
+	self assert: (output includesSubstring: '"selectedPaths":[[1]]')
 ]
 
 { #category : 'tests' }

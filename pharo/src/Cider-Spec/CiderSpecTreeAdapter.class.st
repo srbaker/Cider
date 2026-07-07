@@ -16,6 +16,7 @@ CiderSpecTreeAdapter >> buildWidget [
 	self emitter
 		treePresenterBuilt: node
 		roots: roots asArray
+		nodes: (self treeNodesFrom: self presenter roots pathPrefix: #())
 		selectedPaths: #().
 	^ node
 ]
@@ -50,4 +51,24 @@ CiderSpecTreeAdapter >> isExpanded: aPath [
 CiderSpecTreeAdapter >> selectedPaths [
 
 	^ #()
+]
+
+{ #category : 'private' }
+CiderSpecTreeAdapter >> treeNodesFrom: items pathPrefix: pathPrefix [
+	| nodes |
+
+	nodes := OrderedCollection new.
+	items withIndexDo: [ :item :index |
+		| path node children |
+		path := pathPrefix copyWith: index.
+		node := Dictionary new
+			at: #path put: path asArray;
+			at: #label put: (self presenter display cull: item) asString;
+			yourself.
+		nodes add: node.
+		children := [ self presenter childrenFor: item ]
+			on: Error
+			do: [ #() ].
+		nodes addAll: (self treeNodesFrom: children pathPrefix: path) ].
+	^ nodes asArray
 ]

@@ -193,15 +193,28 @@ import Testing
 
 @Test func ciderSpecModelReconstructsTreePresenter() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
-    CIDER:{"receiver":"SpTreePresenter","selector":"build","id":"n1","adapter":"TreeAdapter","roots":["Passed","Failures"],"selectedPaths":[[1]]}
+    CIDER:{"receiver":"SpTreePresenter","selector":"build","id":"n1","adapter":"TreeAdapter","roots":["Passed","Failures"],"nodes":[{"path":[1],"label":"Passed"},{"path":[1,1],"label":"CiderWireEmitterTest>>#testWideStringValuesStayByteOriented"},{"path":[2],"label":"Failures"}],"selectedPaths":[[1]]}
     """)
 
     let model = try CiderSpecModel.build(from: events)
 
     #expect(events.first?.kind == .treePresenterBuild)
+    #expect(events.first?.nodes == [
+        CiderWireEvent.TreeNode(path: [1], label: "Passed"),
+        CiderWireEvent.TreeNode(path: [1, 1], label: "CiderWireEmitterTest>>#testWideStringValuesStayByteOriented"),
+        CiderWireEvent.TreeNode(path: [2], label: "Failures")
+    ])
     #expect(model.trees["n1"] == CiderSpecModel.SpTreePresenter(
         id: "n1",
         roots: ["Passed", "Failures"],
+        nodes: [
+            CiderSpecModel.SpTreePresenter.Node(path: [1], label: "Passed"),
+            CiderSpecModel.SpTreePresenter.Node(
+                path: [1, 1],
+                label: "CiderWireEmitterTest>>#testWideStringValuesStayByteOriented"
+            ),
+            CiderSpecModel.SpTreePresenter.Node(path: [2], label: "Failures")
+        ],
         selectedPaths: [[1]]
     ))
 }

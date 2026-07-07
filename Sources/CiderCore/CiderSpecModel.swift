@@ -158,13 +158,25 @@ public struct CiderSpecModel: Equatable, Sendable {
     }
 
     public struct SpTreePresenter: Equatable, Sendable {
+        public struct Node: Equatable, Sendable {
+            public var path: [Int]
+            public var label: String
+
+            public init(path: [Int], label: String) {
+                self.path = path
+                self.label = label
+            }
+        }
+
         public var id: String
         public var roots: [String]
+        public var nodes: [Node]
         public var selectedPaths: [[Int]]
 
-        public init(id: String, roots: [String], selectedPaths: [[Int]] = []) {
+        public init(id: String, roots: [String], nodes: [Node] = [], selectedPaths: [[Int]] = []) {
             self.id = id
             self.roots = roots
+            self.nodes = nodes
             self.selectedPaths = selectedPaths
         }
     }
@@ -427,9 +439,15 @@ public struct CiderSpecModel: Equatable, Sendable {
                 guard let roots = event.roots, let selectedPaths = event.selectedPaths else {
                     throw BuildError.missingTreePayload(event.id)
                 }
+                let nodes = event.nodes?.map {
+                    SpTreePresenter.Node(path: $0.path, label: $0.label)
+                } ?? roots.enumerated().map { index, root in
+                    SpTreePresenter.Node(path: [index + 1], label: root)
+                }
                 model.trees[event.id] = SpTreePresenter(
                     id: event.id,
                     roots: roots,
+                    nodes: nodes,
                     selectedPaths: selectedPaths
                 )
 

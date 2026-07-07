@@ -240,12 +240,23 @@ CiderWireEmitter >> textInputFieldPresenterBuilt: aNode text: aString placeholde
 { #category : 'emitting' }
 CiderWireEmitter >> treePresenterBuilt: aNode roots: rootStrings selectedPaths: selectedPaths [
 
+	self
+		treePresenterBuilt: aNode
+		roots: rootStrings
+		nodes: #()
+		selectedPaths: selectedPaths
+]
+
+{ #category : 'emitting' }
+CiderWireEmitter >> treePresenterBuilt: aNode roots: rootStrings nodes: nodeDictionaries selectedPaths: selectedPaths [
+
 	self emit: {
 		#receiver -> 'SpTreePresenter'.
 		#selector -> 'build'.
 		#id -> aNode id.
 		#adapter -> 'TreeAdapter'.
 		#roots -> rootStrings.
+		#nodes -> nodeDictionaries.
 		#selectedPaths -> selectedPaths }
 ]
 
@@ -313,6 +324,7 @@ CiderWireEmitter >> jsonValue: anObject [
 	anObject isString ifTrue: [ ^ self jsonString: anObject ].
 	anObject isSymbol ifTrue: [ ^ self jsonString: anObject asString ].
 	anObject isNumber ifTrue: [ ^ anObject asString ].
+	anObject isDictionary ifTrue: [ ^ self jsonObjectFrom: anObject associations ].
 	anObject isCollection ifTrue: [ ^ self jsonArrayFrom: anObject ].
 	anObject ifNil: [ ^ 'null' ].
 	^ self jsonString: anObject asString
