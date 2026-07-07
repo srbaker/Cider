@@ -157,6 +157,18 @@ public struct CiderSpecModel: Equatable, Sendable {
         }
     }
 
+    public struct SpTreePresenter: Equatable, Sendable {
+        public var id: String
+        public var roots: [String]
+        public var selectedPaths: [[Int]]
+
+        public init(id: String, roots: [String], selectedPaths: [[Int]] = []) {
+            self.id = id
+            self.roots = roots
+            self.selectedPaths = selectedPaths
+        }
+    }
+
     public struct SpCodePresenter: Equatable, Sendable {
         public var id: String
         public var text: String
@@ -219,6 +231,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         case missingDropListPayload(String)
         case missingTextInputFieldPayload(String)
         case missingListPayload(String)
+        case missingTreePayload(String)
         case missingCodePayload(String)
         case missingMicScrolledTextMorphPayload(String)
         case missingNativeWidgetPayload(String)
@@ -244,6 +257,7 @@ public struct CiderSpecModel: Equatable, Sendable {
     public var dropLists: [String: SpDropListPresenter]
     public var textInputFields: [String: SpTextInputFieldPresenter]
     public var lists: [String: SpListPresenter]
+    public var trees: [String: SpTreePresenter]
     public var codePresenters: [String: SpCodePresenter]
     public var micScrolledTextMorphs: [String: MicScrolledTextMorph]
     public var nativeWidgets: [String: SpNativeWidget]
@@ -261,6 +275,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         dropLists: [String: SpDropListPresenter] = [:],
         textInputFields: [String: SpTextInputFieldPresenter] = [:],
         lists: [String: SpListPresenter] = [:],
+        trees: [String: SpTreePresenter] = [:],
         codePresenters: [String: SpCodePresenter] = [:],
         micScrolledTextMorphs: [String: MicScrolledTextMorph] = [:],
         nativeWidgets: [String: SpNativeWidget] = [:],
@@ -277,6 +292,7 @@ public struct CiderSpecModel: Equatable, Sendable {
         self.dropLists = dropLists
         self.textInputFields = textInputFields
         self.lists = lists
+        self.trees = trees
         self.codePresenters = codePresenters
         self.micScrolledTextMorphs = micScrolledTextMorphs
         self.nativeWidgets = nativeWidgets
@@ -405,6 +421,16 @@ public struct CiderSpecModel: Equatable, Sendable {
                     id: event.id,
                     items: items,
                     selectedIndexes: selectedIndexes
+                )
+
+            case .treePresenterBuild:
+                guard let roots = event.roots, let selectedPaths = event.selectedPaths else {
+                    throw BuildError.missingTreePayload(event.id)
+                }
+                model.trees[event.id] = SpTreePresenter(
+                    id: event.id,
+                    roots: roots,
+                    selectedPaths: selectedPaths
                 )
 
             case .codePresenterBuild:

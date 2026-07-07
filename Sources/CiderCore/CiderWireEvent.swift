@@ -13,6 +13,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case dropListPresenterBuild
         case textInputFieldPresenterBuild
         case listPresenterBuild
+        case treePresenterBuild
         case codePresenterBuild
         case micScrolledTextMorphBuild
         case nativeWidgetBuild
@@ -43,8 +44,10 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public var editable: Bool?
     public var password: Bool?
     public var items: [String]?
+    public var roots: [String]?
     public var selectedIndexes: [Int]?
     public var selectedIndex: Int?
+    public var selectedPaths: [[Int]]?
     public var lineNumbers: Bool?
     public var syntaxHighlight: Bool?
     public var widgetClass: String?
@@ -74,8 +77,10 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         editable: Bool? = nil,
         password: Bool? = nil,
         items: [String]? = nil,
+        roots: [String]? = nil,
         selectedIndexes: [Int]? = nil,
         selectedIndex: Int? = nil,
+        selectedPaths: [[Int]]? = nil,
         lineNumbers: Bool? = nil,
         syntaxHighlight: Bool? = nil,
         widgetClass: String? = nil,
@@ -104,8 +109,10 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         self.editable = editable
         self.password = password
         self.items = items
+        self.roots = roots
         self.selectedIndexes = selectedIndexes
         self.selectedIndex = selectedIndex
+        self.selectedPaths = selectedPaths
         self.lineNumbers = lineNumbers
         self.syntaxHighlight = syntaxHighlight
         self.widgetClass = widgetClass
@@ -140,6 +147,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .textInputFieldPresenterBuild
         case ("SpListPresenter", "build"):
             .listPresenterBuild
+        case ("SpTreePresenter", "build"):
+            .treePresenterBuild
         case ("SpCodePresenter", "build"):
             .codePresenterBuild
         case ("MicScrolledTextMorph", "build"):

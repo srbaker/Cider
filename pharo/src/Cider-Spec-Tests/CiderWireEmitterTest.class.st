@@ -22,6 +22,24 @@ CiderWireEmitterTest >> testStringValuesEscapeJsonControlCharacters [
 ]
 
 { #category : 'tests' }
+CiderWireEmitterTest >> testTreePresenterBuildsSpecShapedEvent [
+	| stream emitter node |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	node := CiderWireNode id: 'n1' kind: #TreeAdapter.
+
+	emitter
+		treePresenterBuilt: node
+		roots: #( 'Passed' 'Failures' )
+		selectedPaths: #( #( 1 ) ).
+
+	self
+		assert: stream contents trimBoth
+		equals: 'CIDER:{"receiver":"SpTreePresenter","selector":"build","id":"n1","adapter":"TreeAdapter","roots":["Passed","Failures"],"selectedPaths":[[1]]}'
+]
+
+{ #category : 'tests' }
 CiderWireEmitterTest >> testDropListPresenterBuildsSpecShapedEvent [
 	| stream emitter node |
 

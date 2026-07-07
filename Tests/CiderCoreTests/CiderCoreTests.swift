@@ -191,6 +191,21 @@ import Testing
     ))
 }
 
+@Test func ciderSpecModelReconstructsTreePresenter() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"SpTreePresenter","selector":"build","id":"n1","adapter":"TreeAdapter","roots":["Passed","Failures"],"selectedPaths":[[1]]}
+    """)
+
+    let model = try CiderSpecModel.build(from: events)
+
+    #expect(events.first?.kind == .treePresenterBuild)
+    #expect(model.trees["n1"] == CiderSpecModel.SpTreePresenter(
+        id: "n1",
+        roots: ["Passed", "Failures"],
+        selectedPaths: [[1]]
+    ))
+}
+
 @Test func ciderSpecModelReconstructsPaginatorPresenter() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
     CIDER:{"receiver":"SpPaginatorPresenter","selector":"build","id":"n1","adapter":"PaginatorAdapter","pages":7,"selectedPage":3,"visiblePages":2}

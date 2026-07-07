@@ -39,6 +39,8 @@ struct CiderSpecRenderer: View {
             return renderTextInputField(textInputField)
         } else if let list = model.lists[id] {
             return renderList(list)
+        } else if let tree = model.trees[id] {
+            return renderTree(tree)
         } else if let codePresenter = model.codePresenters[id] {
             return renderCodePresenter(codePresenter)
         } else if let micScrolledTextMorph = model.micScrolledTextMorphs[id] {
@@ -167,6 +169,20 @@ struct CiderSpecRenderer: View {
                 .padding(.vertical, 2)
                 .listRowBackground(
                     list.selectedIndexes.contains(index + 1)
+                        ? Color.accentColor.opacity(0.18)
+                        : Color.clear
+                )
+        }
+        .frame(minHeight: 120))
+    }
+
+    private func renderTree(_ tree: CiderSpecModel.SpTreePresenter) -> AnyView {
+        AnyView(List(Array(tree.roots.enumerated()), id: \.offset) { index, root in
+            Text(root)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 2)
+                .listRowBackground(
+                    tree.selectedPaths.contains([index + 1])
                         ? Color.accentColor.opacity(0.18)
                         : Color.clear
                 )

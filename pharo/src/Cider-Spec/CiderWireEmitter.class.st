@@ -237,6 +237,18 @@ CiderWireEmitter >> textInputFieldPresenterBuilt: aNode text: aString placeholde
 		#password -> passwordBoolean }
 ]
 
+{ #category : 'emitting' }
+CiderWireEmitter >> treePresenterBuilt: aNode roots: rootStrings selectedPaths: selectedPaths [
+
+	self emit: {
+		#receiver -> 'SpTreePresenter'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'TreeAdapter'.
+		#roots -> rootStrings.
+		#selectedPaths -> selectedPaths }
+]
+
 { #category : 'initialization' }
 CiderWireEmitter >> initialize [
 
