@@ -228,11 +228,17 @@ struct CiderSpecRenderer: View {
                     }
 
                     ScrollView([.horizontal, .vertical]) {
-                        Text(morph.source)
-                            .font(.system(.body, design: .monospaced))
-                            .textSelection(.enabled)
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                            .padding(8)
+                        HStack(alignment: .top, spacing: 12) {
+                            Text(lineNumbers(for: morph.source))
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.trailing)
+
+                            Text(morph.source)
+                                .textSelection(.enabled)
+                        }
+                        .font(.system(.body, design: .monospaced))
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        .padding(8)
                     }
                 }
                 .frame(minHeight: 180, maxHeight: .infinity)
