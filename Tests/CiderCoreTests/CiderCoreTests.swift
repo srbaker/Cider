@@ -264,6 +264,8 @@ import Testing
     let model = try CiderSpecModel.build(from: events)
 
     #expect(events.first?.kind == .clyFullBrowserMorphBuild)
+    #expect(model.primaryRootID == "n1")
+    #expect(CiderAppModel(specModel: model).title == "Cider Browser")
     #expect(model.clyFullBrowserMorphs["n1"] == CiderSpecModel.ClyFullBrowserMorph(
         id: "n1",
         panes: [

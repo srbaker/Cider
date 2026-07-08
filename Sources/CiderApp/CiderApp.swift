@@ -3,7 +3,7 @@ import SwiftUI
 
 @main
 struct CiderApp: App {
-    private static let demoScript = "pharo/scripts/serve-interactive-click.st"
+    private static let demoScript = "pharo/scripts/emit-calypso-browser.st"
 
     @State private var model = CiderAppModel.helloWorld
     @State private var session: CiderPharoLiveSession?

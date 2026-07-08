@@ -6,6 +6,14 @@ public struct CiderAppModel: Equatable, Sendable {
     }
 
     public var title: String {
-        specModel?.primaryWindow?.title ?? "Cider"
+        if let title = specModel?.primaryWindow?.title {
+            return title
+        }
+
+        if specModel?.clyFullBrowserMorphs.isEmpty == false {
+            return "Cider Browser"
+        }
+
+        return "Cider"
     }
 }

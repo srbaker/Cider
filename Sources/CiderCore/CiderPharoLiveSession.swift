@@ -62,7 +62,7 @@ public final class CiderPharoLiveSession: @unchecked Sendable {
                     while true {
                         let event = try self.readEventLocked()
                         events.append(event)
-                        if event.kind == .windowPresenterSet {
+                        if event.kind == .windowPresenterSet || event.kind == .clyFullBrowserMorphBuild {
                             continuation.resume(returning: events)
                             return
                         }

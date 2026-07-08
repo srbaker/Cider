@@ -16,13 +16,9 @@ struct CiderSpecRenderer: View {
     let onTreeTableSelection: (String, [[Int]]) -> Void
     let onTreeTableActivation: (String, [Int]) -> Void
 
-    private var rootWindow: CiderSpecModel.SpWindowPresenter? {
-        model.windows.values.sorted { $0.id < $1.id }.first
-    }
-
     var body: some View {
-        if let presenterLayout = rootWindow?.presenterLayout {
-            renderNode(id: presenterLayout)
+        if let rootID = model.primaryRootID {
+            renderNode(id: rootID)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         } else {
             EmptyView()

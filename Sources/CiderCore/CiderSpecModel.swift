@@ -387,6 +387,13 @@ public struct CiderSpecModel: Equatable, Sendable {
         windows.values.sorted { $0.id < $1.id }.first
     }
 
+    public var primaryRootID: String? {
+        primaryWindow?.presenterLayout
+            ?? clyFullBrowserMorphs.keys.sorted().first
+            ?? micScrolledTextMorphs.keys.sorted().first
+            ?? nativeWidgets.keys.sorted().first
+    }
+
     public static func build(from events: [CiderWireEvent]) throws -> CiderSpecModel {
         var model = CiderSpecModel()
 
