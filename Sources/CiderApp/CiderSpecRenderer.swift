@@ -222,24 +222,32 @@ struct CiderSpecRenderer: View {
             .frame(height: 280)
             .background(Color(nsColor: .controlBackgroundColor))
 
-            if !morph.source.isEmpty {
-                VStack(alignment: .leading, spacing: 0) {
-                    HStack(spacing: 8) {
-                        Text(morph.sourceTitle)
-                            .font(.subheadline.weight(.semibold))
-                            .lineLimit(1)
-                            .truncationMode(.middle)
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 8) {
+                    Text(morph.sourceTitle.isEmpty ? "No selection" : morph.sourceTitle)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(morph.sourceTitle.isEmpty ? .secondary : .primary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
 
-                        Spacer()
+                    Spacer()
 
-                        Text("Source")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 7)
-                    .background(Color(nsColor: .controlBackgroundColor))
+                    Text("Source")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 7)
+                .background(Color(nsColor: .controlBackgroundColor))
 
+                if morph.source.isEmpty {
+                    Text("Select a class or method to show source.")
+                        .font(.system(size: 12, design: .monospaced))
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                        .padding(12)
+                        .background(Color(nsColor: .textBackgroundColor))
+                } else {
                     ScrollView([.horizontal, .vertical]) {
                         HStack(alignment: .top, spacing: 0) {
                             Text(lineNumbers(for: morph.source))
@@ -260,9 +268,9 @@ struct CiderSpecRenderer: View {
                     }
                     .background(Color(nsColor: .textBackgroundColor))
                 }
-                .frame(minHeight: 180, maxHeight: .infinity)
-                .clipShape(RoundedRectangle(cornerRadius: 6))
             }
+            .frame(minHeight: 220, maxHeight: .infinity)
+            .clipShape(RoundedRectangle(cornerRadius: 6))
         }
         .background(Color(nsColor: .windowBackgroundColor)))
     }
