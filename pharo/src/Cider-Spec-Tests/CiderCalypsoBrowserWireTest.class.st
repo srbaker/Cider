@@ -122,3 +122,39 @@ CiderCalypsoBrowserWireTest >> testSelectingMethodPaneEmitsSource [
 	self assert: (browserLine includesSubstring: '"source":"addEdge: edgeModel from: sourceBlock to: targetBlock').
 	self assert: (browserLine includesSubstring: 'self edges add: edge')
 ]
+
+{ #category : 'tests' }
+CiderCalypsoBrowserWireTest >> testSelectingProtocolPaneFiltersMethodPane [
+	| stream emitter browser snapshot node lines browserLine |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	browser := ClyFullBrowserMorph on: ClyNavigationEnvironment currentImage.
+	snapshot := CiderCalypsoBrowserSnapshot emitter: emitter.
+	snapshot rowLimit: 10.
+
+	node := snapshot emitBrowser: browser.
+	snapshot
+		selectPane: 1
+		row: 1
+		inBrowser: browser.
+	snapshot
+		selectPane: 2
+		row: 1
+		inBrowser: browser.
+	snapshot
+		selectPane: 3
+		row: 2
+		inBrowser: browser.
+	snapshot emitBrowser: browser node: node.
+
+	lines := stream contents lines.
+	self assert: lines size equals: 2.
+	browserLine := lines second.
+	self assert: (browserLine includesSubstring: '"title":"Protocols"').
+	self assert: (browserLine includesSubstring: '"selectedIndex":2').
+	self assert: (browserLine includesSubstring: '"accessing"').
+	self assert: (browserLine includesSubstring: '"title":"Methods"').
+	self assert: (browserLine includesSubstring: '"findNode:ifAbsent:"').
+	self deny: (browserLine includesSubstring: '"addEdge:from:to:"')
+]
