@@ -90,6 +90,35 @@ CiderCalypsoBrowserWireTest >> testSelectingClassPanePopulatesProtocolAndMethodP
 ]
 
 { #category : 'tests' }
+CiderCalypsoBrowserWireTest >> testSelectingClassPaneEmitsClassSource [
+	| stream emitter browser snapshot node lines browserLine |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	browser := ClyFullBrowserMorph on: ClyNavigationEnvironment currentImage.
+	snapshot := CiderCalypsoBrowserSnapshot emitter: emitter.
+	snapshot rowLimit: 5.
+
+	node := snapshot emitBrowser: browser.
+	snapshot
+		selectPane: 1
+		row: 1
+		inBrowser: browser.
+	snapshot
+		selectPane: 2
+		row: 1
+		inBrowser: browser.
+	snapshot emitBrowser: browser node: node.
+
+	lines := stream contents lines.
+	self assert: lines size equals: 2.
+	browserLine := lines second.
+	self assert: (browserLine includesSubstring: '"source":"Object << #AIGraphAlgorithm').
+	self assert: (browserLine includesSubstring: 'package: ''AI-Algorithms-Graph''').
+	self assert: (browserLine includesSubstring: 'common superclass for all graphs related algorithms')
+]
+
+{ #category : 'tests' }
 CiderCalypsoBrowserWireTest >> testSelectingMethodPaneEmitsSource [
 	| stream emitter browser snapshot node lines browserLine |
 

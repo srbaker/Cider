@@ -34,7 +34,7 @@ CiderCalypsoBrowserSnapshot >> emitBrowser: aBrowser node: aNode [
 	emitter
 		clyFullBrowserMorphBuilt: aNode
 		panes: (self panesFrom: aBrowser)
-		source: (self selectedMethodSourceFrom: aBrowser).
+		source: (self selectedSourceFrom: aBrowser).
 	^ aNode
 ]
 
@@ -132,4 +132,40 @@ CiderCalypsoBrowserSnapshot >> selectedMethodSourceFrom: aBrowser [
 	(actualObject respondsTo: #sourceCode)
 		ifFalse: [ ^ '' ].
 	^ actualObject sourceCode
+]
+
+{ #category : 'private' }
+CiderCalypsoBrowserSnapshot >> selectedClassSourceFrom: aBrowser [
+	| views classView selectedIndexes classItem actualObject source |
+
+	views := aBrowser navigationViews asArray.
+	views size < 2
+		ifTrue: [ ^ '' ].
+	classView := views at: 2.
+	selectedIndexes := classView table selectedIndexes.
+	selectedIndexes ifEmpty: [ ^ '' ].
+	classItem := [
+		classView dataSource elementAt: selectedIndexes first ]
+		on: Error
+		do: [ ^ '' ].
+	(classItem respondsTo: #actualObject)
+		ifFalse: [ ^ '' ].
+	actualObject := classItem actualObject.
+	source := (actualObject respondsTo: #definitionString)
+		ifTrue: [ actualObject definitionString asString ]
+		ifFalse: [ actualObject name asString ].
+	(actualObject respondsTo: #comment)
+		ifTrue: [
+			actualObject comment asString ifNotEmpty: [ :comment |
+				source := source , String cr , String cr , comment ] ].
+	^ source
+]
+
+{ #category : 'private' }
+CiderCalypsoBrowserSnapshot >> selectedSourceFrom: aBrowser [
+	| methodSource |
+
+	methodSource := self selectedMethodSourceFrom: aBrowser.
+	methodSource ifNotEmpty: [ ^ methodSource ].
+	^ self selectedClassSourceFrom: aBrowser
 ]
