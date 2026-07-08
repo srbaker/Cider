@@ -258,7 +258,7 @@ import Testing
 
 @Test func ciderSpecModelReconstructsCalypsoBrowserMorph() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
-    CIDER:{"receiver":"ClyFullBrowserMorph","selector":"build","id":"n1","adapter":"MorphAdapter","panes":[{"title":"Packages","items":["Kernel","Collections"],"totalRows":775},{"title":"Classes","items":[],"totalRows":0}]}
+    CIDER:{"receiver":"ClyFullBrowserMorph","selector":"build","id":"n1","adapter":"MorphAdapter","panes":[{"title":"Packages","items":["Kernel","Collections"],"totalRows":775,"selectedIndex":2},{"title":"Classes","items":[],"totalRows":0,"selectedIndex":0}]}
     """)
 
     let model = try CiderSpecModel.build(from: events)
@@ -272,15 +272,27 @@ import Testing
             CiderSpecModel.ClyFullBrowserMorph.Pane(
                 title: "Packages",
                 items: ["Kernel", "Collections"],
-                totalRows: 775
+                totalRows: 775,
+                selectedIndex: 2
             ),
             CiderSpecModel.ClyFullBrowserMorph.Pane(
                 title: "Classes",
                 items: [],
-                totalRows: 0
+                totalRows: 0,
+                selectedIndex: 0
             )
         ]
     ))
+}
+
+@Test func ciderWireDecoderParsesCalypsoPaneSelection() throws {
+    let events = try CiderWireOutput.decodeEvents(from: """
+    CIDER:{"receiver":"ClyFullBrowserMorph","selector":"selectPane:row:","id":"n1","paneIndex":1,"index":2}
+    """)
+
+    #expect(events.first?.kind == .clyFullBrowserMorphSelectPaneRow)
+    #expect(events.first?.paneIndex == 1)
+    #expect(events.first?.index == 2)
 }
 
 @Test func ciderSpecModelReconstructsCheckBoxPresenter() throws {

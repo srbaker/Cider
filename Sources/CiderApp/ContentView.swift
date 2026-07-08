@@ -15,6 +15,7 @@ struct ContentView: View {
     let onTreeActivation: (String, [Int]) -> Void
     let onTreeTableSelection: (String, [[Int]]) -> Void
     let onTreeTableActivation: (String, [Int]) -> Void
+    let onCalypsoPaneSelection: (String, Int, Int) -> Void
 
     var body: some View {
         Group {
@@ -32,7 +33,8 @@ struct ContentView: View {
                     onTreeSelection: onTreeSelection,
                     onTreeActivation: onTreeActivation,
                     onTreeTableSelection: onTreeTableSelection,
-                    onTreeTableActivation: onTreeTableActivation
+                    onTreeTableActivation: onTreeTableActivation,
+                    onCalypsoPaneSelection: onCalypsoPaneSelection
                 )
             } else {
                 Text(model.title)

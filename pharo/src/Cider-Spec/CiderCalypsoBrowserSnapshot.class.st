@@ -22,12 +22,19 @@ CiderCalypsoBrowserSnapshot class >> emitter: aCiderWireEmitter [
 CiderCalypsoBrowserSnapshot >> emitBrowser: aBrowser [
 	| node |
 
-	aBrowser ensureInitialState.
 	node := emitter newNodeFor: #ClyFullBrowserMorph.
-	emitter
-		clyFullBrowserMorphBuilt: node
-		panes: (self panesFrom: aBrowser).
+	self emitBrowser: aBrowser node: node.
 	^ node
+]
+
+{ #category : 'emitting' }
+CiderCalypsoBrowserSnapshot >> emitBrowser: aBrowser node: aNode [
+
+	aBrowser ensureInitialState.
+	emitter
+		clyFullBrowserMorphBuilt: aNode
+		panes: (self panesFrom: aBrowser).
+	^ aNode
 ]
 
 { #category : 'accessing' }
@@ -54,17 +61,21 @@ CiderCalypsoBrowserSnapshot >> itemNameAt: rowIndex in: aDataSource [
 
 { #category : 'private' }
 CiderCalypsoBrowserSnapshot >> paneFrom: aQueryView title: titleString [
-	| dataSource totalRows rowCount items |
+	| dataSource totalRows rowCount items selectedIndex |
 
 	dataSource := aQueryView dataSource.
 	totalRows := dataSource numberOfRows.
 	rowCount := totalRows min: rowLimit.
 	items := (1 to: rowCount) collect: [ :index |
 		self itemNameAt: index in: dataSource ].
+	selectedIndex := aQueryView table selectedIndexes
+		ifEmpty: [ 0 ]
+		ifNotEmpty: [ :indexes | indexes first ].
 	^ Dictionary new
 		at: #title put: titleString;
 		at: #items put: items asArray;
 		at: #totalRows put: totalRows;
+		at: #selectedIndex put: selectedIndex;
 		yourself
 ]
 
@@ -84,4 +95,18 @@ CiderCalypsoBrowserSnapshot >> panesFrom: aBrowser [
 CiderCalypsoBrowserSnapshot >> rowLimit: anInteger [
 
 	rowLimit := anInteger
+]
+
+{ #category : 'selection' }
+CiderCalypsoBrowserSnapshot >> selectPane: paneIndex row: rowIndex inBrowser: aBrowser [
+	| views view |
+
+	views := aBrowser navigationViews asArray.
+	(paneIndex between: 1 and: views size)
+		ifFalse: [ ^ self ].
+	view := views at: paneIndex.
+	(rowIndex between: 1 and: view dataSource numberOfRows)
+		ifFalse: [ ^ self ].
+	view table selectIndexes: { rowIndex }.
+	view selectionChanged
 ]

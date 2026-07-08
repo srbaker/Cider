@@ -165,6 +165,17 @@ public final class CiderPharoLiveSession: @unchecked Sendable {
         try await send(event)
     }
 
+    public func selectCalypsoPaneRow(id: String, paneIndex: Int, rowIndex: Int) async throws {
+        let event = CiderWireEvent(
+            receiver: "ClyFullBrowserMorph",
+            selector: "selectPane:row:",
+            id: id,
+            paneIndex: paneIndex,
+            index: rowIndex
+        )
+        try await send(event)
+    }
+
     public func activateTreeTablePath(id: String, path: [Int]) async throws {
         let event = CiderWireEvent(
             receiver: "SpTreeTablePresenter",

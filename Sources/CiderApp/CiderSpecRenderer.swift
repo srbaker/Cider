@@ -15,6 +15,7 @@ struct CiderSpecRenderer: View {
     let onTreeActivation: (String, [Int]) -> Void
     let onTreeTableSelection: (String, [[Int]]) -> Void
     let onTreeTableActivation: (String, [Int]) -> Void
+    let onCalypsoPaneSelection: (String, Int, Int) -> Void
 
     var body: some View {
         if let rootID = model.primaryRootID {
@@ -174,7 +175,7 @@ struct CiderSpecRenderer: View {
     private func renderClyFullBrowserMorph(_ morph: CiderSpecModel.ClyFullBrowserMorph) -> AnyView {
         AnyView(ScrollView([.horizontal, .vertical]) {
             HStack(alignment: .top, spacing: 12) {
-                ForEach(morph.panes, id: \.title) { pane in
+                ForEach(Array(morph.panes.enumerated()), id: \.offset) { paneIndex, pane in
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
                             Text(pane.title)
@@ -185,11 +186,22 @@ struct CiderSpecRenderer: View {
                                 .font(.caption)
                         }
 
-                        ForEach(Array(pane.items.enumerated()), id: \.offset) { _, item in
-                            Text(item)
-                                .lineLimit(1)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.vertical, 2)
+                        ForEach(Array(pane.items.enumerated()), id: \.offset) { rowIndex, item in
+                            Button {
+                                onCalypsoPaneSelection(morph.id, paneIndex + 1, rowIndex + 1)
+                            } label: {
+                                Text(item)
+                                    .lineLimit(1)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.vertical, 2)
+                                    .padding(.horizontal, 4)
+                                    .background(
+                                        pane.selectedIndex == rowIndex + 1
+                                            ? Color.accentColor.opacity(0.16)
+                                            : Color.clear
+                                    )
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
                     .frame(width: 220, alignment: .topLeading)

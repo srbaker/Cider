@@ -260,11 +260,13 @@ public struct CiderSpecModel: Equatable, Sendable {
             public var title: String
             public var items: [String]
             public var totalRows: Int
+            public var selectedIndex: Int
 
-            public init(title: String, items: [String], totalRows: Int) {
+            public init(title: String, items: [String], totalRows: Int, selectedIndex: Int = 0) {
                 self.title = title
                 self.items = items
                 self.totalRows = totalRows
+                self.selectedIndex = selectedIndex
             }
         }
 
@@ -684,10 +686,14 @@ public struct CiderSpecModel: Equatable, Sendable {
                         ClyFullBrowserMorph.Pane(
                             title: $0.title,
                             items: $0.items,
-                            totalRows: $0.totalRows
+                            totalRows: $0.totalRows,
+                            selectedIndex: $0.selectedIndex
                         )
                     }
                 )
+
+            case .clyFullBrowserMorphSelectPaneRow:
+                break
 
             case .nativeWidgetBuild:
                 guard let widgetClass = event.widgetClass else {

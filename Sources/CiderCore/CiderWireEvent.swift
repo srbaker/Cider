@@ -25,11 +25,13 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         public var title: String
         public var items: [String]
         public var totalRows: Int
+        public var selectedIndex: Int
 
-        public init(title: String, items: [String], totalRows: Int) {
+        public init(title: String, items: [String], totalRows: Int, selectedIndex: Int = 0) {
             self.title = title
             self.items = items
             self.totalRows = totalRows
+            self.selectedIndex = selectedIndex
         }
     }
 
@@ -63,6 +65,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         case codePresenterBuild
         case micScrolledTextMorphBuild
         case clyFullBrowserMorphBuild
+        case clyFullBrowserMorphSelectPaneRow
         case nativeWidgetBuild
         case paginatorPresenterBuild
         case boxLayoutAdd
@@ -100,6 +103,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public var selectedIndexes: [Int]?
     public var selectedIndex: Int?
     public var selectedPaths: [[Int]]?
+    public var paneIndex: Int?
     public var index: Int?
     public var path: [Int]?
     public var lineNumbers: Bool?
@@ -140,6 +144,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         selectedIndexes: [Int]? = nil,
         selectedIndex: Int? = nil,
         selectedPaths: [[Int]]? = nil,
+        paneIndex: Int? = nil,
         index: Int? = nil,
         path: [Int]? = nil,
         lineNumbers: Bool? = nil,
@@ -179,6 +184,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         self.selectedIndexes = selectedIndexes
         self.selectedIndex = selectedIndex
         self.selectedPaths = selectedPaths
+        self.paneIndex = paneIndex
         self.index = index
         self.path = path
         self.lineNumbers = lineNumbers
@@ -251,6 +257,8 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
             .micScrolledTextMorphBuild
         case ("ClyFullBrowserMorph", "build"):
             .clyFullBrowserMorphBuild
+        case ("ClyFullBrowserMorph", "selectPane:row:"):
+            .clyFullBrowserMorphSelectPaneRow
         case ("SpNativeWidget", "build"):
             .nativeWidgetBuild
         case ("SpPaginatorPresenter", "build"):

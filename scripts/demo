@@ -20,18 +20,22 @@ mkdir -p \
 # This keeps a no-window demo run useful and fails early before opening the app.
 source "${ROOT_DIR}/.build/pharo/env"
 DEMO_WIRE="$(
+  printf '%s\n' \
+    'CIDER:{"receiver":"ClyFullBrowserMorph","selector":"selectPane:row:","id":"n1","paneIndex":1,"index":1}' |
   HOME="${CIDER_PHARO_HOME}" "${CIDER_PHARO_VM}" \
     --headless "${CIDER_PHARO_IMAGE}" \
-    st pharo/scripts/emit-calypso-browser.st
+    st pharo/scripts/serve-calypso-browser.st
 )"
 if [[ "${DEMO_WIRE}" != *'"receiver":"ClyFullBrowserMorph"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"selector":"build"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"title":"Packages"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"title":"Classes"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"title":"Protocols"'* ]] ||
-  [[ "${DEMO_WIRE}" != *'"title":"Methods"'* ]]; then
+  [[ "${DEMO_WIRE}" != *'"title":"Methods"'* ]] ||
+  [[ "${DEMO_WIRE}" != *'"selectedIndex":1'* ]] ||
+  [[ "${DEMO_WIRE}" != *'"AIGraphAlgorithm"'* ]]; then
   cat >&2 <<MESSAGE
-The demo did not emit the expected Calypso browser panes.
+The demo did not emit the expected interactive Calypso browser panes.
 MESSAGE
   exit 1
 fi

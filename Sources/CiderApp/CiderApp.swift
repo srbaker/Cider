@@ -3,7 +3,7 @@ import SwiftUI
 
 @main
 struct CiderApp: App {
-    private static let demoScript = "pharo/scripts/emit-calypso-browser.st"
+    private static let demoScript = "pharo/scripts/serve-calypso-browser.st"
 
     @State private var model = CiderAppModel.helloWorld
     @State private var session: CiderPharoLiveSession?
@@ -58,6 +58,10 @@ struct CiderApp: App {
             } onTreeTableActivation: { id, path in
                 Task {
                     await activateTreeTablePath(id: id, path: path)
+                }
+            } onCalypsoPaneSelection: { id, paneIndex, rowIndex in
+                Task {
+                    await selectCalypsoPaneRow(id: id, paneIndex: paneIndex, rowIndex: rowIndex)
                 }
             }
                 .frame(minWidth: 720, minHeight: 480)
@@ -145,6 +149,11 @@ struct CiderApp: App {
     @MainActor
     private func activateTreeTablePath(id: String, path: [Int]) async {
         try? await session?.activateTreeTablePath(id: id, path: path)
+    }
+
+    @MainActor
+    private func selectCalypsoPaneRow(id: String, paneIndex: Int, rowIndex: Int) async {
+        try? await session?.selectCalypsoPaneRow(id: id, paneIndex: paneIndex, rowIndex: rowIndex)
     }
 
     @MainActor
