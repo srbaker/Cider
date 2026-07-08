@@ -32,6 +32,20 @@ CiderCalypsoBrowserWireTest >> testDefaultSystemBrowserEmitsCalypsoMorphPaneSnap
 ]
 
 { #category : 'tests' }
+CiderCalypsoBrowserWireTest >> testDefaultSnapshotIncludesMoreThanTheOldFiftyRowLimit [
+	| browser snapshot packagePane |
+
+	browser := ClyFullBrowserMorph on: ClyNavigationEnvironment currentImage.
+	browser ensureInitialState.
+	snapshot := CiderCalypsoBrowserSnapshot emitter: (CiderWireEmitter on: (WriteStream on: String new)).
+
+	packagePane := (snapshot panesFrom: browser) first.
+
+	(packagePane at: #totalRows) > 50
+		ifTrue: [ self assert: (packagePane at: #items) size > 50 ]
+]
+
+{ #category : 'tests' }
 CiderCalypsoBrowserWireTest >> testSelectingPackagePanePopulatesClassPane [
 	| stream emitter browser snapshot node lines browserLine |
 

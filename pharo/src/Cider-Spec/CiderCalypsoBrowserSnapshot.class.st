@@ -49,7 +49,7 @@ CiderCalypsoBrowserSnapshot >> emitter: aCiderWireEmitter [
 CiderCalypsoBrowserSnapshot >> initialize [
 
 	super initialize.
-	rowLimit := 50
+	rowLimit := 1000
 ]
 
 { #category : 'private' }
