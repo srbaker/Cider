@@ -1,3 +1,4 @@
+import AppKit
 import CiderCore
 import SwiftUI
 
@@ -173,19 +174,21 @@ struct CiderSpecRenderer: View {
     }
 
     private func renderClyFullBrowserMorph(_ morph: CiderSpecModel.ClyFullBrowserMorph) -> AnyView {
-        AnyView(VStack(alignment: .leading, spacing: 0) {
+        AnyView(VStack(alignment: .leading, spacing: 10) {
             ScrollView(.horizontal) {
                 HStack(alignment: .top, spacing: 12) {
                     ForEach(Array(morph.panes.enumerated()), id: \.offset) { paneIndex, pane in
                         VStack(alignment: .leading, spacing: 6) {
-                            HStack {
+                            HStack(spacing: 6) {
                                 Text(pane.title)
-                                    .font(.headline)
+                                    .font(.subheadline.weight(.semibold))
                                 Spacer()
                                 Text("\(pane.items.count)/\(pane.totalRows)")
                                     .foregroundStyle(.secondary)
                                     .font(.caption)
+                                    .monospacedDigit()
                             }
+                            .padding(.horizontal, 4)
 
                             ScrollView(.vertical) {
                                 LazyVStack(alignment: .leading, spacing: 1) {
@@ -197,8 +200,8 @@ struct CiderSpecRenderer: View {
                                                 .lineLimit(1)
                                                 .truncationMode(.tail)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                                .padding(.vertical, 2)
-                                                .padding(.horizontal, 4)
+                                                .padding(.vertical, 3)
+                                                .padding(.horizontal, 6)
                                                 .background(
                                                     pane.selectedIndex == rowIndex + 1
                                                         ? Color.accentColor.opacity(0.16)
@@ -213,39 +216,55 @@ struct CiderSpecRenderer: View {
                         .frame(width: 220, height: 260, alignment: .topLeading)
                     }
                 }
-                .padding(8)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
             }
             .frame(height: 280)
+            .background(Color(nsColor: .controlBackgroundColor))
 
             if !morph.source.isEmpty {
                 VStack(alignment: .leading, spacing: 0) {
-                    if !morph.sourceTitle.isEmpty {
+                    HStack(spacing: 8) {
                         Text(morph.sourceTitle)
-                            .font(.headline)
+                            .font(.subheadline.weight(.semibold))
                             .lineLimit(1)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 6)
+                            .truncationMode(.middle)
+
+                        Spacer()
+
+                        Text("Source")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 7)
+                    .background(Color(nsColor: .controlBackgroundColor))
 
                     ScrollView([.horizontal, .vertical]) {
-                        HStack(alignment: .top, spacing: 12) {
+                        HStack(alignment: .top, spacing: 0) {
                             Text(lineNumbers(for: morph.source))
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.trailing)
+                                .padding(.trailing, 10)
+                                .frame(minWidth: 44, alignment: .trailing)
 
                             Text(morph.source)
                                 .textSelection(.enabled)
+                                .padding(.leading, 12)
                         }
-                        .font(.system(.body, design: .monospaced))
+                        .font(.system(size: 12, design: .monospaced))
+                        .lineSpacing(2)
                         .frame(maxWidth: .infinity, alignment: .topLeading)
-                        .padding(8)
+                        .padding(.vertical, 10)
+                        .padding(.trailing, 12)
                     }
+                    .background(Color(nsColor: .textBackgroundColor))
                 }
                 .frame(minHeight: 180, maxHeight: .infinity)
-                .background(Color.secondary.opacity(0.04))
+                .clipShape(RoundedRectangle(cornerRadius: 6))
             }
         }
-        .background(Color.secondary.opacity(0.04)))
+        .background(Color(nsColor: .windowBackgroundColor)))
     }
 
     private func renderPaginator(_ paginator: CiderSpecModel.SpPaginatorPresenter) -> AnyView {
