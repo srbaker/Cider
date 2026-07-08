@@ -107,6 +107,18 @@ CiderWireEmitter >> clyFullBrowserMorphBuilt: aNode panes: paneDictionaries [
 ]
 
 { #category : 'emitting' }
+CiderWireEmitter >> clyFullBrowserMorphBuilt: aNode panes: paneDictionaries source: sourceString [
+
+	self emit: {
+		#receiver -> 'ClyFullBrowserMorph'.
+		#selector -> 'build'.
+		#id -> aNode id.
+		#adapter -> 'MorphAdapter'.
+		#panes -> paneDictionaries.
+		#source -> sourceString }
+]
+
+{ #category : 'emitting' }
 CiderWireEmitter >> dropListPresenterBuilt: aNode items: itemStrings selectedIndex: selectedIndex [
 
 	self emit: {

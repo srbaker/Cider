@@ -22,7 +22,8 @@ source "${ROOT_DIR}/.build/pharo/env"
 DEMO_WIRE="$(
   printf '%s\n' \
     'CIDER:{"receiver":"ClyFullBrowserMorph","selector":"selectPane:row:","id":"n1","paneIndex":1,"index":1}' \
-    'CIDER:{"receiver":"ClyFullBrowserMorph","selector":"selectPane:row:","id":"n1","paneIndex":2,"index":1}' |
+    'CIDER:{"receiver":"ClyFullBrowserMorph","selector":"selectPane:row:","id":"n1","paneIndex":2,"index":1}' \
+    'CIDER:{"receiver":"ClyFullBrowserMorph","selector":"selectPane:row:","id":"n1","paneIndex":4,"index":1}' |
   HOME="${CIDER_PHARO_HOME}" "${CIDER_PHARO_VM}" \
     --headless "${CIDER_PHARO_IMAGE}" \
     st pharo/scripts/serve-calypso-browser.st
@@ -36,7 +37,8 @@ if [[ "${DEMO_WIRE}" != *'"receiver":"ClyFullBrowserMorph"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"selectedIndex":1'* ]] ||
   [[ "${DEMO_WIRE}" != *'"AIGraphAlgorithm"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"instance side"'* ]] ||
-  [[ "${DEMO_WIRE}" != *'"addEdge:from:to:"'* ]]; then
+  [[ "${DEMO_WIRE}" != *'"addEdge:from:to:"'* ]] ||
+  [[ "${DEMO_WIRE}" != *'"source":"addEdge: edgeModel from: sourceBlock to: targetBlock'* ]]; then
   cat >&2 <<MESSAGE
 The demo did not emit the expected interactive Calypso browser panes.
 MESSAGE

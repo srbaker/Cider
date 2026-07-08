@@ -258,7 +258,7 @@ import Testing
 
 @Test func ciderSpecModelReconstructsCalypsoBrowserMorph() throws {
     let events = try CiderWireOutput.decodeEvents(from: """
-    CIDER:{"receiver":"ClyFullBrowserMorph","selector":"build","id":"n1","adapter":"MorphAdapter","panes":[{"title":"Packages","items":["Kernel","Collections"],"totalRows":775,"selectedIndex":2},{"title":"Classes","items":[],"totalRows":0,"selectedIndex":0}]}
+    CIDER:{"receiver":"ClyFullBrowserMorph","selector":"build","id":"n1","adapter":"MorphAdapter","panes":[{"title":"Packages","items":["Kernel","Collections"],"totalRows":775,"selectedIndex":2},{"title":"Classes","items":[],"totalRows":0,"selectedIndex":0}],"source":"exampleSource\\n\\t^ 1"}
     """)
 
     let model = try CiderSpecModel.build(from: events)
@@ -281,7 +281,8 @@ import Testing
                 totalRows: 0,
                 selectedIndex: 0
             )
-        ]
+        ],
+        source: "exampleSource\n\t^ 1"
     ))
 }
 

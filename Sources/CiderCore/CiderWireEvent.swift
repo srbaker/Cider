@@ -100,6 +100,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
     public var nodes: [TreeNode]?
     public var treeTableNodes: [TreeTableNode]?
     public var panes: [CalypsoPane]?
+    public var source: String?
     public var selectedIndexes: [Int]?
     public var selectedIndex: Int?
     public var selectedPaths: [[Int]]?
@@ -141,6 +142,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         nodes: [TreeNode]? = nil,
         treeTableNodes: [TreeTableNode]? = nil,
         panes: [CalypsoPane]? = nil,
+        source: String? = nil,
         selectedIndexes: [Int]? = nil,
         selectedIndex: Int? = nil,
         selectedPaths: [[Int]]? = nil,
@@ -181,6 +183,7 @@ public struct CiderWireEvent: Codable, Equatable, Sendable {
         self.nodes = nodes
         self.treeTableNodes = treeTableNodes
         self.panes = panes
+        self.source = source
         self.selectedIndexes = selectedIndexes
         self.selectedIndex = selectedIndex
         self.selectedPaths = selectedPaths

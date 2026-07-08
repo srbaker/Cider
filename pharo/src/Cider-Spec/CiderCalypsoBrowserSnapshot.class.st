@@ -33,7 +33,8 @@ CiderCalypsoBrowserSnapshot >> emitBrowser: aBrowser node: aNode [
 	aBrowser ensureInitialState.
 	emitter
 		clyFullBrowserMorphBuilt: aNode
-		panes: (self panesFrom: aBrowser).
+		panes: (self panesFrom: aBrowser)
+		source: (self selectedMethodSourceFrom: aBrowser).
 	^ aNode
 ]
 
@@ -109,4 +110,26 @@ CiderCalypsoBrowserSnapshot >> selectPane: paneIndex row: rowIndex inBrowser: aB
 		ifFalse: [ ^ self ].
 	view table selectIndexes: { rowIndex }.
 	view selectionChanged
+]
+
+{ #category : 'private' }
+CiderCalypsoBrowserSnapshot >> selectedMethodSourceFrom: aBrowser [
+	| views methodView selectedIndexes methodItem actualObject |
+
+	views := aBrowser navigationViews asArray.
+	views size < 4
+		ifTrue: [ ^ '' ].
+	methodView := views at: 4.
+	selectedIndexes := methodView table selectedIndexes.
+	selectedIndexes ifEmpty: [ ^ '' ].
+	methodItem := [
+		methodView dataSource elementAt: selectedIndexes first ]
+		on: Error
+		do: [ ^ '' ].
+	(methodItem respondsTo: #actualObject)
+		ifFalse: [ ^ '' ].
+	actualObject := methodItem actualObject.
+	(actualObject respondsTo: #sourceCode)
+		ifFalse: [ ^ '' ].
+	^ actualObject sourceCode
 ]

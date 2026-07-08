@@ -173,43 +173,57 @@ struct CiderSpecRenderer: View {
     }
 
     private func renderClyFullBrowserMorph(_ morph: CiderSpecModel.ClyFullBrowserMorph) -> AnyView {
-        AnyView(ScrollView([.horizontal, .vertical]) {
-            HStack(alignment: .top, spacing: 12) {
-                ForEach(Array(morph.panes.enumerated()), id: \.offset) { paneIndex, pane in
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack {
-                            Text(pane.title)
-                                .font(.headline)
-                            Spacer()
-                            Text("\(pane.items.count)/\(pane.totalRows)")
-                                .foregroundStyle(.secondary)
-                                .font(.caption)
-                        }
-
-                        ForEach(Array(pane.items.enumerated()), id: \.offset) { rowIndex, item in
-                            Button {
-                                onCalypsoPaneSelection(morph.id, paneIndex + 1, rowIndex + 1)
-                            } label: {
-                                Text(item)
-                                    .lineLimit(1)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.vertical, 2)
-                                    .padding(.horizontal, 4)
-                                    .background(
-                                        pane.selectedIndex == rowIndex + 1
-                                            ? Color.accentColor.opacity(0.16)
-                                            : Color.clear
-                                    )
+        AnyView(VStack(alignment: .leading, spacing: 12) {
+            ScrollView([.horizontal, .vertical]) {
+                HStack(alignment: .top, spacing: 12) {
+                    ForEach(Array(morph.panes.enumerated()), id: \.offset) { paneIndex, pane in
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Text(pane.title)
+                                    .font(.headline)
+                                Spacer()
+                                Text("\(pane.items.count)/\(pane.totalRows)")
+                                    .foregroundStyle(.secondary)
+                                    .font(.caption)
                             }
-                            .buttonStyle(.plain)
+
+                            ForEach(Array(pane.items.enumerated()), id: \.offset) { rowIndex, item in
+                                Button {
+                                    onCalypsoPaneSelection(morph.id, paneIndex + 1, rowIndex + 1)
+                                } label: {
+                                    Text(item)
+                                        .lineLimit(1)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.vertical, 2)
+                                        .padding(.horizontal, 4)
+                                        .background(
+                                            pane.selectedIndex == rowIndex + 1
+                                                ? Color.accentColor.opacity(0.16)
+                                                : Color.clear
+                                        )
+                                }
+                                .buttonStyle(.plain)
+                            }
                         }
+                        .frame(width: 220, alignment: .topLeading)
                     }
-                    .frame(width: 220, alignment: .topLeading)
                 }
+                .padding(8)
             }
-            .padding(8)
+            .frame(minHeight: 260)
+
+            if !morph.source.isEmpty {
+                ScrollView([.horizontal, .vertical]) {
+                    Text(morph.source)
+                        .font(.system(.body, design: .monospaced))
+                        .textSelection(.enabled)
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        .padding(8)
+                }
+                .frame(minHeight: 180)
+                .background(Color.secondary.opacity(0.04))
+            }
         }
-        .frame(minHeight: 260)
         .background(Color.secondary.opacity(0.04)))
     }
 
