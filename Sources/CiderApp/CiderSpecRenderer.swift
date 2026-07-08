@@ -182,13 +182,19 @@ struct CiderSpecRenderer: View {
                             HStack(spacing: 6) {
                                 Text(pane.title)
                                     .font(.subheadline.weight(.semibold))
-                                Spacer()
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Spacer(minLength: 4)
                                 Text("\(pane.items.count)/\(pane.totalRows)")
                                     .foregroundStyle(.secondary)
                                     .font(.caption)
                                     .monospacedDigit()
+                                    .lineLimit(1)
+                                    .fixedSize()
                             }
                             .padding(.horizontal, 4)
+                            .frame(maxWidth: .infinity)
 
                             ScrollView(.vertical) {
                                 LazyVStack(alignment: .leading, spacing: 1) {
@@ -214,6 +220,7 @@ struct CiderSpecRenderer: View {
                             }
                         }
                         .frame(width: 220, height: 200, alignment: .topLeading)
+                        .clipped()
                     }
                 }
                 .padding(.horizontal, 10)
