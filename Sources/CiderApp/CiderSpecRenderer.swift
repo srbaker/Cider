@@ -218,12 +218,22 @@ struct CiderSpecRenderer: View {
             .frame(height: 280)
 
             if !morph.source.isEmpty {
-                ScrollView([.horizontal, .vertical]) {
-                    Text(morph.source)
-                        .font(.system(.body, design: .monospaced))
-                        .textSelection(.enabled)
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
-                        .padding(8)
+                VStack(alignment: .leading, spacing: 0) {
+                    if !morph.sourceTitle.isEmpty {
+                        Text(morph.sourceTitle)
+                            .font(.headline)
+                            .lineLimit(1)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 6)
+                    }
+
+                    ScrollView([.horizontal, .vertical]) {
+                        Text(morph.source)
+                            .font(.system(.body, design: .monospaced))
+                            .textSelection(.enabled)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            .padding(8)
+                    }
                 }
                 .frame(minHeight: 180, maxHeight: .infinity)
                 .background(Color.secondary.opacity(0.04))

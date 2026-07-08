@@ -39,6 +39,7 @@ if [[ "${DEMO_WIRE}" != *'"receiver":"ClyFullBrowserMorph"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"AIGraphAlgorithm"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"accessing"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"findNode:ifAbsent:"'* ]] ||
+  [[ "${DEMO_WIRE}" != *'"sourceTitle":"AIGraphAlgorithm>>#edges"'* ]] ||
   [[ "${DEMO_WIRE}" != *'"source":"edges'* ]]; then
   cat >&2 <<MESSAGE
 The demo did not emit the expected interactive Calypso browser panes.

@@ -34,7 +34,8 @@ CiderCalypsoBrowserSnapshot >> emitBrowser: aBrowser node: aNode [
 	emitter
 		clyFullBrowserMorphBuilt: aNode
 		panes: (self panesFrom: aBrowser)
-		source: (self selectedSourceFrom: aBrowser).
+		source: (self selectedSourceFrom: aBrowser)
+		sourceTitle: (self selectedSourceTitleFrom: aBrowser).
 	^ aNode
 ]
 
@@ -162,10 +163,61 @@ CiderCalypsoBrowserSnapshot >> selectedClassSourceFrom: aBrowser [
 ]
 
 { #category : 'private' }
+CiderCalypsoBrowserSnapshot >> selectedClassTitleFrom: aBrowser [
+	| views classView selectedIndexes classItem actualObject |
+
+	views := aBrowser navigationViews asArray.
+	views size < 2
+		ifTrue: [ ^ '' ].
+	classView := views at: 2.
+	selectedIndexes := classView table selectedIndexes.
+	selectedIndexes ifEmpty: [ ^ '' ].
+	classItem := [
+		classView dataSource elementAt: selectedIndexes first ]
+		on: Error
+		do: [ ^ '' ].
+	(classItem respondsTo: #actualObject)
+		ifFalse: [ ^ '' ].
+	actualObject := classItem actualObject.
+	(actualObject respondsTo: #name)
+		ifTrue: [ ^ actualObject name asString ].
+	^ actualObject printString
+]
+
+{ #category : 'private' }
+CiderCalypsoBrowserSnapshot >> selectedMethodTitleFrom: aBrowser [
+	| views methodView selectedIndexes methodItem actualObject |
+
+	views := aBrowser navigationViews asArray.
+	views size < 4
+		ifTrue: [ ^ '' ].
+	methodView := views at: 4.
+	selectedIndexes := methodView table selectedIndexes.
+	selectedIndexes ifEmpty: [ ^ '' ].
+	methodItem := [
+		methodView dataSource elementAt: selectedIndexes first ]
+		on: Error
+		do: [ ^ '' ].
+	(methodItem respondsTo: #actualObject)
+		ifFalse: [ ^ '' ].
+	actualObject := methodItem actualObject.
+	^ actualObject printString
+]
+
+{ #category : 'private' }
 CiderCalypsoBrowserSnapshot >> selectedSourceFrom: aBrowser [
 	| methodSource |
 
 	methodSource := self selectedMethodSourceFrom: aBrowser.
 	methodSource ifNotEmpty: [ ^ methodSource ].
 	^ self selectedClassSourceFrom: aBrowser
+]
+
+{ #category : 'private' }
+CiderCalypsoBrowserSnapshot >> selectedSourceTitleFrom: aBrowser [
+	| methodTitle |
+
+	methodTitle := self selectedMethodTitleFrom: aBrowser.
+	methodTitle ifNotEmpty: [ ^ methodTitle ].
+	^ self selectedClassTitleFrom: aBrowser
 ]

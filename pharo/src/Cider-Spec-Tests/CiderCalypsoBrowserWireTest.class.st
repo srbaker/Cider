@@ -113,6 +113,7 @@ CiderCalypsoBrowserWireTest >> testSelectingClassPaneEmitsClassSource [
 	lines := stream contents lines.
 	self assert: lines size equals: 2.
 	browserLine := lines second.
+	self assert: (browserLine includesSubstring: '"sourceTitle":"AIGraphAlgorithm"').
 	self assert: (browserLine includesSubstring: '"source":"Object << #AIGraphAlgorithm').
 	self assert: (browserLine includesSubstring: 'package: ''AI-Algorithms-Graph''').
 	self assert: (browserLine includesSubstring: 'common superclass for all graphs related algorithms')
@@ -148,6 +149,7 @@ CiderCalypsoBrowserWireTest >> testSelectingMethodPaneEmitsSource [
 	browserLine := lines second.
 	self assert: (browserLine includesSubstring: '"title":"Methods"').
 	self assert: (browserLine includesSubstring: '"selectedIndex":1').
+	self assert: (browserLine includesSubstring: '"sourceTitle":"AIGraphAlgorithm>>#addEdge:from:to:"').
 	self assert: (browserLine includesSubstring: '"source":"addEdge: edgeModel from: sourceBlock to: targetBlock').
 	self assert: (browserLine includesSubstring: 'self edges add: edge')
 ]

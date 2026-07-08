@@ -273,11 +273,13 @@ public struct CiderSpecModel: Equatable, Sendable {
         public var id: String
         public var panes: [Pane]
         public var source: String
+        public var sourceTitle: String
 
-        public init(id: String, panes: [Pane], source: String = "") {
+        public init(id: String, panes: [Pane], source: String = "", sourceTitle: String = "") {
             self.id = id
             self.panes = panes
             self.source = source
+            self.sourceTitle = sourceTitle
         }
     }
 
@@ -692,7 +694,8 @@ public struct CiderSpecModel: Equatable, Sendable {
                             selectedIndex: $0.selectedIndex
                         )
                     },
-                    source: event.source ?? ""
+                    source: event.source ?? "",
+                    sourceTitle: event.sourceTitle ?? ""
                 )
 
             case .clyFullBrowserMorphSelectPaneRow:
