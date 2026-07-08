@@ -74,3 +74,7 @@ The Pharo code lives in Tonel format under `pharo/src`:
 - `Cider-Spec` contains the Spec backend, adapters, and wire emitter.
 - `Cider-Spec-Examples` contains the Hello World Spec application.
 - `Cider-Spec-Tests` contains the SUnit wire test.
+
+## License
+
+Cider is licensed under the GNU Affero General Public License version 3 or later (`AGPL-3.0-or-later`). The full license text is in `LICENSE`, downloaded from the GNU project at `https://www.gnu.org/licenses/agpl-3.0.txt`.
