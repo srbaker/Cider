@@ -213,13 +213,13 @@ struct CiderSpecRenderer: View {
                                 }
                             }
                         }
-                        .frame(width: 220, height: 260, alignment: .topLeading)
+                        .frame(width: 220, height: 200, alignment: .topLeading)
                     }
                 }
                 .padding(.horizontal, 10)
                 .padding(.vertical, 8)
             }
-            .frame(height: 280)
+            .frame(height: 220)
             .background(Color(nsColor: .controlBackgroundColor))
 
             VStack(alignment: .leading, spacing: 0) {
@@ -261,7 +261,7 @@ struct CiderSpecRenderer: View {
                     .background(Color(nsColor: .textBackgroundColor))
                 }
             }
-            .frame(minHeight: 220, maxHeight: .infinity)
+            .frame(minHeight: 160, maxHeight: .infinity)
             .clipShape(RoundedRectangle(cornerRadius: 6))
         }
         .background(Color(nsColor: .windowBackgroundColor)))
