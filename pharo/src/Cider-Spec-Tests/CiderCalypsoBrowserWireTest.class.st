@@ -56,3 +56,35 @@ CiderCalypsoBrowserWireTest >> testSelectingPackagePanePopulatesClassPane [
 	self assert: (browserLine includesSubstring: '"title":"Classes"').
 	self assert: (browserLine includesSubstring: '"AIGraphAlgorithm"')
 ]
+
+{ #category : 'tests' }
+CiderCalypsoBrowserWireTest >> testSelectingClassPanePopulatesProtocolAndMethodPanes [
+	| stream emitter browser snapshot node lines browserLine |
+
+	stream := WriteStream on: String new.
+	emitter := CiderWireEmitter on: stream.
+	browser := ClyFullBrowserMorph on: ClyNavigationEnvironment currentImage.
+	snapshot := CiderCalypsoBrowserSnapshot emitter: emitter.
+	snapshot rowLimit: 5.
+
+	node := snapshot emitBrowser: browser.
+	snapshot
+		selectPane: 1
+		row: 1
+		inBrowser: browser.
+	snapshot
+		selectPane: 2
+		row: 1
+		inBrowser: browser.
+	snapshot emitBrowser: browser node: node.
+
+	lines := stream contents lines.
+	self assert: lines size equals: 2.
+	browserLine := lines second.
+	self assert: (browserLine includesSubstring: '"title":"Classes"').
+	self assert: (browserLine includesSubstring: '"selectedIndex":1').
+	self assert: (browserLine includesSubstring: '"title":"Protocols"').
+	self assert: (browserLine includesSubstring: '"instance side"').
+	self assert: (browserLine includesSubstring: '"title":"Methods"').
+	self assert: (browserLine includesSubstring: '"addEdge:from:to:"')
+]
