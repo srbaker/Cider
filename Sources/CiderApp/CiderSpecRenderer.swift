@@ -173,8 +173,8 @@ struct CiderSpecRenderer: View {
     }
 
     private func renderClyFullBrowserMorph(_ morph: CiderSpecModel.ClyFullBrowserMorph) -> AnyView {
-        AnyView(VStack(alignment: .leading, spacing: 12) {
-            ScrollView([.horizontal, .vertical]) {
+        AnyView(VStack(alignment: .leading, spacing: 0) {
+            ScrollView(.horizontal) {
                 HStack(alignment: .top, spacing: 12) {
                     ForEach(Array(morph.panes.enumerated()), id: \.offset) { paneIndex, pane in
                         VStack(alignment: .leading, spacing: 6) {
@@ -187,30 +187,35 @@ struct CiderSpecRenderer: View {
                                     .font(.caption)
                             }
 
-                            ForEach(Array(pane.items.enumerated()), id: \.offset) { rowIndex, item in
-                                Button {
-                                    onCalypsoPaneSelection(morph.id, paneIndex + 1, rowIndex + 1)
-                                } label: {
-                                    Text(item)
-                                        .lineLimit(1)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .padding(.vertical, 2)
-                                        .padding(.horizontal, 4)
-                                        .background(
-                                            pane.selectedIndex == rowIndex + 1
-                                                ? Color.accentColor.opacity(0.16)
-                                                : Color.clear
-                                        )
+                            ScrollView(.vertical) {
+                                LazyVStack(alignment: .leading, spacing: 1) {
+                                    ForEach(Array(pane.items.enumerated()), id: \.offset) { rowIndex, item in
+                                        Button {
+                                            onCalypsoPaneSelection(morph.id, paneIndex + 1, rowIndex + 1)
+                                        } label: {
+                                            Text(item)
+                                                .lineLimit(1)
+                                                .truncationMode(.tail)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .padding(.vertical, 2)
+                                                .padding(.horizontal, 4)
+                                                .background(
+                                                    pane.selectedIndex == rowIndex + 1
+                                                        ? Color.accentColor.opacity(0.16)
+                                                        : Color.clear
+                                                )
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
                                 }
-                                .buttonStyle(.plain)
                             }
                         }
-                        .frame(width: 220, alignment: .topLeading)
+                        .frame(width: 220, height: 260, alignment: .topLeading)
                     }
                 }
                 .padding(8)
             }
-            .frame(minHeight: 260)
+            .frame(height: 280)
 
             if !morph.source.isEmpty {
                 ScrollView([.horizontal, .vertical]) {
@@ -220,7 +225,7 @@ struct CiderSpecRenderer: View {
                         .frame(maxWidth: .infinity, alignment: .topLeading)
                         .padding(8)
                 }
-                .frame(minHeight: 180)
+                .frame(minHeight: 180, maxHeight: .infinity)
                 .background(Color.secondary.opacity(0.04))
             }
         }
