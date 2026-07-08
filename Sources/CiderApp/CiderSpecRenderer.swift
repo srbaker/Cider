@@ -249,17 +249,9 @@ struct CiderSpecRenderer: View {
                         .background(Color(nsColor: .textBackgroundColor))
                 } else {
                     ScrollView([.horizontal, .vertical]) {
-                        HStack(alignment: .top, spacing: 0) {
-                            Text(lineNumbers(for: morph.source))
-                                .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.trailing)
-                                .padding(.trailing, 10)
-                                .frame(minWidth: 44, alignment: .trailing)
-
-                            Text(morph.source)
-                                .textSelection(.enabled)
-                                .padding(.leading, 12)
-                        }
+                        Text(morph.source)
+                            .textSelection(.enabled)
+                            .padding(.horizontal, 12)
                         .font(.system(size: 12, design: .monospaced))
                         .lineSpacing(2)
                         .frame(maxWidth: .infinity, alignment: .topLeading)
